@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./fonts/fonts.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://code.s3.yandex.net/react/libs/react-18/react.development.js"></script>
+    <script src="https://code.s3.yandex.net/react/libs/react-18/react-dom.development.js"></script>
+    <script src="https://code.s3.yandex.net/react/libs/react-18/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const hasAuth = false // Это значение задаётся на бэкенде. Магия!
+
+      const root = ReactDOM.createRoot(document.querySelector('#root'))
+      root.render(
+        <div>
+          {
+            /* Этот блок должен отображаться, когда hasAuth === true */
+            hasAuth ? (
+              <div className="content sign-in">
+                <h2 className="content__title">Личный кабинет</h2>
+              </div>
+            ) : (
+              /* Этот блок должен отображаться, когда hasAuth === false */
+              <div className="content sign-out">
+                <h2 className="content__title">Личный кабинет</h2>
+                <div className="content__error">
+                  <p>Доступ ограничен</p>
+                  <p>Зарегистрируйтесь или войдите</p>
+                </div>
+              </div>
+            )
+          }
+        </div>
+      )
+    </script>
+  </body>
+</html>

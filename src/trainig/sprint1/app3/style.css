@@ -1,0 +1,40 @@
+.content {
+  width: 720px;
+  height: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #1C1C20;
+  font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif;
+}
+
+.sign-in {
+  background-image: url('./images/welcome.svg');
+}
+
+.sign-out {
+  background-image: url('./images/error.svg');
+}
+
+.content__title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 40px;
+  line-height: 48px;
+  color: #FFF;
+  margin: 64px 40px auto;
+}
+
+.content__error {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 28px;
+  color: #FFF;
+  margin: auto 40px 64px;
+}
+
+p {
+  margin: 0;
+}
