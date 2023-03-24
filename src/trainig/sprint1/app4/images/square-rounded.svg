@@ -1,0 +1,69 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="158" height="158" fill="white"/>
+<rect width="160" height="160" fill="#3C39EC"/>
+<path d="M10 10H11" stroke="white"/>
+<path d="M30 10L20 10" stroke="white"/>
+<path d="M50 10L40 10" stroke="white"/>
+<path d="M70 10L60 10" stroke="white"/>
+<path d="M90 10L80 10" stroke="white"/>
+<path d="M110 10L100 10" stroke="white"/>
+<path d="M130 10L120 10" stroke="white"/>
+<path d="M150 10L140 10" stroke="white"/>
+<path d="M10 30L10 20" stroke="white"/>
+<path d="M30 30L22.9289 22.9289" stroke="white"/>
+<path d="M50 30L41.0557 25.5279" stroke="white"/>
+<path d="M70 30L60.5132 26.8377" stroke="white"/>
+<path d="M90 30L80.2986 27.5746" stroke="white"/>
+<path d="M110 30L100.194 28.0388" stroke="white"/>
+<path d="M130 30L120.136 28.356" stroke="white"/>
+<path d="M150 30L140.101 28.5858" stroke="white"/>
+<path d="M10 50L10 40" stroke="white"/>
+<path d="M30 50L25.5279 41.0557" stroke="white"/>
+<path d="M50 50L42.9289 42.9289" stroke="white"/>
+<path d="M70 50L61.6795 44.453" stroke="white"/>
+<path d="M90 50L81.0557 45.5279" stroke="white"/>
+<path d="M110 50L100.715 46.2861" stroke="white"/>
+<path d="M130 50L120.513 46.8377" stroke="white"/>
+<path d="M150 50L140.385 47.2528" stroke="white"/>
+<path d="M10 70L10 60" stroke="white"/>
+<path d="M30 70L26.8377 60.5132" stroke="white"/>
+<path d="M50 70L44.453 61.6795" stroke="white"/>
+<path d="M70 70L62.9289 62.9289" stroke="white"/>
+<path d="M90 70L82 64" stroke="white"/>
+<path d="M110 70L101.425 64.855" stroke="white"/>
+<path d="M130 70L121.056 65.5279" stroke="white"/>
+<path d="M150 70L140.809 66.0608" stroke="white"/>
+<path d="M10 90L10 80" stroke="white"/>
+<path d="M30 90L27.5746 80.2986" stroke="white"/>
+<path d="M50 90L45.5279 81.0557" stroke="white"/>
+<path d="M70 90L64 82" stroke="white"/>
+<path d="M90 90L82.9289 82.9289" stroke="white"/>
+<path d="M110 90L102.191 83.753" stroke="white"/>
+<path d="M130 90L121.679 84.453" stroke="white"/>
+<path d="M150 90L141.318 85.0386" stroke="white"/>
+<path d="M10 110L10 100" stroke="white"/>
+<path d="M30 110L28.0388 100.194" stroke="white"/>
+<path d="M50 110L46.2861 100.715" stroke="white"/>
+<path d="M70 110L64.855 101.425" stroke="white"/>
+<path d="M90 110L83.7531 102.191" stroke="white"/>
+<path d="M110 110L102.929 102.929" stroke="white"/>
+<path d="M130 110L122.318 103.598" stroke="white"/>
+<path d="M150 110L141.863 104.188" stroke="white"/>
+<path d="M10 130L10 120" stroke="white"/>
+<path d="M30 130L28.356 120.136" stroke="white"/>
+<path d="M50 130L46.8377 120.513" stroke="white"/>
+<path d="M70 130L65.5279 121.056" stroke="white"/>
+<path d="M90 130L84.453 121.679" stroke="white"/>
+<path d="M110 130L103.598 122.318" stroke="white"/>
+<path d="M130 130L122.929 122.929" stroke="white"/>
+<path d="M150 130L142.407 123.492" stroke="white"/>
+<path d="M10 150L10 140" stroke="white"/>
+<path d="M30 150L28.5858 140.101" stroke="white"/>
+<path d="M50 150L47.2528 140.385" stroke="white"/>
+<path d="M70 150L66.0608 140.809" stroke="white"/>
+<path d="M90 150L85.0386 141.318" stroke="white"/>
+<path d="M110 150L104.188 141.863" stroke="white"/>
+<path d="M130 150L123.492 142.407" stroke="white"/>
+<path d="M150 150L142.929 142.929" stroke="white"/>
+<rect x="1" y="1" width="158" height="158" stroke="white" stroke-width="2"/>
+</svg>
