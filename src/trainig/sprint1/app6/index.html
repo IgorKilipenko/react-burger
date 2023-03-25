@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./fonts/fonts.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://code.s3.yandex.net/react/libs/react-18/react.development.js"></script>
+    <script src="https://code.s3.yandex.net/react/libs/react-18/react-dom.development.js"></script>
+    <script src="https://code.s3.yandex.net/react/libs/react-18/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const poemClass = 'poem poem-classic'
+
+      const color = 'зеленый'
+      const metalType = 'Златая'
+      const animal = 'кот'
+      const route = 'кругом'
+
+      const root = ReactDOM.createRoot(document.querySelector('#root'))
+      root.render(
+        <div className={poemClass}>
+          <p>У лукоморья дуб {color};</p>
+          <p>{metalType} цепь на дубе том:</p>
+          <p>И днём и ночью {animal} учёный</p>
+          <p>Всё ходит по цепи {route};</p>
+        </div>
+      )
+    </script>
+  </body>
+</html>
