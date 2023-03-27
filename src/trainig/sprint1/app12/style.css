@@ -1,0 +1,34 @@
+.content {
+  width: 640px;
+  height: 780px;
+  margin: 0 auto;
+  padding: 0 40px;
+  font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: #000;
+}
+
+body {
+  background-color: #efece7;
+}
+
+.text-food {
+  font-size: 20px;
+  line-height: 40px;
+  margin: 0;
+  padding-top: 56px;
+}
+
+.title {
+  font-size: 48px;
+  line-height: 56px;
+  margin: 0 0 8px;
+}
+
+.text-country {
+  font-size: 20px;
+  line-height: 24px;
+  opacity: .6;
+  margin: 0;
+}
