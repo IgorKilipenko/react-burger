@@ -1,4 +1,4 @@
-const CatCard = props => {
+const CatCard = (props) => {
   return (
     <article className="card">
       <img className="card__img" src="./images/cat.png" alt="фото кошки." />
@@ -11,8 +11,8 @@ const CatCard = props => {
         <p className="card__text">{`Происхождение: ${props.origin}`}</p>
       </div>
     </article>
-  );
-};
+  )
+}
 
 const App = () => {
   const data = {
@@ -21,20 +21,10 @@ const App = () => {
     length: '55–63 см без хвоста',
     height: '28–33 см',
     weight: '3-8 кг',
-    origin: 'Великобритания'
-  };
-  return (
-    <CatCard
-      name={data.name}
-      lifespan={data.lifespan}
-      length={data.length}
-      height={data.height}
-      weight={data.weight}
-      origin={data.origin}
-    />
-  );
-};
+    origin: 'Великобритания',
+  }
+  return <CatCard {...data} />
+}
 
-
-const root = ReactDOM.createRoot(document.querySelector('#root'));
-root.render(<App />);
+const root = ReactDOM.createRoot(document.querySelector('#root'))
+root.render(<App />)
