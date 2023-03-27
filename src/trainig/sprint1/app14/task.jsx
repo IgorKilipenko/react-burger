@@ -8,6 +8,60 @@ const Description = (props) => {
   )
 }
 
+const Common = (props) => {
+  return (
+    <div className="card__data-box">
+      <h2 className="card__subtitle">{props.subtitle}</h2>
+      <div className="card__two-columns">
+        <p className="card__text">Годы производства</p>
+        <p className="card__text">{props.years}</p>
+        <p className="card__text">Класс</p>
+        <p className="card__text">{props.class}</p>
+        <p className="card__text">Производитель</p>
+        <p className="card__text">{props.dev}</p>
+        <p className="card__text">Дизайнер</p>
+        <p className="card__text">{props.dis}</p>
+      </div>
+    </div>
+  )
+}
+
+const SizeSpecs = (props) => {
+  return (
+    <div className="card__data-box">
+      <h2 className="card__subtitle">{props.subtitle}</h2>
+      <div className="card__two-columns">
+        <p className="card__text">Длина</p>
+        <p className="card__text">{props.length}</p>
+        <p className="card__text">Ширина</p>
+        <p className="card__text">{props.width}</p>
+        <p className="card__text">Высота</p>
+        <p className="card__text">{props.height}</p>
+        <p className="card__text">Клиренс</p>
+        <p className="card__text">{props.clearance}</p>
+        <p className="card__text">Колёсная база</p>
+        <p className="card__text">{props.wheelbase}</p>
+        <p className="card__text">Масса</p>
+        <p className="card__text">{props.weight}</p>
+      </div>
+    </div>
+  )
+}
+
+const SpeedSpecs = (props) => {
+  return (
+    <div className="card__data-box">
+      <h2 className="card__subtitle">{props.subtitle}</h2>
+      <div className="card__two-columns">
+        <p className="card__text">Разгон до 100 км/ч</p>
+        <p className="card__text">{props.acceleration}</p>
+        <p className="card__text">Максимальная скорость</p>
+        <p className="card__text">{props.maxSpeed}</p>
+      </div>
+    </div>
+  )
+}
+
 const Delorean = () => {
   const data = {
     common: {
@@ -46,6 +100,7 @@ const Delorean = () => {
       },
     },
   }
+
   return (
     <article className="card">
       <div className="card__heading">
@@ -59,45 +114,9 @@ const Delorean = () => {
           DMC-12
         </h1>
       </div>
-      <div className="card__data-box">
-        <h2 className="card__subtitle">{data.common.subtitle}</h2>
-        <div className="card__two-columns">
-          <p className="card__text">Годы производства</p>
-          <p className="card__text">{data.common.years}</p>
-          <p className="card__text">Класс</p>
-          <p className="card__text">{data.common.class}</p>
-          <p className="card__text">Производитель</p>
-          <p className="card__text">{data.common.dev}</p>
-          <p className="card__text">Дизайнер</p>
-          <p className="card__text">{data.common.dis}</p>
-        </div>
-      </div>
-      <div className="card__data-box">
-        <h2 className="card__subtitle">{data.sizeSpecs.subtitle}</h2>
-        <div className="card__two-columns">
-          <p className="card__text">Длина</p>
-          <p className="card__text">{data.sizeSpecs.length}</p>
-          <p className="card__text">Ширина</p>
-          <p className="card__text">{data.sizeSpecs.width}</p>
-          <p className="card__text">Высота</p>
-          <p className="card__text">{data.sizeSpecs.height}</p>
-          <p className="card__text">Клиренс</p>
-          <p className="card__text">{data.sizeSpecs.clearance}</p>
-          <p className="card__text">Колёсная база</p>
-          <p className="card__text">{data.sizeSpecs.wheelbase}</p>
-          <p className="card__text">Масса</p>
-          <p className="card__text">{data.sizeSpecs.weight}</p>
-        </div>
-      </div>
-      <div className="card__data-box">
-        <h2 className="card__subtitle">{data.speedSpecs.subtitle}</h2>
-        <div className="card__two-columns">
-          <p className="card__text">Разгон до 100 км/ч</p>
-          <p className="card__text">{data.speedSpecs.acceleration}</p>
-          <p className="card__text">Максимальная скорость</p>
-          <p className="card__text">{data.speedSpecs.maxSpeed}</p>
-        </div>
-      </div>
+      <Common {...data.common} />
+      <SizeSpecs {...data.sizeSpecs} />
+      <SpeedSpecs {...data.speedSpecs} />
       <Description {...data.description} />
     </article>
   )
