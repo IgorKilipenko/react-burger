@@ -78,11 +78,38 @@ class CalendarEvent extends React.Component {
     location: 'Переговорная №4',
   }
 
-  getCurrentUserConfirmationStatus() {}
+  getCurrentUser() {
+    const curr_user_id = this.state.currentUser    
+    return this.state.invited.find((user) => user.id === curr_user_id)
+  }
 
-  confirm = () => {}
+  getCurrentUserConfirmationStatus() {
+    return this.getCurrentUser()?.status
+  }
 
-  cancel = () => {}
+  setCurrentUserConfirmationStatus(status) {
+    const curr_user = this.getCurrentUser()
+    if (curr_user?.status === status) {
+      return
+    }
+
+    this.setState(prevState => ({
+      ...prevState,
+      invited: [
+        ...prevState.invited.map((user) =>
+          user.id === curr_user.id ? { ...user, status } : { ...user }
+        ),
+      ],
+    }))
+  }
+
+  confirm = () => {
+    this.setCurrentUserConfirmationStatus(STATUS_CONFIRMED)
+  }
+
+  cancel = () => {
+    this.setCurrentUserConfirmationStatus(STATUS_CANCELED)
+  }
 
   render() {
     const confirmed =
