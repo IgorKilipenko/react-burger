@@ -1,0 +1,37 @@
+body {
+	background-color: #15151A;
+}
+
+.App {
+	font-family: sans-serif;
+	padding: 40px;
+	width: 50%;
+	height: 700px;
+	margin: 0 auto;
+	color: #fff;
+}
+h3,
+p {
+	padding: 0;
+	margin: 0;
+}
+
+.replied-message {
+	padding: 16px;
+	border-left: 2px solid #6c84ff;
+	font-size: 0.8rem;
+	margin-bottom: 16px;
+}
+
+.message {
+	padding: 16px;
+	margin-bottom: 20px;
+	background: #242427;
+	border-radius: 16px;
+}
+
+@media (max-width: 1000px) {
+	.App {
+		width: 90%;
+	}
+}
