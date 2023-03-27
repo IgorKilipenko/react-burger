@@ -1,0 +1,33 @@
+.content {
+  width: 720px;
+  height: 780px;
+  font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif;
+  margin: 0 auto;
+  background-image: url(./images/bg.png);
+}
+
+.content__title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 48px;
+  text-align: center;
+  color: #FFF;
+  padding: 40px 0 16px;
+  margin: 0;
+}
+
+.post {
+  background-color: #fff;
+  border-radius: 32px;
+  margin: 16px 40px 0;
+}
+
+.good-news {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 28px;
+  color: #000;
+  padding: 40px;
+}
