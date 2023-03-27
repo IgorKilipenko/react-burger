@@ -1,0 +1,36 @@
+#root {
+  display: flex;
+  width: 50%;
+  height: 780px;
+  margin: 0 auto;
+}
+
+body {
+  background-color: #000;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 520px;
+  margin: auto;
+  font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #FFF;
+}
+
+.card__img {
+  width: 100%;
+  height: auto;
+}
+
+.card__text-box {
+  margin: 16px 0 0;
+}
+
+.card__text {
+  margin: 0;
+}
