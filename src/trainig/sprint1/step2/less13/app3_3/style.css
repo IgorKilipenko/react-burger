@@ -1,0 +1,120 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 700px;
+  margin: 0 auto;
+  padding: 40px;
+  font-family: 'IBM Plex Sans', Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: #000;
+  border: 1px solid #000;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px 20px;
+}
+
+.calendar__menu {
+  font-size: 16px;
+  line-height: 20px;
+  color: #999;
+  margin: 0;
+}
+
+.calendar__title {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 20px;
+  margin: 0;
+}
+
+.calendar__invited {
+  display: flex;
+  flex-direction: column;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.user:last-child {
+  margin-bottom: 0;
+}
+
+.user__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.user__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.user__text {
+  margin: 0;
+}
+
+.user__status {
+  margin: 4px 0 0;
+}
+
+.user__status.confirmed {
+  color: #02B241;
+}
+.user__status.pending {
+  color: #999999;
+}
+.user__status.canceled {
+  color: #FF3B30;
+}
+
+.calendar__text {
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0;
+}
+
+.buttons {
+  margin: auto 0 0 auto;
+  display: flex;
+}
+
+.button {
+  padding: 16px;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.cancel {
+  color: #000;
+  border: 1px solid #000;
+  background-color: #fff;
+  margin-right: 24px;
+}
+
+.confirm {
+  color: #fff;
+  background-color: #000;
+  border: none;
+}
+
+@media (max-width: 1000px) {
+  .main {
+    width: 80%;
+  }
+}
