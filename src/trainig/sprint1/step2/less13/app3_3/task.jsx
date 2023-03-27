@@ -79,7 +79,7 @@ class CalendarEvent extends React.Component {
   }
 
   getCurrentUser() {
-    const curr_user_id = this.state.currentUser    
+    const curr_user_id = this.state.currentUser
     return this.state.invited.find((user) => user.id === curr_user_id)
   }
 
@@ -93,13 +93,11 @@ class CalendarEvent extends React.Component {
       return
     }
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       ...prevState,
-      invited: [
-        ...prevState.invited.map((user) =>
-          user.id === curr_user.id ? { ...user, status } : { ...user }
-        ),
-      ],
+      invited: prevState.invited.map((user) =>
+        user.id === curr_user.id ? { ...user, status } : user
+      ),
     }))
   }
 
