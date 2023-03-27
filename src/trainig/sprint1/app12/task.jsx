@@ -24,7 +24,8 @@ const meals = [
 
 class App extends React.Component {
   randomMeal(arr) {
-    /* Ваш код здесь */
+    const idx = Math.floor(Math.random() * Math.max(arr.length - 1, 0))
+    return arr[idx]
   }
 
   render() {
