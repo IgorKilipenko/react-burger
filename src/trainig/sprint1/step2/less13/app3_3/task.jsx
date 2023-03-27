@@ -1,3 +1,16 @@
+/*
+Урок 13: Как изменять состояние в Reaсt-компонентах
+
+Перед вами упрощённый вариант корпоративного календаря. 
+Вас позвали на встречу, и нужно подтвердить ваше присутствие.
+В state компонента есть поле invited и сurrentUser. Среди invited находится пользователь, который авторизован в системе, 
+и его id соответствует currentUser. Применять изменения нужно к этому пользователю. 
+Допишите три функции: getCurrentUserConfirmationStatus, confirm и cancel. 
+Функция confirm должна изменять состояние status у текущего пользователя на "confirmed", а  cancel — на "canceled". 
+Функция getCurrentUserConfirmationStatus должна возвращать статус текущего пользователя. Использовать эту функцию необходимо 
+в методах confirm и cancel .
+*/
+
 const STATUS_CONFIRMED = 'confirmed'
 const STATUS_PENDING = 'pending'
 const STATUS_CANCELED = 'canceled'
