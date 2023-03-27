@@ -1,0 +1,48 @@
+.page {
+  width: 720px;
+  height: 780px;
+  margin: 0 auto;
+  font-family: 'IBM Plex Mono', Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 20px;
+  background-image: url('./images/bg.png');
+}
+
+.header {
+  background-color: #fff;
+  padding: 24px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 0px 1px rgba(0, 0, 0, 0.04);
+}
+
+.menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1A1A1A;
+  width: 268px;
+}
+
+.item-btn {
+  background-color: #fff;
+  border: none;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.log-in-btn {
+  color: #fff;
+  background: linear-gradient(40.43deg, #667EEA 0%, #667EE9 6.67%, 
+    #677CE7 13.33%, #677AE4 20%, #6876DF 26.67%, #6A72D9 33.33%, #6B6DD2 40%, 
+    #6D67CA 46.67%, #6F62C2 53.33%, #715CBA 60%, #7257B3 66.67%, #7453AD 73.33%, 
+    #754FA8 80%, #754DA5 86.67%, #764BA3 93.33%, #764BA2 100%);
+  border-radius: 100px;
+  padding: 16px 32px;
+  border: none;
+  outline: none;
+  text-transform: uppercase;
+}
