@@ -1,0 +1,13 @@
+@font-face {
+  src: url(https://code.s3.yandex.net/web-code/fonts/ibmplexmono.woff2) format('woff2');
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  src: url(https://code.s3.yandex.net/web-code/fonts/ibmplexmonobold.woff2) format('woff2');
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: bold;
+  font-display: swap;
+}

@@ -1,0 +1,48 @@
+#team-container {
+  display: flex;
+  flex-direction: column;
+  font-family: 'IBM Plex Mono', monospace;
+  max-width: 720px;
+  height: 780px;
+  margin: 0 auto;
+  background-image: url(./images/bg.png);
+  color: #fff;
+}
+
+.table {
+  margin: auto;
+  border: 1px solid #fff;
+}
+
+.table__title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 32px;
+  color: #FFF;
+  padding: 16px;
+  margin: 0;
+}
+
+.table__content {
+  margin: 0;
+  padding: 0;
+  counter-reset: num;
+}
+
+.table__text {
+  padding: 16px 0 16px;
+  border-top: 1px solid #fff;
+  list-style-type: none;
+}
+
+.table__text::before {
+  counter-increment: num;
+  content: counter(num) '. ';
+  color: white;
+  padding-left: 16px;
+}
+
+.table__span {
+  color: #fff02d;
+}
