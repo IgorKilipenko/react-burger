@@ -1,20 +1,54 @@
-import React from 'react';
-import styles from './styles.module.css';
-import { SwitchControl } from './components/SwitchControl';
-import { FlowControl, FLOW_OPTIONS } from './components/FlowControl';
-import { MainDashboard, MIN_TEMPERATURE, MAX_TEMPERATURE } from './components/MainDashboard';
+import React from 'react'
+import styles from './styles.module.css'
+import { SwitchControl } from './components/SwitchControl'
+import { FlowControl, FLOW_OPTIONS } from './components/FlowControl'
+import {
+  MainDashboard,
+  MIN_TEMPERATURE,
+  MAX_TEMPERATURE,
+} from './components/MainDashboard'
 
 export default class App extends React.Component {
   state = {
     enabled: false,
     temperature: 21,
-    flow: 1
-  };
+    flow: 1,
+  }
 
   /* Здесь ваш код */
+  handlePowerSwitch = () => {
+    this.setState((prevState) => ({
+      ...prevState,
+      enabled: !prevState.enabled,
+    }))
+  }
+
+  handleFlowSelect = (value) => {
+    this.setState((prevState) => ({ ...prevState, flow: value }))
+  }
+
+  handleTemperatureIncrease = () => {
+    if (this.state.temperature >= MAX_TEMPERATURE) {
+      return
+    }
+    this.setState((prevState) => ({
+      ...prevState,
+      temperature: prevState.temperature + 1,
+    }))
+  }
+
+  handleTemperatureDecrease = () => {
+    if (this.state.temperature <= MIN_TEMPERATURE) {
+      return
+    }
+    this.setState((prevState) => ({
+      ...prevState,
+      temperature: prevState.temperature - 1,
+    }))
+  }
 
   render() {
-    const { enabled } = this.state;
+    const { enabled } = this.state
 
     return (
       <div className={styles.root}>
@@ -22,18 +56,21 @@ export default class App extends React.Component {
           <h1 className={styles.title}>Гостиная</h1>
           <div className={styles.card}>
             <div className={styles.column}>
-              <SwitchControl enabled={enabled} onClick={/* Здесь ваш код */} />
+              <SwitchControl
+                enabled={enabled}
+                onClick={this.handlePowerSwitch}
+              />
               <div>
                 <span className={styles.iconFan} />
                 <label>
                   Скорость обдува
                   <div className={styles.fanRow}>
-                    {FLOW_OPTIONS.map(elem => (
+                    {FLOW_OPTIONS.map((elem) => (
                       <FlowControl
                         key={`flow_elem${elem}`}
                         flow={elem}
                         selectedFlow={this.state.flow}
-                        onClick={/* Здесь ваш код */}
+                        onClick={this.handleFlowSelect}
                       />
                     ))}
                   </div>
@@ -42,8 +79,8 @@ export default class App extends React.Component {
             </div>
             <MainDashboard
               temperature={this.state.temperature}
-              onIncreaseClick={/* Здесь ваш код */}
-              onDecreaseClick={/* Здесь ваш код */}
+              onIncreaseClick={this.handleTemperatureIncrease}
+              onDecreaseClick={this.handleTemperatureDecrease}
             />
             <div className={styles.column}>
               <span className={styles.iconDrop} />
@@ -55,6 +92,6 @@ export default class App extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
