@@ -1,0 +1,28 @@
+<svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_ddd)">
+<path d="M43.36 30.6396C44.6184 31.8984 45.4753 33.5021 45.8223 35.2478C46.1693 36.9936 45.9909 38.803 45.3096 40.4474C44.6284 42.0918 43.4748 43.4972 41.9948 44.486C40.5148 45.4748 38.7749 46.0026 36.995 46.0026C35.2151 46.0026 33.4752 45.4748 31.9952 44.486C30.5152 43.4972 29.3616 42.0918 28.6804 40.4474C27.9991 38.803 27.8207 36.9936 28.1677 35.2478C28.5147 33.5021 29.3716 31.8984 30.63 30.6396" stroke="#3C39EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M37 27V37" stroke="#3C39EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="37" cy="37" r="20" stroke="#3C39EC" stroke-width="2"/>
+</g>
+<defs>
+<filter id="filter0_ddd" x="-1" y="-1" width="76" height="76" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.235294 0 0 0 0 0.223529 0 0 0 0 0.92549 0 0 0 0.08 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="4"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.235294 0 0 0 0 0.223529 0 0 0 0 0.92549 0 0 0 0.16 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="8"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.235294 0 0 0 0 0.223529 0 0 0 0 0.92549 0 0 0 0.24 0"/>
+<feBlend mode="normal" in2="effect2_dropShadow" result="effect3_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow" result="shape"/>
+</filter>
+</defs>
+</svg>

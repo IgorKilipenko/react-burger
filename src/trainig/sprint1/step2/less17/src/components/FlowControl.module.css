@@ -1,0 +1,19 @@
+.fanButton {
+  width: 34px;
+  height: 34px;
+  margin-right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #F6F6F6;
+  box-shadow: -5px 5px 10px rgba(226, 226, 226, 0.2), 5px -5px 10px rgba(226, 226, 226, 0.2), -5px -5px 10px rgba(255, 255, 255, 0.9), 5px 5px 13px rgba(226, 226, 226, 0.9);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.fanButton.isActive {
+  color: #3C39EC;
+  text-shadow: 0px 0px 16px rgba(60, 57, 236, 0.24), 0px 0px 8px rgba(60, 57, 236, 0.16), 0px 0px 4px rgba(60, 57, 236, 0.08);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F2F2F2 100%);
+  box-shadow: inset -5px 5px 10px rgba(224, 224, 224, 0.2), inset 5px -5px 10px rgba(224, 224, 224, 0.2), inset -5px -5px 10px rgba(255, 255, 255, 0.9), inset 5px 5px 13px rgba(224, 224, 224, 0.9);
+}
