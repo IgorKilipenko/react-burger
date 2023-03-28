@@ -18,7 +18,7 @@ const Message = ({ message, repliedMessage, className = 'message' }) => (
 )
 
 Message.propTypes = {
-  /* {Ваш код здесь} */
+  message: messagePropTypes.isRequired,
 }
 
 const RepliedMessage = ({ message }) => (
@@ -26,7 +26,7 @@ const RepliedMessage = ({ message }) => (
 )
 
 RepliedMessage.propTypes = {
-  /* {Ваш код здесь} */
+  message: messagePropTypes.isRequired,
 }
 
 const Chat = ({ thread }) => (
@@ -46,7 +46,7 @@ const Chat = ({ thread }) => (
 )
 
 Chat.propTypes = {
-  /* {Ваш код здесь} */
+  thread: PropTypes.arrayOf(messagePropTypes).isRequired,
 }
 
 export default class App extends React.Component {
