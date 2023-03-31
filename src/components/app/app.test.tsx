@@ -1,9 +1,14 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './app';
+import { mockMatchMedia } from "../../test-utils/mock-match-media"
+import { render, screen } from "@testing-library/react"
+import App from "./app"
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/Личный кабинет/i);
-  expect(linkElement).toBeInTheDocument();
-});
+describe("<App />", () => {
+  beforeEach(() => {
+    mockMatchMedia("(prefers-color-scheme: dark)", true)
+  })
+  test("has header", () => {
+    render(<App />)
+    const linkElement = screen.getByText(/Личный кабинет/i)
+    expect(linkElement).toBeInTheDocument()
+  })
+})
