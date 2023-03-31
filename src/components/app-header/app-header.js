@@ -1,23 +1,34 @@
-import styles from './app-header.module.css'
-import { Logo } from '@ya.praktikum/react-developer-burger-ui-components'
-import Layout, { HeaderItem as Item } from './header-layout'
+import React from "react"
+import { ProfileIcon, BurgerIcon, ListIcon } from "@ya.praktikum/react-developer-burger-ui-components"
+import { Flex, HStack, Stack} from "@chakra-ui/react"
+import HeaderLink from "./header-link"
+import { ResponsiveLogo } from "../logo"
 
-const AppHeader = () => (
-  <header className={styles.header}>
-    <Layout>
-      <Item>
-        <nav className='flex flex-row'>
-          <div>Конструктор</div>
-          <div>Лента заказов</div>
-        </nav>
-      </Item>
-      <Item>
-        <Logo />
-      </Item>
+const AppHeader = () => {
+  const headerItems = [
+    <Stack
+      as="nav"
+      justify={{ base: "center", lg: "start" }}
+      align={{ base: "start", lg: "center" }}
+      spacing={{ base: 0, lg: 2 }}
+      direction={{ base: "column", lg: "row" }}
+    >
+      <HeaderLink icon={BurgerIcon} text="Конструктор" isActive={true} />
+      <HeaderLink icon={ListIcon} text="Лента заказов" />
+    </Stack>,
+    <HStack justify="center" align="center">
+      <ResponsiveLogo breakpoint={'md'}/>
+    </HStack>,
+    <HStack justify="end">
+      <HeaderLink icon={ProfileIcon} text="Личный кабинет" />
+    </HStack>,
+  ]
 
-      <Item>Личный кабинет</Item>
-    </Layout>
-  </header>
-)
+  return (
+    <Flex as="header" pt={4} pb={4} justify="space-between" align="center" width="100%">
+      {headerItems.map((item, i, arr) => React.cloneElement(item, { key: i, width: `calc(100% / ${arr.length})` }))}
+    </Flex>
+  )
+}
 
 export default AppHeader
