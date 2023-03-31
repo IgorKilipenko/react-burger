@@ -1,11 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import App, {theme} from './components/app'
-import reportWebVitals from './reportWebVitals'
-import { ColorModeScript } from '@chakra-ui/react'
+import React from "react"
+import ReactDOM from "react-dom/client"
+import App from "./components/app"
+import theme from "./theme"
+import reportWebVitals from "./reportWebVitals"
+import { ColorModeScript } from "@chakra-ui/react"
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
