@@ -1,16 +1,22 @@
 import { ChakraProvider } from "@chakra-ui/react"
 import React from "react"
 import AppHeader from "../app-header"
+import BurgerIngredients from "../burger-ingredients/burger-ingredients"
 import theme from "../../theme/theme"
 import { useTheme } from "@chakra-ui/react"
-import { Container, type ContainerProps } from "@chakra-ui/react"
 
-const MainContainer: React.FC<ContainerProps> = ({ children, ...otherProps }) => {
+const MainContainer = ({ children }: { children: React.ReactNode }) => {
   const {
     sizes: { container },
   } = useTheme()
-  const props = { ...otherProps, maxWidth: container.xl }
-  return <Container {...props}>{children}</Container>
+
+  return (
+    <>
+      {React.Children.map(children, (child: React.ReactNode) =>
+        React.cloneElement(child as React.ReactElement, { maxWidth: container.xl })
+      )}
+    </>
+  )
 }
 
 function App() {
@@ -18,6 +24,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <MainContainer>
         <AppHeader />
+        <BurgerIngredients/>
       </MainContainer>
     </ChakraProvider>
   )
