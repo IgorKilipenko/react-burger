@@ -4,18 +4,25 @@ import { Text } from "@chakra-ui/react"
 import { Link } from "@chakra-ui/react"
 import { Icon } from "@chakra-ui/react"
 
-const HeaderLink = ({ icon, text, isActive = false }) => {
-  return (
+const HeaderLink = ({ icon, text, children, isActive = false, onClick, value }) => {
+  const type = isActive ? "primary" : "secondary"
+  const _onClick = () => onClick(value)
+
+  return children ? (
+    <Link onClick={_onClick} variant={type}>{children}</Link>
+  ) : (
     <Box pt={{ base: 1, lg: 4 }} pb={{ base: 1, lg: 4 }} pl={{ base: 0, lg: 5 }} pr={{ base: 0, lg: 5 }}>
-      <Link as={HStack} spacing={icon ? 2 : 0} variant={"primary"}>
+      <Link as={HStack} onClick={_onClick} spacing={icon && text ? 2 : 0} variant={type}>
         {icon && (
           <Box>
-            <Icon as={icon} type={isActive ? "primary" : "secondary"} />
+            <Icon as={icon} type={type} />
           </Box>
         )}
-        <Text fontWeight="normal" /*whiteSpace='nowrap'*/ lineHeight="normal" className="text text_type_main-default">
-          {text}
-        </Text>
+        {text && (
+          <Text fontWeight="normal" lineHeight="normal" className="text text_type_main-default">
+            {text}
+          </Text>
+        )}
       </Link>
     </Box>
   )
@@ -23,8 +30,11 @@ const HeaderLink = ({ icon, text, isActive = false }) => {
 
 HeaderLink.propTypes = {
   icon: PropTypes.elementType,
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
+  children: PropTypes.node,
   isActive: PropTypes.bool,
+  onClick: PropTypes.func,
+  value: PropTypes.string,
 }
 
 export default HeaderLink
