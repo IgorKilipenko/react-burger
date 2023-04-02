@@ -19,7 +19,7 @@ const HeaderLink = ({ icon, text, children, isActive = false, onClick, value }) 
           </Box>
         )}
         {text && (
-          <Text fontWeight="normal" lineHeight="normal" className="text text_type_main-default">
+          <Text variant={'mainDefault'}>
             {text}
           </Text>
         )}
