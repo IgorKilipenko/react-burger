@@ -42,12 +42,12 @@ const BurgerIngredients = () => {
   const data = loadIngredients()
 
   return (
-      <Flex as="section" direction="column" grow={1} basis={0} w="100%" pt={10}>
+      <Flex direction="column" pt={10}>
         <Text variant={"mainLarge"} pt={5} pb={10}>
           {capitalizeFirstLetter("соберите бургер")}
         </Text>
         <IngredientsTabPanel />
-        <Flex direction="column" overflow="auto">
+        <Flex direction="column" overflowY="auto" className="custom-scroll">
           {ingredientCategories.map((category, i) => (
             <Flex key={`category-${category.id}-${i}`} direction="column" pt={10}>
               <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
