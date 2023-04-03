@@ -10,6 +10,19 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 }
 
-const theme = extendTheme({ config, ...typography, styles, semanticTokens, components: { Link: linkTheme, Text:textTheme } })
+const sizes = {
+  container: {
+    maxContentWidth:"1280px"
+  }
+}
+
+const theme = extendTheme({
+  config,
+  ...typography,
+  styles,
+  semanticTokens,
+  sizes,
+  components: { Link: linkTheme, Text: textTheme },
+})
 
 export default theme
