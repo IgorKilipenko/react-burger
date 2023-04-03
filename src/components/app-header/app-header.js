@@ -54,7 +54,7 @@ const AppHeader = ({ maxWidth = null, onChangeHeight = null }) => {
   const [height, setHeight] = React.useState(0)
 
   const handleResizeHeight = () => {
-    setHeight(headerRef?.current.clientHeight ?? 0)
+    setHeight(headerRef.current?.clientHeight ?? 0)
   }
 
   React.useEffect(() => {
