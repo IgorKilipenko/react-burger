@@ -47,9 +47,27 @@ const buildLinks = () => {
   }
 }
 
-const AppHeader = ({ maxWidth = null }) => {
+const AppHeader = ({ maxWidth = null, onChangeHeight = null }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
+  const headerRef = React.useRef()
+  const [height, setHeight] = React.useState(0)
+
+  const handleResizeHeight = () => {
+    setHeight(headerRef?.current.clientHeight ?? 0)
+  }
+
+  React.useEffect(() => {
+    handleResizeHeight()
+  }, [headerRef])
+
+  React.useEffect(() => {
+    onChangeHeight && onChangeHeight(height)
+  }, [onChangeHeight, height])
+
+  React.useEffect(() => {
+    onChangeHeight && onChangeHeight(height)
+  }, [onChangeHeight, height])
 
   const headerItems = [
     <Stack
@@ -73,10 +91,10 @@ const AppHeader = ({ maxWidth = null }) => {
   ]
 
   return (
-    <Center as="header" bg={"app-header-bg"} width="100%" pl={{ base: 2, lg: 0 }} pr={{ base: 2, lg: 0 }}>
-      <Flex as="nav" maxWidth={maxWidth ?? "100%"} pt={4} pb={4} justify="space-between" align="center" width="100%">
-        {headerItems.map((item, i, arr) =>
-          React.cloneElement(item, { key: `header-link-id-${i}`, flexGrow:1,  flexBasis:0})
+    <Center ref={headerRef} as="header" bg={"app-header-bg"} w="100%" pl={{ base: 2, lg: 0 }} pr={{ base: 2, lg: 0 }}>
+      <Flex as="nav" maxW={maxWidth ?? "100%"} pt={4} pb={4} justify="space-between" align="center" w="100%">
+        {headerItems.map((item, i) =>
+          React.cloneElement(item, { key: `header-item-id-${i}`, flexGrow: 1, flexBasis: 0 })
         )}
       </Flex>
     </Center>
