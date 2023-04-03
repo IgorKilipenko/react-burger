@@ -47,7 +47,7 @@ const buildLinks = () => {
   }
 }
 
-const AppHeader = ({ maxWidth = null, onChangeHeight = null }) => {
+const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
   const headerRef = React.useRef()
@@ -92,7 +92,7 @@ const AppHeader = ({ maxWidth = null, onChangeHeight = null }) => {
 
   return (
     <Center ref={headerRef} as="header" bg={"app-header-bg"} w="100%" pl={{ base: 2, lg: 0 }} pr={{ base: 2, lg: 0 }}>
-      <Flex as="nav" maxW={maxWidth ?? "100%"} pt={4} pb={4} justify="space-between" align="center" w="100%">
+      <Flex as="nav" maxW={maxContentWidth ?? "100%"} pt={4} pb={4} justify="space-between" align="center" w="100%">
         {headerItems.map((item, i) =>
           React.cloneElement(item, { key: `header-item-id-${i}`, flexGrow: 1, flexBasis: 0 })
         )}
