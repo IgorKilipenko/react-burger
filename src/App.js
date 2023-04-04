@@ -22,35 +22,31 @@ const Film = ({ data }) => {
   )
 }
 
-export default class App extends React.Component {
-  state = {
-    isLoading: false,
-    hasError: false,
-    data: [],
-  }
+const App = () => {
+  const [state, setState] = React.useState({ data: [], isLoading: false, hasError: false })
 
-  componentDidMount() {
-    this.getFilms()
-  }
+  React.useEffect(() => {
+    const getFilms = () => {
+      setState((prevState) => ({ ...prevState, hasError: false, isLoading: true }))
+      fetch("https://api.nomoreparties.co/beatfilm-movies")
+        .then((res) => res.json())
+        .then((data) => setState((prevState) => ({ ...prevState, data, isLoading: false })))
+        .catch((e) => {
+          setState((prevState) => ({ ...prevState, hasError: true, isLoading: false }))
+        })
+    }
 
-  getFilms = () => {
-    this.setState({ ...this.state, hasError: false, isLoading: true })
-    fetch("https://api.nomoreparties.co/beatfilm-movies")
-      .then((res) => res.json())
-      .then((data) => this.setState({ ...this.state, data, isLoading: false }))
-      .catch((e) => {
-        this.setState({ ...this.state, hasError: true, isLoading: false })
-      })
-  }
+    getFilms()
+  }, [])
 
-  render() {
-    const { data, isLoading, hasError } = this.state
-    return (
-      <div className={`${styles.app} ${styles.grid}`}>
-        {isLoading && "Загрузка..."}
-        {hasError && "Произошла ошибка"}
-        {!isLoading && !hasError && data.length && data.map((film, index) => <Film key={index} data={film} />)}
-      </div>
-    )
-  }
+  const { data, isLoading, hasError } = state
+  return (
+    <div className={`${styles.app} ${styles.grid}`}>
+      {isLoading && "Загрузка..."}
+      {hasError && "Произошла ошибка"}
+      {!isLoading && !hasError && data.length && data.map((film, index) => <Film key={index} data={film} />)}
+    </div>
+  )
 }
+
+export default App
