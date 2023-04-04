@@ -6,4 +6,5 @@
         "clsx",
         "praktikum"
     ],
+    "jest.autoRun": "off"
 }
