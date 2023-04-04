@@ -1,8 +1,9 @@
 import React from 'react';
 import withFetch from './hocs/with-fetch';
 import styles from '../styles.module.css'
+import Film from './film';
 
-const WithFetchFilm = withFetch();
+const WithFetchFilm = withFetch('https://api.nomoreparties.co/beatfilm-movies')(Film);
 
 class App extends React.Component {
 

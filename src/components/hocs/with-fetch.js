@@ -1,8 +1,7 @@
 import React from 'react';
-import Film from '../film';
 import styles from '../../styles.module.css'
 
-const withFetch = () => class extends React.Component {
+const withFetch = (url) => WrappedComponent => class extends React.Component {
     state = {
       isLoading: false,
       hasError: false,
@@ -16,7 +15,7 @@ const withFetch = () => class extends React.Component {
     getData() {
       this.setState({ ...this.state, hasError: false, isLoading: true });
 
-      fetch('https://api.nomoreparties.co/beatfilm-movies')
+      fetch(url)
         .then((res) => res.json())
         .then((data) =>
           this.setState({ ...this.state, data, isLoading: false })
@@ -35,7 +34,7 @@ const withFetch = () => class extends React.Component {
           {!isLoading &&
           !hasError &&
           data.length &&
-          data.map((film, index) => <Film key={index} data={film} />)}
+          data.map((film, index) => <WrappedComponent key={index} data={film} />)}
         </section>
       );
     }
