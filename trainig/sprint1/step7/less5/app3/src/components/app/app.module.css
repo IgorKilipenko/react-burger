@@ -1,0 +1,57 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(220.43deg, #21062D 0%, #170330 48%, #0E0033 100%);
+}
+
+.blur {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 640px;
+  height: 280px;
+}
+
+.blur::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 80%;
+  height: 100%;
+  background-color: #9D54AD;
+  filter: blur(100px);
+}
+
+.blur::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: url(../../images/particles.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+@media screen and (max-width: 720px) {
+  .root {
+    overflow: hidden;
+  }
+}
