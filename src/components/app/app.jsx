@@ -9,7 +9,7 @@ import { Box, Flex } from "@chakra-ui/react"
 const MainContainer = ({ children, maxContentWidth = null, height = "100%" }) => {
   return (
     <Flex as="main" align="start" justify="center" h={height}>
-      <Flex w="100%" h="100%" maxW={maxContentWidth ?? "100%"} justify="space-between" pl={5} pr={5} gap={5} pb={2}>
+      <Flex w="100%" h="100%" maxW={maxContentWidth ?? "100%"} justify="space-between" pl={5} pr={5} gap={10} pb={2}>
         {React.Children.map(children, (child) => (
           <Flex as="section" grow={1} basis={0} justify='center'>
             {child}
