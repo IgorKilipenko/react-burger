@@ -25,9 +25,8 @@ const Burger = ({ bun, ingredients }) => {
       pt: type === "bottom" ? "1px" : null,
     }
     const result = (
-      <Flex w="100%" pr={4} grow={1} basis={0}>
+      <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" grow={1} basis={0}>
         <ConstructorElement
-          key={`burger-constructor-${element._id ?? element.name}` + (type ? `-${type}` : "")}
           type={type}
           isLocked={element.isLocked ?? false}
           text={element.name}
@@ -49,6 +48,7 @@ const Burger = ({ bun, ingredients }) => {
       overflowY="auto"
       overflowX="hidden"
       className="custom-scroll"
+      pr={4}
     >
       {bun && buildItem({ element: bun, type: "top" })}
       {ingredients.map((element) => buildItem({ element }))}
@@ -60,7 +60,7 @@ const Burger = ({ bun, ingredients }) => {
 const BurgerConstructor = (/*{ selectedIngredients }*/) => {
   const [bun, innerIngredients] = extractIngredientsByType(selectedIngredients)
   return (
-    <Flex direction={"column"} pt={100} justify="space-between" align="center" h="100%">
+    <Flex direction={"column"} pt={100} justify="space-between" align="center" h="100%" w='100%'>
       <Burger bun={bun} ingredients={innerIngredients} />
       <Text maxH="min-content">Оформить заказ</Text>
     </Flex>
