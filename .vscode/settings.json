@@ -3,8 +3,10 @@
     "editor.tabSize": 2,
     "cmake.configureOnOpen": false,
     "cSpell.words": [
-        "hocs"
+        "clsx",
+        "praktikum"
     ],
-    "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "jest.autoRun": "off",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
