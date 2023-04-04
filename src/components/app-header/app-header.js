@@ -65,10 +65,6 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
     onChangeHeight && onChangeHeight(height)
   }, [onChangeHeight, height])
 
-  React.useEffect(() => {
-    onChangeHeight && onChangeHeight(height)
-  }, [onChangeHeight, height])
-
   const headerItems = [
     <Stack
       justify={{ base: "center", lg: "start" }}
