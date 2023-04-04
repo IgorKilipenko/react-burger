@@ -1,0 +1,17 @@
+html {
+  background: #111;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: Helvetica Neue, Arial, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+html.no-cursor, html.no-cursor * { cursor: none; }
+
+input[type="checkbox"] {
+  margin-right: 14px;
+}
