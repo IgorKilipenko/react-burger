@@ -1,17 +1,63 @@
-html {
-  background: #111;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-family: Helvetica Neue, Arial, sans-serif;
-  font-size: 14px;
-  overflow: hidden;
+body {
+  background-color: #000;
+  padding: 0;
+  margin: 0;
+  font-family: 'IBM Plex Mono', Helvetica, Arial, sans-serif;
+  height: 100vh;
+  width: 100vw;
+  color: #fff;
+  background-image: url('./images/pattern.png');
+  background-position: center center;
+  background-repeat: round;
 }
 
-html.no-cursor, html.no-cursor * { cursor: none; }
+.d-flex {
+  display: flex;
+  justify-content: center;
+}
 
-input[type="checkbox"] {
-  margin-right: 14px;
+.container {
+  background-color: black;
+  padding: 40px;
+}
+
+.app__title {
+  margin: 0 0 20px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.btn {
+  width: 320px;
+  height: 44px;
+  margin: auto;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.btn-on {
+  border: 1px solid #fff;
+  background-color: #000;
+  color: #fff;
+}
+
+.btn-off {
+  background-color: #fff;
+  color: #000;
+}
+
+h2 {
+  margin: 0;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.gap20 {
+  gap: 20px;
 }
