@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Flex, Text } from "@chakra-ui/react"
-import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
+import { Flex, Text, Box } from "@chakra-ui/react"
+import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components"
 import { data as rawData } from "../../utils/data"
 
 const selectedIngredients = rawData
@@ -16,6 +16,7 @@ const extractIngredientsByType = (ingredientsList) => {
 
 const Burger = ({ bun, ingredients }) => {
   const buildItem = ({ element, type = null }) => {
+    const isDraggable = ["top", "bottom"].find((x) => x === type) ? false : true
     const stickyProps = {
       position: "sticky",
       alignSelf: type === "top" ? "flex-start" : "flex-end",
@@ -24,8 +25,12 @@ const Burger = ({ bun, ingredients }) => {
       pb: type === "top" ? "1px" : null,
       pt: type === "bottom" ? "1px" : null,
     }
+
     const result = (
       <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" grow={1} basis={0}>
+        <Flex w={8} align="center">
+          <Box w={6}>{isDraggable && <DragIcon type="primary" />}</Box>
+        </Flex>
         <ConstructorElement
           type={type}
           isLocked={element.isLocked ?? false}
@@ -60,7 +65,7 @@ const Burger = ({ bun, ingredients }) => {
 const BurgerConstructor = (/*{ selectedIngredients }*/) => {
   const [bun, innerIngredients] = extractIngredientsByType(selectedIngredients)
   return (
-    <Flex direction={"column"} pt={100} justify="space-between" align="center" h="100%" w='100%'>
+    <Flex direction={"column"} pt={100} justify="space-between" align="center" h="100%" w="100%">
       <Burger bun={bun} ingredients={innerIngredients} />
       <Text maxH="min-content">Оформить заказ</Text>
     </Flex>
