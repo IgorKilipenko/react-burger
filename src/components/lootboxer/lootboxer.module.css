@@ -1,0 +1,81 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: max-content;
+  max-width: 480px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 16px;
+  color: #FFFFFF;
+}
+
+.description {
+  display: block;
+  width: 100%;
+  min-height: 4rem;
+  margin-bottom: 16px;
+  text-align: center;
+  opacity: .6;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 480px;
+  height: 320px;
+  margin-bottom: 16px;
+  background: rgba(157, 84, 173, 0.6);
+  border: 1px solid #9D54AD;
+  border-radius: 24px;
+}
+
+.card:hover {
+  box-shadow: 0 0 10px 0 #B447EB;
+}
+
+.title {
+  display: block;
+  margin-bottom: 32px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.title:hover {
+  text-shadow: 0 0 10px #B447EB;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 56px;
+  margin: 0 20px;
+  background: rgba(180, 71, 235, 0.4);
+  border: 1px solid #B447EB;
+  border-radius: 100px;
+  font-size: 1rem;
+  font-family: 'Roboto Slab', sans-serif;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.button:hover,
+.button:focus {
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 0 10px 0 #B447EB;
+}
+
+.button > img {
+  margin-right: 1rem;
+}

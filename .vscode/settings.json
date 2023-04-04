@@ -1,12 +1,9 @@
 {
-    "cSpell.language": "en,ru",
-    "editor.tabSize": 2,
-    "cmake.configureOnOpen": false,
-    "cSpell.words": [
-        "clsx",
-        "praktikum"
-    ],
-    "jest.autoRun": "off",
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "cSpell.language": "en,ru",
+  "editor.tabSize": 2,
+  "cmake.configureOnOpen": false,
+  "cSpell.words": ["clsx", "lootboxer", "praktikum"],
+  "jest.autoRun": "off",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
