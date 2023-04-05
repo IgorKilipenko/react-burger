@@ -3,6 +3,7 @@ import { ProfileIcon, BurgerIcon, ListIcon } from "@ya.praktikum/react-developer
 import { Flex, Center } from "@chakra-ui/react"
 import HeaderLink from "./header-link"
 import { ResponsiveLogo } from "../logo"
+import {useHeight} from '../../utils/hooks/useSize'
 
 const buildLinks = () => {
   const initializeLink =
@@ -51,20 +52,7 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
   const headerRef = React.useRef()
-  const [height, setHeight] = React.useState(0)
-
-  const handleResizeHeight = () => {
-    setHeight(headerRef.current?.clientHeight ?? 0)
-  }
-
-  React.useEffect(() => {
-    if (!headerRef.current) return
-    const resizeObserver = new ResizeObserver(() => {
-      handleResizeHeight()
-    })
-    resizeObserver.observe(headerRef.current)
-    return () => resizeObserver.disconnect()
-  }, [headerRef])
+  const height = useHeight(headerRef)
 
   React.useEffect(() => {
     onChangeHeight && onChangeHeight(height)
