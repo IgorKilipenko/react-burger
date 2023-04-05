@@ -1,5 +1,5 @@
-import { Flex, Text, Box } from "@chakra-ui/react"
-import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components"
+import { Flex, Text, Box, Icon } from "@chakra-ui/react"
+import { ConstructorElement, DragIcon, Button, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components"
 import { data as rawData } from "../../utils/data"
 import { BurgerIngredientType } from "../types"
 
@@ -68,9 +68,19 @@ const Burger = ({ bun, ingredients }) => {
 const BurgerConstructor = (/*{ selectedIngredients }*/) => {
   const [bun, innerIngredients] = extractIngredientsByType(selectedIngredients)
   return (
-    <Flex direction={"column"} pt={100} justify="space-between" align="center" h="100%" w="100%">
+    <Flex direction={"column"} gap={10} pt={100} justify="space-between" align="center" h="100%" w="100%">
       <Burger bun={bun} ingredients={innerIngredients} />
-      <Text maxH="min-content">Оформить заказ</Text>
+      <Flex justify="end" align="center" w="100%" gap={10}>
+        <Flex align="center">
+          <Text variant={"digitsMedium"}>
+            5785
+          </Text>
+          <Icon as={CurrencyIcon} />
+        </Flex>
+        <Button htmlType="button" type="primary" size="large" extraClass="ml-2">
+          Оформить заказ
+        </Button>
+      </Flex>
     </Flex>
   )
 }
