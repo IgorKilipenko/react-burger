@@ -15,21 +15,24 @@ const extractIngredientsByType = (ingredientsList) => {
 }
 
 const Burger = ({ bun, ingredients }) => {
+  const allowableTypes = { top: "top", bottom: "bottom" }
   const buildItem = ({ element, type = null }) => {
-    const isDraggable = ["top", "bottom"].find((x) => x === type) ? false : true
-    const stickyProps = {
-      position: "sticky",
-      alignSelf: type === "top" ? "flex-start" : "flex-end",
-      top: type === "top" ? 0 : null,
-      bottom: type === "bottom" ? 0 : null,
-      pb: type === "top" ? "1px" : null,
-      pt: type === "bottom" ? "1px" : null,
-    }
+    const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
 
-    const result = (
-      <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" grow={1} basis={0}>
+    const bunProps = isBunElement ? {
+      position: "sticky",
+      alignSelf: type === allowableTypes.top ? "flex-start" : "flex-end",
+      top: type === allowableTypes.top ? 0 : null,
+      bottom: type === allowableTypes.bottom ? 0 : null,
+      pb: type === allowableTypes.top ? "1px" : null,
+      pt: type === allowableTypes.bottom ? "1px" : null,
+      bg: "body-bg",
+    } : null
+
+    return (
+      <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
         <Flex w={8} align="center">
-          <Box w={6}>{isDraggable && <DragIcon type="primary" />}</Box>
+          <Box w={6}>{!isBunElement && <DragIcon type="primary" />}</Box>
         </Flex>
         <ConstructorElement
           type={type}
@@ -40,7 +43,6 @@ const Burger = ({ bun, ingredients }) => {
         />
       </Flex>
     )
-    return type ? React.cloneElement(result, { bg: "body-bg", ...stickyProps }) : result
   }
 
   return (
@@ -55,9 +57,9 @@ const Burger = ({ bun, ingredients }) => {
       className="custom-scroll"
       pr={4}
     >
-      {bun && buildItem({ element: bun, type: "top" })}
+      {bun && buildItem({ element: bun, type: allowableTypes.top })}
       {ingredients.map((element) => buildItem({ element }))}
-      {bun && buildItem({ element: bun, type: "bottom" })}
+      {bun && buildItem({ element: bun, type: allowableTypes.bottom })}
     </Flex>
   )
 }
