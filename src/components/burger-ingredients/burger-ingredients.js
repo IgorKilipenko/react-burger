@@ -41,9 +41,9 @@ const loadIngredients = () => {
   )
 }
 
-const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = 2 }) => {
+const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0] }) => {
   const data = loadIngredients()
-  const categoriesRefs = React.useRef(Array(categories))
+  const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
 
   React.useEffect(() => {
@@ -51,9 +51,7 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
   }, [categories])
 
   const scrollIntoCategory = (id) => {
-    id = Math.min(categoriesRefs.current.length - 1, id)
-    if (id < 0) return
-    categoriesRefs.current[id].scrollIntoView({ behavior: "smooth" })
+    categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
   }
 
   React.useEffect(() => {
@@ -61,7 +59,7 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
   }, [currentTabId])
 
   const handleChangeActiveTab = (tabId) => {
-    setCurrentTabId(categories.findIndex((c) => c.id === tabId))
+    setCurrentTabId(tabId)
   }
 
   return (
@@ -72,7 +70,11 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
       <IngredientsTabPanel items={ingredientCategories} onChangeActiveTab={handleChangeActiveTab} />
       <Flex direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {categories.map((category, i) => (
-          <Flex key={`category-${category.id}-${i}`} ref={(el) => (categoriesRefs.current[i] = el)} direction="column">
+          <Flex
+            key={`category-${category.id}-${i}`}
+            ref={(el) => (categoriesRefs.current[i].ref = el)}
+            direction="column"
+          >
             <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
             <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
               {data[category.id].map((ingredient) => (
