@@ -71,7 +71,7 @@ const BurgerConstructor = (/*{ selectedIngredients }*/) => {
     <Flex direction={"column"} gap={10} pt={100} justify="space-between" align="center" h="100%" w="100%">
       <Burger bun={bun} ingredients={innerIngredients} />
       <Flex justify="end" align="center" w="100%" gap={10}>
-        <Flex align="center">
+        <Flex align="center" gap={2}>
           <Text variant={"digitsMedium"}>
             5785
           </Text>

@@ -9,7 +9,7 @@ const IngredientCard = ({ ingredient, size }) => {
     <Link isActive={true}>
       <Flex direction="column" align="center" h={size?.h} w={size?.w} _hover={{ bg: "app-header-bg" }}>
         <Image src={ingredient.image} pl={4} pr={4} pt={6} />
-        <Flex gap={1} pt={1} pb={1}>
+        <Flex gap={2} pt={1} pb={1}>
           <Text variant={"digitsDefault"} align="center">
             5785
           </Text>
