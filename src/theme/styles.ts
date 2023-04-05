@@ -6,7 +6,7 @@ export const semanticTokens = {
     "link-inactive-color": { _light: "gray.800", _dark: "#8585AD" },
     "app-header-bg": { _light: "white", _dark: "#1C1C21" },
     "body-bg": { _light: "white", _dark: "#131316" },
-  }
+  },
 }
 
 export const styles: ChakraThemeType["styles"] = {
@@ -21,6 +21,20 @@ export const styles: ChakraThemeType["styles"] = {
     },
     "*, *::before, &::after": {
       borderColor: "chakra-border-color",
+    },
+    ".constructor-element": {
+      ".constructor-element__text": {
+        marginRight: "20px",
+        display: "-webkit-box",
+        alignItems: "center",
+        lineHeight: "24px",
+        textAlign: "left",
+        flexGrow: 1,
+        overflow: "hidden",
+        WebkitLineClamp: "2",
+        WebkitBoxOrient: "vertical",
+        textOverflow: "ellipsis",
+      },
     },
   }),
 }
