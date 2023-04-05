@@ -34,6 +34,7 @@ export const styles: ChakraThemeType["styles"] = {
         WebkitLineClamp: "2",
         WebkitBoxOrient: "vertical",
         textOverflow: "ellipsis",
+        whiteSpace: "pre-wrap"
       },
     },
   }),
