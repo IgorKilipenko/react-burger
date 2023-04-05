@@ -43,7 +43,7 @@ const BurgerIngredients = () => {
 
   return (
     <Flex direction="column">
-      <Text variant={"mainLarge"} pt={10} pb={10}>
+      <Text variant={"mainLarge"} pt={10} pb={5}>
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
       <IngredientsTabPanel />

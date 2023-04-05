@@ -1,4 +1,3 @@
-import React from "react"
 import PropTypes from "prop-types"
 import { Flex, Text, Box } from "@chakra-ui/react"
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components"
@@ -52,7 +51,7 @@ const Burger = ({ bun, ingredients }) => {
       direction="column"
       justify="start"
       align="center"
-      gap={2}
+      gap={4}
       maxH="100%"
       overflowY="auto"
       overflowX="hidden"
