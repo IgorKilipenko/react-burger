@@ -1,6 +1,6 @@
 import React from "react"
 import { ProfileIcon, BurgerIcon, ListIcon } from "@ya.praktikum/react-developer-burger-ui-components"
-import { Flex, Stack, Center } from "@chakra-ui/react"
+import { Flex, Center } from "@chakra-ui/react"
 import HeaderLink from "./header-link"
 import { ResponsiveLogo } from "../logo"
 
@@ -58,7 +58,12 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
   }
 
   React.useEffect(() => {
-    handleResizeHeight()
+    if (!headerRef.current) return
+    const resizeObserver = new ResizeObserver(() => {
+      handleResizeHeight()
+    })
+    resizeObserver.observe(headerRef.current)
+    return () => resizeObserver.disconnect()
   }, [headerRef])
 
   React.useEffect(() => {
@@ -66,10 +71,10 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
   }, [onChangeHeight, height])
 
   const headerItems = [
-    <Stack
+    <Flex
       justify={{ base: "center", lg: "start" }}
       align={{ base: "start", lg: "center" }}
-      spacing={{ base: 0, lg: 2 }}
+      gap={{ base: 0, lg: 2 }}
       direction={{ base: "column", lg: "row" }}
     >
       {links.burgerConstructor.element({
@@ -77,7 +82,7 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
         onClick: setCurrentLink,
       })}
       {links.orderList.element({ isActive: currentLink === links.orderList.tag, onClick: setCurrentLink })}
-    </Stack>,
+    </Flex>,
     <Flex justify="center" align="center">
       {links.homeLink.element({ isActive: currentLink === links.homeLink.tag, onClick: setCurrentLink })}
     </Flex>,
@@ -87,8 +92,15 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
   ]
 
   return (
-    <Center ref={headerRef} as="header" bg={"app-header-bg"} w="100%" pl={{ base: 2, lg: 0 }} pr={{ base: 2, lg: 0 }}>
-      <Flex as="nav" maxW={maxContentWidth ?? "100%"} pt={4} pb={4} justify="space-between" align="center" w="100%">
+    <Center
+      ref={headerRef}
+      as="header"
+      bg={"app-header-bg"}
+      w="100%"
+      pl={{ base: 2, lg: 0 }}
+      pr={{ base: 2, lg: 0 }}
+    >
+      <Flex as="nav" maxW={maxContentWidth} pt={4} pb={4} justify="space-between" align="center" w="100%">
         {headerItems.map((item, i) =>
           React.cloneElement(item, { key: `header-item-id-${i}`, flexGrow: 1, flexBasis: 0 })
         )}
