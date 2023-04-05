@@ -1,8 +1,8 @@
 import React from "react"
 import { ProfileIcon, BurgerIcon, ListIcon } from "@ya.praktikum/react-developer-burger-ui-components"
 import { Flex, Center } from "@chakra-ui/react"
-import HeaderLink from "./header-link"
-import { ResponsiveLogo } from "../logo"
+import { Link } from "../common"
+import { ResponsiveLogo } from "../common/logo"
 import { useHeight } from "../../utils/hooks/useSize"
 import { AppHeaderPropType } from "./app-header.types"
 
@@ -21,29 +21,29 @@ const buildLinks = () => {
     burgerConstructor: {
       tag: "burgerConstructor",
       get element() {
-        return initializeLink(<HeaderLink icon={BurgerIcon} text="Конструктор" value={this.tag} />)
+        return initializeLink(<Link icon={BurgerIcon} text="Конструктор" value={this.tag} />)
       },
     },
     orderList: {
       tag: "orderList",
       get element() {
-        return initializeLink(<HeaderLink icon={ListIcon} text="Лента заказов" value={this.tag} />)
+        return initializeLink(<Link icon={ListIcon} text="Лента заказов" value={this.tag} />)
       },
     },
     homeLink: {
       tag: "homeLink",
       get element() {
         return initializeLink(
-          <HeaderLink>
+          <Link>
             <ResponsiveLogo breakpoint={"md"} value={this.tag} />
-          </HeaderLink>
+          </Link>
         )
       },
     },
     userProfile: {
       tag: "userProfile",
       get element() {
-        return initializeLink(<HeaderLink icon={ProfileIcon} text="Личный кабинет" value={this.tag} />)
+        return initializeLink(<Link icon={ProfileIcon} text="Личный кабинет" value={this.tag} />)
       },
     },
   }
