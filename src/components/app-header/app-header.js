@@ -3,7 +3,8 @@ import { ProfileIcon, BurgerIcon, ListIcon } from "@ya.praktikum/react-developer
 import { Flex, Center } from "@chakra-ui/react"
 import HeaderLink from "./header-link"
 import { ResponsiveLogo } from "../logo"
-import {useHeight} from '../../utils/hooks/useSize'
+import { useHeight } from "../../utils/hooks/useSize"
+import { AppHeaderPropType } from "./app-header.types"
 
 const buildLinks = () => {
   const initializeLink =
@@ -80,14 +81,7 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
   ]
 
   return (
-    <Center
-      ref={headerRef}
-      as="header"
-      bg={"app-header-bg"}
-      w="100%"
-      pl={{ base: 2, lg: 0 }}
-      pr={{ base: 2, lg: 0 }}
-    >
+    <Center ref={headerRef} as="header" bg={"app-header-bg"} w="100%" pl={{ base: 2, lg: 0 }} pr={{ base: 2, lg: 0 }}>
       <Flex as="nav" maxW={maxContentWidth} pt={4} pb={4} justify="space-between" align="center" w="100%">
         {headerItems.map((item, i) =>
           React.cloneElement(item, { key: `header-item-id-${i}`, flexGrow: 1, flexBasis: 0 })
@@ -96,5 +90,7 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
     </Center>
   )
 }
+
+AppHeader.propTypes = AppHeaderPropType
 
 export default AppHeader
