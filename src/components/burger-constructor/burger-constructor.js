@@ -19,15 +19,17 @@ const Burger = ({ bun, ingredients }) => {
   const buildItem = ({ element, type = null }) => {
     const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
 
-    const bunProps = isBunElement ? {
-      position: "sticky",
-      alignSelf: type === allowableTypes.top ? "flex-start" : "flex-end",
-      top: type === allowableTypes.top ? 0 : null,
-      bottom: type === allowableTypes.bottom ? 0 : null,
-      pb: type === allowableTypes.top ? "1px" : null,
-      pt: type === allowableTypes.bottom ? "1px" : null,
-      bg: "body-bg",
-    } : null
+    const bunProps = isBunElement
+      ? {
+          position: "sticky",
+          alignSelf: type === allowableTypes.top ? "flex-start" : "flex-end",
+          top: type === allowableTypes.top ? 0 : null,
+          bottom: type === allowableTypes.bottom ? 0 : null,
+          pb: type === allowableTypes.top ? "1px" : null,
+          pt: type === allowableTypes.bottom ? "1px" : null,
+          bg: "body-bg",
+        }
+      : null
 
     return (
       <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
@@ -36,8 +38,8 @@ const Burger = ({ bun, ingredients }) => {
         </Flex>
         <ConstructorElement
           type={type}
-          isLocked={element.isLocked ?? false}
-          text={element.name}
+          isLocked={element.isLocked || isBunElement || false}
+          text={element.name + (isBunElement && ` (${type === allowableTypes.top ? "верх" : "низ"})`)}
           price={element.price}
           thumbnail={element.image}
         />
