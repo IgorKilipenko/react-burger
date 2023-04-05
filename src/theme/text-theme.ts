@@ -1,5 +1,7 @@
 import { defineStyle, defineStyleConfig } from "@chakra-ui/react"
 
+const _digitsFontFamily = "Iceland"
+
 const _fontSizes = {
   default: "16px",
   large: "36px",
@@ -39,6 +41,22 @@ const variants = {
     fontSize: _fontSizes.small,
     lineHeight: 1.43,
   })),
+
+  digitsMedium: {
+    fontFamily: _digitsFontFamily,
+    fontSize: "48px",
+    lineHeight: 0.75,
+  },
+  digitsDefault: {
+    fontFamily: _digitsFontFamily,
+    fontSize: "28px",
+    lineHeight: 0.86,
+  },
+  digitsLarge: {
+    fontFamily: _digitsFontFamily,
+    fontSize: "144px",
+    lineHeight: 0.83,
+  },
 }
 
 const baseStyle = defineStyle({
