@@ -2,7 +2,7 @@ import React from "react"
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
 import { Flex, Grid } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
-import { Image } from "@chakra-ui/react"
+import { IngredientCard } from "../common"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { data as rawData } from "../../utils/data"
 
@@ -52,13 +52,8 @@ const BurgerIngredients = () => {
           <Flex key={`category-${category.id}-${i}`} direction="column">
             <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
             <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
-              {data[category.id].map((ingredient, i) => (
-                <Flex key={ingredient._id} direction="column" w="100%" h="208px">
-                  <Image src={ingredient.image} />
-                  <Text variant={"mainDefault"} align="center">
-                    {ingredient.name}
-                  </Text>
-                </Flex>
+              {data[category.id].map((ingredient) => (
+                <IngredientCard key={"ingredient-" + ingredient._id} ingredient={ingredient} />
               ))}
             </Grid>
           </Flex>
