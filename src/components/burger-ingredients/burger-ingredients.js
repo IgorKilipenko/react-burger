@@ -47,9 +47,9 @@ const BurgerIngredients = () => {
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
       <IngredientsTabPanel />
-      <Flex direction="column" overflowY="auto" className="custom-scroll">
+      <Flex direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {ingredientCategories.map((category, i) => (
-          <Flex key={`category-${category.id}-${i}`} direction="column" pt={10}>
+          <Flex key={`category-${category.id}-${i}`} direction="column">
             <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
             <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
               {data[category.id].map((ingredient, i) => (
