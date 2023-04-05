@@ -39,7 +39,7 @@ const Burger = ({ bun, ingredients }) => {
         <ConstructorElement
           type={type}
           isLocked={element.isLocked || isBunElement || false}
-          text={element.name + (isBunElement && ` (${type === allowableTypes.top ? "верх" : "низ"})`)}
+          text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
           price={element.price}
           thumbnail={element.image}
         />
