@@ -12,12 +12,15 @@ const ingredientCategories = [
   { id: "main", name: "начинки" },
 ]
 
-const IngredientsTabPanel = (props) => {
-  const items = ingredientCategories
+const IngredientsTabPanel = ({ items, onChangeActiveTab }) => {
   const [current, setCurrent] = React.useState(items[0].id)
 
+  React.useEffect(() => {
+    onChangeActiveTab && onChangeActiveTab(current)
+  }, [current, onChangeActiveTab])
+
   return (
-    <Flex {...props}>
+    <Flex>
       {items.map((item, i) => (
         <Tab key={`tab-${item.id}`} value={item.id} active={current === item.id} onClick={() => setCurrent(item.id)}>
           {capitalizeFirstLetter(item.name)}
@@ -38,18 +41,38 @@ const loadIngredients = () => {
   )
 }
 
-const BurgerIngredients = () => {
+const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = 2 }) => {
   const data = loadIngredients()
+  const categoriesRefs = React.useRef(Array(categories))
+  const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
+
+  React.useEffect(() => {
+    categoriesRefs.current = categoriesRefs.current.slice(0, categories.length)
+  }, [categories])
+
+  const scrollIntoCategory = (id) => {
+    id = Math.min(categoriesRefs.current.length - 1, id)
+    if (id < 0) return
+    categoriesRefs.current[id].scrollIntoView({ behavior: "smooth" })
+  }
+
+  React.useEffect(() => {
+    scrollIntoCategory(currentTabId)
+  }, [currentTabId])
+
+  const handleChangeActiveTab = (tabId) => {
+    setCurrentTabId(categories.findIndex((c) => c.id === tabId))
+  }
 
   return (
     <Flex direction="column">
       <Text variant={"mainLarge"} pt={10} pb={5}>
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
-      <IngredientsTabPanel />
+      <IngredientsTabPanel items={ingredientCategories} onChangeActiveTab={handleChangeActiveTab} />
       <Flex direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
-        {ingredientCategories.map((category, i) => (
-          <Flex key={`category-${category.id}-${i}`} direction="column">
+        {categories.map((category, i) => (
+          <Flex key={`category-${category.id}-${i}`} ref={(el) => (categoriesRefs.current[i] = el)} direction="column">
             <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
             <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
               {data[category.id].map((ingredient) => (
