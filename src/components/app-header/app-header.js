@@ -4,7 +4,7 @@ import { useHeight } from "../../utils/hooks/useSize"
 import { AppHeaderPropType } from "./app-header.types"
 import { buildLinks } from "./build-links"
 
-const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
+const AppHeader = React.memo(({ maxContentWidth = null, onChangeHeight = null }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
   const headerRef = React.useRef()
@@ -44,7 +44,7 @@ const AppHeader = ({ maxContentWidth = null, onChangeHeight = null }) => {
       </Flex>
     </Center>
   )
-}
+})
 
 AppHeader.propTypes = AppHeaderPropType
 

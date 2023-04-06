@@ -1,7 +1,8 @@
+import React from "react"
 import { Flex, Box } from "@chakra-ui/react"
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components"
 
-export const Burger = ({ bun, ingredients }) => {
+export const Burger = React.memo(({ bun, ingredients }) => {
   const allowableTypes = { top: "top", bottom: "bottom" }
   const buildItem = ({ element, type = null }) => {
     const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
@@ -51,4 +52,4 @@ export const Burger = ({ bun, ingredients }) => {
       {bun && buildItem({ element: bun, type: allowableTypes.bottom })}
     </Flex>
   )
-}
+})

@@ -23,7 +23,7 @@ const loadIngredients = () => {
   )
 }
 
-const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0].id }) => {
+const BurgerIngredients = React.memo(({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0].id }) => {
   const data = loadIngredients()
   const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
@@ -73,6 +73,6 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
       </Flex>
     </Flex>
   )
-}
+})
 
 export default BurgerIngredients

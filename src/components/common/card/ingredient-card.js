@@ -1,10 +1,11 @@
+import React from "react"
 import PropTypes from "prop-types"
 import { Flex, Image, Text, Icon } from "@chakra-ui/react"
 import { BurgerIngredientType } from "../../types"
 import { Link } from "../link"
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components"
 
-const IngredientCard = ({ ingredient, size }) => {
+const IngredientCard = React.memo( ({ ingredient, size }) => {
   return (
     <Link isActive={true}>
       <Flex direction="column" align="center" h={size?.h} w={size?.w} _hover={{ bg: "app-header-bg" }}>
@@ -21,7 +22,7 @@ const IngredientCard = ({ ingredient, size }) => {
       </Flex>
     </Link>
   )
-}
+})
 
 IngredientCard.propTypes = {
   ingredient: BurgerIngredientType.isRequired,
