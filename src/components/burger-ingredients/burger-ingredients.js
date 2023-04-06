@@ -5,6 +5,7 @@ import { Text } from "@chakra-ui/react"
 import { IngredientCard } from "../common"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { data as rawData } from "../../utils/data"
+import { useInViewport } from "../../utils/hooks"
 
 const ingredientCategories = [
   { id: "bun", name: "булки" },
@@ -12,17 +13,26 @@ const ingredientCategories = [
   { id: "main", name: "начинки" },
 ]
 
-const IngredientsTabPanel = ({ items, onChangeActiveTab }) => {
-  const [current, setCurrent] = React.useState(items[0].id)
+const IngredientsTabPanel = ({ items, onChangeActiveTab, activeTabId = items[0].id }) => {
+  const [current, setCurrent] = React.useState(activeTabId)
+  console.log({ activeTabId, current })
+
+  React.useEffect(() => {
+    setCurrent(activeTabId)
+  }, [activeTabId])
 
   React.useEffect(() => {
     onChangeActiveTab && onChangeActiveTab(current)
   }, [current, onChangeActiveTab])
 
+  const handleTabItemClick = (tabId) => {
+    setCurrent(tabId)
+  }
+
   return (
     <Flex>
       {items.map((item, i) => (
-        <Tab key={`tab-${item.id}`} value={item.id} active={current === item.id} onClick={() => setCurrent(item.id)}>
+        <Tab key={`tab-${item.id}`} value={item.id} active={current === item.id} onClick={() => handleTabItemClick(item.id)}>
           {capitalizeFirstLetter(item.name)}
         </Tab>
       ))}
@@ -41,25 +51,96 @@ const loadIngredients = () => {
   )
 }
 
-const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0] }) => {
+const CategorySection = React.forwardRef(({ category, ingredients, containerRef, onCategoryInView }, ref) => {
+  const categoryRef = React.useRef()
+  const [inViewport, ratio] = useInViewport(categoryRef, {
+    threshold: [0, 0.25, 0.5, 0.75, 1],
+    //threshold: 1,
+    root: containerRef,
+  })
+
+  React.useEffect(() => {
+    //inViewport && console.log("inViewport", { category, ratio })
+    categoryRef.current &&
+      onCategoryInView &&
+      inViewport &&
+      onCategoryInView({
+        categoryId: category.id,
+        ratio,
+        /*offsets: { top: categoryRef.current.offsetTop, height: categoryRef.current.offsetHeight, 
+          heightRatio: (categoryRef.current.offsetHeight / categoryRef.current)},*/
+      })
+    //inViewport && console.log("inViewport", { category, ratio, current: categoryRef.current })
+  }, [category.id, inViewport, onCategoryInView, ratio])
+
+  /*const handleCategoryInView = () => {
+    onCategoryInView && onCategoryInView(category)
+  }*/
+
+  const initRefs = (el) => {
+    categoryRef.current = el
+    if (!ref) return
+    typeof ref === "function" ? ref(el) : (ref.current = el)
+  }
+
+  return (
+    <Flex ref={(el) => initRefs(el)} /*key={`category-${category.id}-${i}`}*/ direction="column">
+      <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
+      <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
+        {ingredients.map((ingredient) => (
+          <IngredientCard key={"ingredient-" + ingredient._id} ingredient={ingredient} />
+        ))}
+      </Grid>
+    </Flex>
+  )
+})
+
+const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0].id }) => {
   const data = loadIngredients()
+  //const [isForceScroll, setIsForceScroll] = React.useState(false)
   const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
+  const containerRef = React.useRef()
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
+  const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
+  const forceScroll = React.useRef(false)
+
+  /*const [inViewport, ratio] = useInViewport(categoriesRefs.current[activeCategoryId].ref, {
+    threshold: [0, 0.25, 0.5, 0.75, 1],
+    root: containerRef,
+  })
+
+  React.useEffect(() => {
+    inViewport && console.log("inViewport", { ratio })
+  }, [inViewport, ratio])*/
 
   React.useEffect(() => {
     categoriesRefs.current = categoriesRefs.current.slice(0, categories.length)
   }, [categories])
 
   const scrollIntoCategory = (id) => {
-    categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
+    forceScroll.current && categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
   }
 
-  React.useEffect(() => {
-    scrollIntoCategory(currentTabId)
-  }, [currentTabId])
+  /*React.useEffect(() => {
+    //scrollIntoCategory(currentTabId)
+  }, [currentTabId])*/
 
   const handleChangeActiveTab = (tabId) => {
-    setCurrentTabId(tabId)
+    //setCurrentTabId(tabId)
+    scrollIntoCategory(tabId)
+  }
+
+  const handleCategoryInView = ({ categoryId, ratio }) => {
+    const activeRatio = ratioRef.current
+    if (activeRatio.categoryId === categoryId) {
+      ratioRef.current = { ...ratioRef.current, ratio }
+      return
+    }
+    if (ratio > activeRatio.ratio) {
+      ratioRef.current = { ...ratioRef.current, categoryId, ratio }
+      forceScroll.current = false
+      setCurrentTabId(categoryId)
+    }
   }
 
   return (
@@ -67,21 +148,20 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
       <Text variant={"mainLarge"} pt={10} pb={5}>
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
-      <IngredientsTabPanel items={ingredientCategories} onChangeActiveTab={handleChangeActiveTab} />
-      <Flex direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
+      <IngredientsTabPanel
+        items={ingredientCategories}
+        onChangeActiveTab={handleChangeActiveTab}
+        activeTabId={currentTabId}
+      />
+      <Flex ref={containerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {categories.map((category, i) => (
-          <Flex
+          <CategorySection
             key={`category-${category.id}-${i}`}
             ref={(el) => (categoriesRefs.current[i].ref = el)}
-            direction="column"
-          >
-            <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
-            <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
-              {data[category.id].map((ingredient) => (
-                <IngredientCard key={"ingredient-" + ingredient._id} ingredient={ingredient} />
-              ))}
-            </Grid>
-          </Flex>
+            category={category}
+            ingredients={data[category.id]}
+            onCategoryInView={handleCategoryInView}
+          />
         ))}
       </Flex>
     </Flex>
