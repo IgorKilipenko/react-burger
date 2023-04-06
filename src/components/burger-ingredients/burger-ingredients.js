@@ -13,22 +13,27 @@ const ingredientCategories = [
   { id: "main", name: "начинки" },
 ]
 
-const IngredientsTabPanel = ({ items, onChangeActiveTab, activeTabId = items[0].id }) => {
+const IngredientsTabPanel = ({ items, onTabClick, activeTabId = items[0].id }) => {
   const [current, setCurrent] = React.useState(activeTabId)
 
   React.useEffect(() => {
     setCurrent(activeTabId)
   }, [activeTabId])
 
-  const handleTabItemClick = (tabId) => {
+  const handleTabClick = (tabId) => {
     setCurrent(tabId)
-    onChangeActiveTab && onChangeActiveTab(tabId)
+    onTabClick && onTabClick(tabId)
   }
 
   return (
     <Flex>
       {items.map((item, i) => (
-        <Tab key={`tab-${item.id}`} value={item.id} active={current === item.id} onClick={() => handleTabItemClick(item.id)}>
+        <Tab
+          key={`tab-${item.id}`}
+          value={item.id}
+          active={current === item.id}
+          onClick={() => handleTabClick(item.id)}
+        >
           {capitalizeFirstLetter(item.name)}
         </Tab>
       ))}
@@ -121,11 +126,7 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
       <Text variant={"mainLarge"} pt={10} pb={5}>
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
-      <IngredientsTabPanel
-        items={ingredientCategories}
-        onChangeActiveTab={handleChangeActiveTab}
-        activeTabId={currentTabId}
-      />
+      <IngredientsTabPanel items={ingredientCategories} onTabClick={handleChangeActiveTab} activeTabId={currentTabId} />
       <Flex ref={containerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {categories.map((category, i) => (
           <CategorySection
