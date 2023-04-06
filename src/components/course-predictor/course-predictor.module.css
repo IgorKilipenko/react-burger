@@ -1,0 +1,108 @@
+.card {
+  max-width: 720px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 40px;
+}
+
+.cardRow {
+  min-height: 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 166px 0 0;
+}
+
+.value {
+  display: block;
+}
+
+.text {
+  margin: 0;
+}
+
+.caption {
+  composes: text;
+  font-size: 40px;
+  line-height: 48px;
+  text-transform: lowercase;
+}
+
+.previousElement {
+  composes: text;
+  min-height: 64px;
+}
+
+.currentElement {
+  composes: value;
+  font-size: 120px;
+  line-height: 120px;
+}
+
+.ratio {
+  line-height: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 0 20px;
+}
+
+.ratioDown {
+  composes: ratio;
+  stroke: #FF0000;
+  color: #FF0000;
+}
+
+.ratioUp {
+  composes: ratio;
+  stroke: #00FF00;
+  color: #00FF00;
+}
+
+.ratioIcon {
+  margin: 0 0 16px;
+}
+
+.ratioUp .ratioIcon {
+  transform: rotate(180deg);
+}
+
+.button {
+  width: 100%;
+  font-size: 20px;
+  line-height: 32px;
+  text-transform: lowercase;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  background: transparent;
+  padding: 15px 40px;
+  cursor: pointer;
+  margin: 98px 0 0;
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px #ffffff;
+}
+
+@media screen and (max-width: 660px) {
+  .card {
+    padding: 20px;
+  }
+
+  .currentElement {
+    font-size: 80px;
+    line-height: 80px;
+  }
+
+  .caption {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .cardRow {
+    min-height: 80px;
+  }
+}
