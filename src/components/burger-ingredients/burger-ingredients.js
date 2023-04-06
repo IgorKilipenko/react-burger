@@ -21,12 +21,13 @@ const IngredientsTabPanel = ({ items, onChangeActiveTab, activeTabId = items[0].
     setCurrent(activeTabId)
   }, [activeTabId])
 
-  React.useEffect(() => {
+ /*React.useEffect(() => {
     onChangeActiveTab && onChangeActiveTab(current)
-  }, [current, onChangeActiveTab])
+  }, [current, onChangeActiveTab])*/
 
   const handleTabItemClick = (tabId) => {
     setCurrent(tabId)
+    onChangeActiveTab && onChangeActiveTab(tabId)
   }
 
   return (
@@ -104,43 +105,30 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
   const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
   const forceScroll = React.useRef(false)
 
-  /*const [inViewport, ratio] = useInViewport(categoriesRefs.current[activeCategoryId].ref, {
-    threshold: [0, 0.25, 0.5, 0.75, 1],
-    root: containerRef,
-  })
-
-  React.useEffect(() => {
-    inViewport && console.log("inViewport", { ratio })
-  }, [inViewport, ratio])*/
-
   React.useEffect(() => {
     categoriesRefs.current = categoriesRefs.current.slice(0, categories.length)
   }, [categories])
 
   const scrollIntoCategory = (id) => {
-    forceScroll.current && categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
+    console.log('scrollIntoCategory', {id, from:id, to:categoriesRefs.current?.find((c) => c.id === id), categories:categoriesRefs.current})
+    categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
   }
 
-  /*React.useEffect(() => {
-    //scrollIntoCategory(currentTabId)
-  }, [currentTabId])*/
-
   const handleChangeActiveTab = (tabId) => {
-    //setCurrentTabId(tabId)
     scrollIntoCategory(tabId)
+    setCurrentTabId(tabId)
   }
 
   const handleCategoryInView = ({ categoryId, ratio }) => {
-    const activeRatio = ratioRef.current
+    /*const activeRatio = ratioRef.current
     if (activeRatio.categoryId === categoryId) {
       ratioRef.current = { ...ratioRef.current, ratio }
       return
     }
     if (ratio > activeRatio.ratio) {
       ratioRef.current = { ...ratioRef.current, categoryId, ratio }
-      forceScroll.current = false
-      setCurrentTabId(categoryId)
-    }
+      //setCurrentTabId(categoryId)
+    }*/
   }
 
   return (
@@ -151,7 +139,7 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
       <IngredientsTabPanel
         items={ingredientCategories}
         onChangeActiveTab={handleChangeActiveTab}
-        activeTabId={currentTabId}
+        //activeTabId={currentTabId}
       />
       <Flex ref={containerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {categories.map((category, i) => (
