@@ -1,16 +1,18 @@
 import React from "react"
+import { getTargetElement } from "./utils"
 
-type TargetType = HTMLElement | Element;
+type TargetType = HTMLElement | Element
 
-export function useHeight<T extends TargetType>( target : React.MutableRefObject<T> ) : number  {
+export function useHeight<T extends TargetType>(target: React.MutableRefObject<T>): number {
   const [height, setHeight] = React.useState(0)
 
   React.useLayoutEffect(() => {
-    if (!target.current) return
+    const element = getTargetElement(target)
+    if (!element) return
     const resizeObserver = new ResizeObserver(() => {
-      setHeight(target.current.clientHeight ?? 0)
+      setHeight(element.clientHeight ?? 0)
     })
-    resizeObserver.observe(target.current)
+    resizeObserver.observe(element)
     return () => resizeObserver.disconnect()
   }, [target])
 
