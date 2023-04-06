@@ -1,45 +1,16 @@
 import React from "react"
-import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
-import { Flex, Grid } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
-import { IngredientCard } from "../common"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { data as rawData } from "../../utils/data"
-import { useInViewport } from "../../utils/hooks"
+import { IngredientsTabPanel } from "./ingredients-tab-panel"
+import { CategorySection } from "./category-section"
 
 const ingredientCategories = [
   { id: "bun", name: "булки" },
   { id: "sauce", name: "соусы" },
   { id: "main", name: "начинки" },
 ]
-
-const IngredientsTabPanel = ({ items, onTabClick, activeTabId = items[0].id }) => {
-  const [current, setCurrent] = React.useState(activeTabId)
-
-  React.useEffect(() => {
-    setCurrent(activeTabId)
-  }, [activeTabId])
-
-  const handleTabClick = (tabId) => {
-    setCurrent(tabId)
-    onTabClick && onTabClick(tabId)
-  }
-
-  return (
-    <Flex>
-      {items.map((item, i) => (
-        <Tab
-          key={`tab-${item.id}`}
-          value={item.id}
-          active={current === item.id}
-          onClick={() => handleTabClick(item.id)}
-        >
-          {capitalizeFirstLetter(item.name)}
-        </Tab>
-      ))}
-    </Flex>
-  )
-}
 
 const loadIngredients = () => {
   return rawData.reduce(
@@ -52,47 +23,9 @@ const loadIngredients = () => {
   )
 }
 
-const CategorySection = React.forwardRef(({ category, ingredients, containerRef, onCategoryInView }, ref) => {
-  const categoryRef = React.useRef()
-  const [inViewport, ratio] = useInViewport(categoryRef, {
-    threshold: [0, 0.25, 0.5, 0.75, 1],
-    root: containerRef,
-  })
-
-  React.useEffect(() => {
-    categoryRef.current &&
-      onCategoryInView &&
-      inViewport &&
-      onCategoryInView({
-        categoryId: category.id,
-        ratio,
-        /*offsets: { top: categoryRef.current.offsetTop, height: categoryRef.current.offsetHeight, 
-          heightRatio: (categoryRef.current.offsetHeight / categoryRef.current)},*/
-      })
-  }, [category.id, inViewport, onCategoryInView, ratio])
-
-  const initRefs = (el) => {
-    categoryRef.current = el
-    if (!ref) return
-    typeof ref === "function" ? ref(el) : (ref.current = el)
-  }
-
-  return (
-    <Flex ref={(el) => initRefs(el)} /*key={`category-${category.id}-${i}`}*/ direction="column">
-      <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
-      <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
-        {ingredients.map((ingredient) => (
-          <IngredientCard key={"ingredient-" + ingredient._id} ingredient={ingredient} />
-        ))}
-      </Grid>
-    </Flex>
-  )
-})
-
 const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0].id }) => {
   const data = loadIngredients()
   const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
-  const containerRef = React.useRef()
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
   const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
 
@@ -127,7 +60,7 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
       <IngredientsTabPanel items={ingredientCategories} onTabClick={handleChangeActiveTab} activeTabId={currentTabId} />
-      <Flex ref={containerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
+      <Flex direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {categories.map((category, i) => (
           <CategorySection
             key={`category-${category.id}-${i}`}
