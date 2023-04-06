@@ -10,26 +10,31 @@ const getRatio = (current, previous = 0) =>
 
 export default function CoursePredictor() {
   const [currentCourse, setCurrentCourse] = React.useState()
+  const previousCourseRef = React.useRef()
 
-  React.useEffect(() => {})
+  React.useEffect(() => {
+    previousCourseRef.current = currentCourse
+  }, [currentCourse])
+
+  const previousCourse = previousCourseRef.current;
 
   const handleGenerateCourse = () => {
     setCurrentCourse(getRandomNum())
   }
 
-  const isDown = getRatio(currentCourse) < 0 ? coursePredictorStyles.ratioDown : coursePredictorStyles.ratioUp
+  const isDown = getRatio(currentCourse, previousCourse) < 0 ? coursePredictorStyles.ratioDown : coursePredictorStyles.ratioUp
 
-  const ratioElement = currentCourse && (
+  const ratioElement = currentCourse && previousCourse &&  (
     <output className={isDown}>
       <TriangleImage className={coursePredictorStyles.ratioIcon} />
-      {getRatio(currentCourse)}%
+      {getRatio(currentCourse, previousCourse)}%
     </output>
   )
 
-  const previousElement = (
+  const previousElement =  (
     <p className={coursePredictorStyles.previousElement}>
       Предыдущее значение:
-      <output className={coursePredictorStyles.value}></output>
+      {previousCourse && <output className={coursePredictorStyles.value}></output>}
     </p>
   )
 
