@@ -120,15 +120,15 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
   }
 
   const handleCategoryInView = ({ categoryId, ratio }) => {
-    /*const activeRatio = ratioRef.current
+    const activeRatio = ratioRef.current
     if (activeRatio.categoryId === categoryId) {
       ratioRef.current = { ...ratioRef.current, ratio }
       return
     }
     if (ratio > activeRatio.ratio) {
       ratioRef.current = { ...ratioRef.current, categoryId, ratio }
-      //setCurrentTabId(categoryId)
-    }*/
+      setCurrentTabId(categoryId)
+    }
   }
 
   return (
@@ -139,7 +139,7 @@ const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId
       <IngredientsTabPanel
         items={ingredientCategories}
         onChangeActiveTab={handleChangeActiveTab}
-        //activeTabId={currentTabId}
+        activeTabId={currentTabId}
       />
       <Flex ref={containerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {categories.map((category, i) => (
