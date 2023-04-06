@@ -15,15 +15,10 @@ const ingredientCategories = [
 
 const IngredientsTabPanel = ({ items, onChangeActiveTab, activeTabId = items[0].id }) => {
   const [current, setCurrent] = React.useState(activeTabId)
-  console.log({ activeTabId, current })
 
   React.useEffect(() => {
     setCurrent(activeTabId)
   }, [activeTabId])
-
- /*React.useEffect(() => {
-    onChangeActiveTab && onChangeActiveTab(current)
-  }, [current, onChangeActiveTab])*/
 
   const handleTabItemClick = (tabId) => {
     setCurrent(tabId)
@@ -56,12 +51,10 @@ const CategorySection = React.forwardRef(({ category, ingredients, containerRef,
   const categoryRef = React.useRef()
   const [inViewport, ratio] = useInViewport(categoryRef, {
     threshold: [0, 0.25, 0.5, 0.75, 1],
-    //threshold: 1,
     root: containerRef,
   })
 
   React.useEffect(() => {
-    //inViewport && console.log("inViewport", { category, ratio })
     categoryRef.current &&
       onCategoryInView &&
       inViewport &&
@@ -71,12 +64,7 @@ const CategorySection = React.forwardRef(({ category, ingredients, containerRef,
         /*offsets: { top: categoryRef.current.offsetTop, height: categoryRef.current.offsetHeight, 
           heightRatio: (categoryRef.current.offsetHeight / categoryRef.current)},*/
       })
-    //inViewport && console.log("inViewport", { category, ratio, current: categoryRef.current })
   }, [category.id, inViewport, onCategoryInView, ratio])
-
-  /*const handleCategoryInView = () => {
-    onCategoryInView && onCategoryInView(category)
-  }*/
 
   const initRefs = (el) => {
     categoryRef.current = el
@@ -98,19 +86,16 @@ const CategorySection = React.forwardRef(({ category, ingredients, containerRef,
 
 const BurgerIngredients = ({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0].id }) => {
   const data = loadIngredients()
-  //const [isForceScroll, setIsForceScroll] = React.useState(false)
   const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
   const containerRef = React.useRef()
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
   const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
-  const forceScroll = React.useRef(false)
 
   React.useEffect(() => {
     categoriesRefs.current = categoriesRefs.current.slice(0, categories.length)
   }, [categories])
 
   const scrollIntoCategory = (id) => {
-    console.log('scrollIntoCategory', {id, from:id, to:categoriesRefs.current?.find((c) => c.id === id), categories:categoriesRefs.current})
     categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
   }
 
