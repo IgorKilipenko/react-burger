@@ -17,7 +17,6 @@ const variants = {
 }
 
 const baseStyle = defineStyle({
-  variant: "primary",
   padding: 0,
   margin: 0,
 })
@@ -25,4 +24,7 @@ const baseStyle = defineStyle({
 export const iconTheme = defineStyleConfig({
   baseStyle,
   variants,
+  defaultProps: {
+    variant: "primary",
+  },
 })
