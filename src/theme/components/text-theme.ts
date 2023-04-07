@@ -60,7 +60,6 @@ const variants = {
 }
 
 const baseStyle = defineStyle({
-  variant: "mainDefault",
   padding: 0,
   margin: 0,
 })
@@ -69,4 +68,7 @@ export const textTheme = defineStyleConfig({
   baseStyle,
   sizes,
   variants,
+  defaultProps: {
+    variant: "mainDefault",
+  },
 })
