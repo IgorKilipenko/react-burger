@@ -18,11 +18,12 @@ const sizes = {
 
 const variants = {
   mainDefault: defineStyle(() => ({
-    lineHeights: 1.5,
+    lineHeight: 1.5,
     fontSize: _fontSizes.default,
     fontFamily: "Jet Brains Mono",
     fontWeight: "normal",
     textDecoration: "none",
+    color: 'inherit',
   })),
 
   mainLarge: defineStyle(() => ({
@@ -51,6 +52,7 @@ const variants = {
     fontFamily: _digitsFontFamily,
     fontSize: "28px",
     lineHeight: 0.86,
+    color: 'inherit',
   },
   digitsLarge: {
     fontFamily: _digitsFontFamily,
