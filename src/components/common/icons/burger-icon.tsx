@@ -1,7 +1,7 @@
 import { Icon, IconProps } from "@chakra-ui/react"
 
 export const BurgerIcon = (props: IconProps) => (
-  <Icon {...props}>
+  <Icon viewBox='0 0 24 24' {...props}>
     <path
       fill="currentColor"
       fillRule="evenodd"
