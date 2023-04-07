@@ -1,5 +1,7 @@
-import { Flex, Text, Icon } from "@chakra-ui/react"
-import { Button, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components"
+import { Flex, Text } from "@chakra-ui/react"
+import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
+import { CurrencyIcon } from "../common/icons"
+import { Icon } from "../common/icon"
 import { data as rawData } from "../../utils/data"
 import { BurgerIngredientType } from "../types"
 import { Burger } from "./burger"
@@ -21,10 +23,8 @@ const BurgerConstructor = (/*{ selectedIngredients }*/) => {
       <Burger bun={bun} ingredients={innerIngredients} />
       <Flex justify="end" align="center" w="100%" gap={10}>
         <Flex align="center" gap={2}>
-          <Text variant={"digitsMedium"}>
-            5785
-          </Text>
-          <Icon as={CurrencyIcon} />
+          <Text variant={"digitsMedium"}>5785</Text>
+          <Icon as={CurrencyIcon} boxSize={9} />
         </Flex>
         <Button htmlType="button" type="primary" size="large" extraClass="ml-2">
           Оформить заказ

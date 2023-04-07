@@ -1,9 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Box, Flex } from "@chakra-ui/react"
+import { Flex, Box } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { Link as ChakraLink } from "@chakra-ui/react"
-import { Icon } from "@chakra-ui/react"
+import { Icon } from "../icon"
 
 const Link = React.memo(({ icon, text, children, isActive = false, onClick, value }) => {
   const type = isActive ? "primary" : "secondary"
@@ -15,12 +15,8 @@ const Link = React.memo(({ icon, text, children, isActive = false, onClick, valu
     </ChakraLink>
   ) : (
     <Box pt={{ base: 1, lg: 4 }} pb={{ base: 1, lg: 4 }} pl={{ base: 0, lg: 5 }} pr={{ base: 0, lg: 5 }}>
-      <ChakraLink as={Flex} onClick={_onClick} gap={icon && text ? 2 : 0} variant={type}>
-        {icon && (
-          <Box>
-            <Icon as={icon} type={type} />
-          </Box>
-        )}
+      <ChakraLink as={Flex} align="center" onClick={_onClick} gap={icon && text ? 2 : 0} variant={type}>
+        {icon && <Icon as={icon} type={type} />}
         {text && <Text variant={"mainDefault"}>{text}</Text>}
       </ChakraLink>
     </Box>

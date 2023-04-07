@@ -1,5 +1,5 @@
 import React from "react"
-import { ProfileIcon, BurgerIcon, ListIcon } from "@ya.praktikum/react-developer-burger-ui-components"
+import { ProfileIcon, BurgerIcon, ListIcon } from "../common/icons"
 import { Link } from "../common"
 import { ResponsiveLogo } from "../common/logo"
 

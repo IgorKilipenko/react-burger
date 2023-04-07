@@ -1,6 +1,8 @@
 import React from "react"
 import { Flex, Box } from "@chakra-ui/react"
-import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components"
+import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
+import { DragIcon } from "../common/icons"
+import { Icon } from "../common/icon"
 
 export const Burger = React.memo(({ bun, ingredients }) => {
   const allowableTypes = { top: "top", bottom: "bottom" }
@@ -22,7 +24,7 @@ export const Burger = React.memo(({ bun, ingredients }) => {
     return (
       <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
         <Flex w={8} align="center">
-          <Box w={6}>{!isBunElement && <DragIcon type="primary" />}</Box>
+          <Box w={6}>{!isBunElement && <Icon as={DragIcon}/>}</Box>
         </Flex>
         <ConstructorElement
           type={type}
