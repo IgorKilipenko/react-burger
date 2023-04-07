@@ -1,12 +1,15 @@
-import { Square, useMultiStyleConfig } from "@chakra-ui/react"
+import { Circle, useMultiStyleConfig, createStylesContext } from "@chakra-ui/react"
 import { CloseIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 
-export const ModalCloseButton = ({ size, variant }) => {
+export const ModalCloseButton = ({ size = 6, variant = "primary" }) => {
   const styles = useMultiStyleConfig("ModalCloseButton", { size, variant })
+  const [StylesProvider] = createStylesContext("ModalCloseButton")
   return (
-    <Square __css={styles.container}>
-      <Icon boxSize={6} as={CloseIcon} __css={styles.icon} type="error" />
-    </Square>
+    <Circle p={1} __css={styles.container}>
+      <StylesProvider value={styles}>
+        <Icon boxSize={size} as={CloseIcon} type={variant} __css={styles.icon} />
+      </StylesProvider>
+    </Circle>
   )
 }

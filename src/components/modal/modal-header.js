@@ -1,8 +1,9 @@
-import { Flex } from "@chakra-ui/react"
-import { ModalCloseButton } from "./modal-close-button"
+import { Flex, Text } from "@chakra-ui/react"
 
-export const ModalHeader = () => (
+export const ModalHeader = ({text}) => (
   <Flex>
-    <ModalCloseButton />
+    <Text variant='mainLarge'>
+      {text}
+    </Text>
   </Flex>
 )
