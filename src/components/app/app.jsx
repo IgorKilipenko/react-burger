@@ -29,7 +29,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Box position="absolute" width="100vw" height="100vh" overflowY="hidden">
-        <AppHeader maxContentWidth={maxContentWidth} onChangeHeight={(value) => handleHeaderChangeHeight(value)} />
+        <AppHeader onChangeHeight={(value) => handleHeaderChangeHeight(value)} />
         <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
           <BurgerIngredients />
           <BurgerConstructor />

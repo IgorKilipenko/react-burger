@@ -3,12 +3,14 @@ import { Flex, Center } from "@chakra-ui/react"
 import { useHeight } from "../../utils/hooks/useSize"
 import { AppHeaderPropType } from "./app-header.types"
 import { buildLinks } from "./build-links"
+import { useMultiStyleConfig } from "@chakra-ui/react"
 
-const AppHeader = React.memo(({ maxContentWidth = null, onChangeHeight = null }) => {
+const AppHeader = React.memo(({ variant='desktop', onChangeHeight = null }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
   const headerRef = React.useRef()
   const height = useHeight(headerRef)
+  const styles = useMultiStyleConfig("AppHeader", { variant })
 
   React.useEffect(() => {
     onChangeHeight && onChangeHeight(height)
@@ -36,11 +38,9 @@ const AppHeader = React.memo(({ maxContentWidth = null, onChangeHeight = null })
   ]
 
   return (
-    <Center ref={headerRef} as="header" bg={"app-header-bg"} w="100%" pl={{ base: 2, lg: 0 }} pr={{ base: 2, lg: 0 }}>
-      <Flex as="nav" maxW={maxContentWidth} pt={4} pb={4} justify="space-between" align="center" w="100%">
-        {headerItems.map((item, i) =>
-          React.cloneElement(item, { key: `header-item-id-${i}`, flexGrow: 1, flexBasis: 0 })
-        )}
+    <Center ref={headerRef} as="header" {...styles.container}>
+      <Flex as="nav" {...styles.nav} >
+        {headerItems.map((item, i) => React.cloneElement(item, { key: `header-item-id-${i}`, ...styles.items }))}
       </Flex>
     </Center>
   )
