@@ -1,2 +1,6 @@
 export { CloseIcon } from "./close-icon"
 export { ProfileIcon } from "./profile-icon"
+export { BurgerIcon } from "./burger-icon"
+export { ListIcon } from "./list-icon"
+export { CurrencyIcon } from "./currency-icon"
+export { DragIcon } from "./drag-icon"
