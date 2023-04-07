@@ -1,6 +1,7 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react"
 import { linkTheme } from "./components/link-theme"
 import { iconTheme } from "./components/icon-theme"
+import { appHeaderTheme } from "./components/app-header-theme"
 import { modalCloseButtonTheme } from './components/modal/modal-close-button-theme'
 import { textTheme } from "./components/text-theme"
 import { typography } from "./foundations/typography"
@@ -24,7 +25,7 @@ const theme = extendTheme({
   styles,
   semanticTokens,
   sizes,
-  components: { Link: linkTheme, Text: textTheme, ModalCloseButton: modalCloseButtonTheme, Icon:iconTheme },
+  components: { Link: linkTheme, Text: textTheme, ModalCloseButton: modalCloseButtonTheme, Icon:iconTheme, AppHeader:appHeaderTheme },
 })
 
 export default theme
