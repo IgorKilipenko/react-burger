@@ -11,14 +11,16 @@ const variants = {
   success: defineStyle((props) => ({
     color: mode("#00CCCC", "#00CCCC")(props),
   })),
-  primary: defineStyle((props) => ({
-    color: mode("#F2F2F3", "#F2F2F3")(props),
+  primary: defineStyle(() => ({
+    color: 'inherit',
   })),
 }
 
 const baseStyle = defineStyle({
   padding: 0,
   margin: 0,
+  boxSize: 6,
+  viewBox: '0 0 24 24'
 })
 
 export const iconTheme = defineStyleConfig({
