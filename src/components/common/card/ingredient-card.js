@@ -4,10 +4,15 @@ import { Flex, Image, Text, Icon } from "@chakra-ui/react"
 import { BurgerIngredientType } from "../../types"
 import { Link } from "../link"
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components"
+import { Modal } from "../../modal"
 
 const IngredientCard = React.memo( ({ ingredient, size }) => {
+  const [modalOpen, setModalOpen] = React.useState(false)
+
   return (
-    <Link isActive={true}>
+    <>
+    <Modal isOpen={modalOpen}/>
+    <Link isActive={true} onClick={() => setModalOpen(true)}>
       <Flex direction="column" align="center" h={size?.h} w={size?.w} _hover={{ bg: "app-header-bg" }}>
         <Image src={ingredient.image} pl={4} pr={4} pt={6} />
         <Flex gap={2} pt={1} pb={1}>
@@ -21,6 +26,7 @@ const IngredientCard = React.memo( ({ ingredient, size }) => {
         </Text>
       </Flex>
     </Link>
+    </>
   )
 })
 
