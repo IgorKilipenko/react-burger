@@ -5,7 +5,7 @@ import { AppHeaderPropType } from "./app-header.types"
 import { buildLinks } from "./build-links"
 import { useMultiStyleConfig } from "@chakra-ui/react"
 
-const AppHeader = React.memo(({ variant='desktop', onChangeHeight = null }) => {
+const AppHeader = React.memo(({ variant = "desktop", onChangeHeight = null }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
   const headerRef = React.useRef()
@@ -17,30 +17,37 @@ const AppHeader = React.memo(({ variant='desktop', onChangeHeight = null }) => {
   }, [onChangeHeight, height])
 
   const headerItems = [
-    <Flex
-      justify={{ base: "center", lg: "start" }}
-      align={{ base: "start", lg: "center" }}
-      gap={{ base: 0, lg: 2 }}
-      direction={{ base: "column", lg: "row" }}
-    >
-      {links.burgerConstructor.element({
-        isActive: currentLink === links.burgerConstructor.tag,
-        onClick: setCurrentLink,
-      })}
-      {links.orderList.element({ isActive: currentLink === links.orderList.tag, onClick: setCurrentLink })}
-    </Flex>,
-    <Flex justify="center" align="center">
-      {links.homeLink.element({ isActive: currentLink === links.homeLink.tag, onClick: setCurrentLink })}
-    </Flex>,
-    <Flex justify="end">
-      {links.userProfile.element({ isActive: currentLink === links.userProfile.tag, onClick: setCurrentLink })}
-    </Flex>,
+    (props) => (
+      <Flex
+        justify={{ base: "center", lg: "start" }}
+        align={{ base: "start", lg: "center" }}
+        gap={{ base: 0, lg: 2 }}
+        direction={{ base: "column", lg: "row" }}
+        {...props}
+      >
+        {links.burgerConstructor.element({
+          isActive: currentLink === links.burgerConstructor.tag,
+          onClick: setCurrentLink,
+        })}
+        {links.orderList.element({ isActive: currentLink === links.orderList.tag, onClick: setCurrentLink })}
+      </Flex>
+    ),
+    (props) => (
+      <Flex justify="center" align="center" {...props}>
+        {links.homeLink.element({ isActive: currentLink === links.homeLink.tag, onClick: setCurrentLink })}
+      </Flex>
+    ),
+    (props) => (
+      <Flex justify="end" {...props}>
+        {links.userProfile.element({ isActive: currentLink === links.userProfile.tag, onClick: setCurrentLink })}
+      </Flex>
+    ),
   ]
 
   return (
     <Center ref={headerRef} as="header" {...styles.container}>
-      <Flex as="nav" {...styles.nav} >
-        {headerItems.map((item, i) => React.cloneElement(item, { key: `header-item-id-${i}`, ...styles.items }))}
+      <Flex as="nav" {...styles.nav}>
+        {headerItems.map((item, i) => item({ key: `header-item-id-${i}`, ...styles.items }))}
       </Flex>
     </Center>
   )
