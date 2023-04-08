@@ -10,11 +10,11 @@ import { apiClientConfig, parseRawData, type BurgerIngredientType, type Ingredie
 
 const selectIngredients = (ingredients: IngredientsTableView) => {
   const bunId = "bun"
-  const bun = ingredients[bunId][Math.floor(Math.random()*(ingredients[bunId].length-1))]
+  const bun = ingredients[bunId][Math.floor(Math.random() * ((ingredients[bunId].length - 1)))]
   const innerIngredients = Object.keys(ingredients)
     .filter((key) => key !== bunId)
     .reduce<BurgerIngredientType[]>((res, key, i, arr) => {
-      res.push(...ingredients[key].slice(Math.floor(Math.random()*(ingredients[key].length-1))))
+      res.push(...ingredients[key].slice(Math.floor(Math.random() * ((ingredients[key].length - 1)))))
       return res
     }, [])
   return [bun, ...innerIngredients]
@@ -25,28 +25,19 @@ interface MainContainerProps {
   maxContentWidth?: LayoutProps["maxW"]
   height?: LayoutProps["height"]
   h?: LayoutProps["h"]
-  messageComponent?: React.ReactNode
 }
 
-const MainContainer: React.FC<MainContainerProps> = ({
-  children,
-  maxContentWidth,
-  h,
-  height = "100%",
-  messageComponent,
-}) => {
+const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth, h, height = "100%" }) => {
   const currHeight = h ?? height
   return (
     <Flex as="main" className="custom-scroll" overflow="auto" align="stretch" justify="stretch" h={currHeight}>
       <Flex grow={1} justify="space-around">
         <Flex maxW={maxContentWidth} justify="space-between" pl={5} pr={5} gap={10} pb={10}>
-          {messageComponent != null
-            ? messageComponent
-            : React.Children.map(children, (child) => (
-                <Flex as="section" grow={1} basis={0} justify="center">
-                  {child}
-                </Flex>
-              ))}
+          {React.Children.map(children, (child) => (
+            <Flex as="section" grow={1} basis={0} justify="center">
+              {child}
+            </Flex>
+          ))}
         </Flex>
       </Flex>
     </Flex>
@@ -100,25 +91,20 @@ const App = () => {
         overflow="hidden"
       >
         <AppHeader onChangeHeight={handleHeaderChangeHeight} />
-        <MainContainer
-          maxContentWidth={maxContentWidth}
-          height={`calc(100% - ${headerHeight}px)`}
-          messageComponent={
-            error || (data && !data.success)
-              ? errorMessage("Ошибка загрузки данных.")
-              : (!categories || categories.length === 0) ? loadingMessage() : null
-          }
-        >
-          {categories && (
-            <>
-              <BurgerIngredients
-                categories={categories}
-                activeCategoryId={categories[0]?.id ?? 0}
-                ingredients={ingredients}
-              />
-              <BurgerConstructor selectedIngredients={selectedIngredients} />
-            </>
-          )}
+        <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
+          {categories.length > 0
+            ? [
+                <BurgerIngredients
+                  key={`section-BurgerIngredients`}
+                  categories={categories}
+                  activeCategoryId={categories[0]?.id ?? 0}
+                  ingredients={ingredients}
+                />,
+                <BurgerConstructor key={`section-BurgerConstructor`} selectedIngredients={selectedIngredients} />,
+              ]
+            : error || (data && !data.success)
+            ? errorMessage("Ошибка загрузки данных.")
+            : loadingMessage()}
         </MainContainer>
       </Flex>
     </ChakraProvider>
