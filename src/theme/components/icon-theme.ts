@@ -1,15 +1,14 @@
 import { defineStyle, defineStyleConfig } from "@chakra-ui/react"
-import { mode } from "@chakra-ui/theme-tools"
 
 const variants = {
   secondary: defineStyle(() => ({
     color: "link-inactive-color",
   })),
-  error: defineStyle((props) => ({
-    color: mode("#E52B1A", "#E52B1A")(props),
+  error: defineStyle(() => ({
+    color: 'error-color',
   })),
-  success: defineStyle((props) => ({
-    color: mode("#00CCCC", "#00CCCC")(props),
+  success: defineStyle(() => ({
+    color: 'success-color',
   })),
   primary: defineStyle(() => ({
     color: 'inherit',
