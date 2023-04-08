@@ -24,7 +24,7 @@ export const Burger = React.memo(({ bun, ingredients }) => {
     return (
       <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
         <Flex w={8} align="center">
-          <Box w={6}>{!isBunElement && <Icon as={DragIcon}/>}</Box>
+          <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
         </Flex>
         <ConstructorElement
           type={type}
@@ -49,9 +49,9 @@ export const Burger = React.memo(({ bun, ingredients }) => {
       className="custom-scroll"
       pr={4}
     >
-      {bun && buildItem({ element: bun, type: allowableTypes.top })}
-      {ingredients.map((element) => buildItem({ element }))}
-      {bun && buildItem({ element: bun, type: allowableTypes.bottom })}
+      {bun && buildItem({ element: bun.ingredient, type: allowableTypes.top })}
+      {ingredients.map((element) => buildItem({ element: element.ingredient }))}
+      {bun && buildItem({ element: bun.ingredient, type: allowableTypes.bottom })}
     </Flex>
   )
 })

@@ -9,13 +9,18 @@ import { useFetch } from "../../hooks"
 import { apiClientConfig, parseRawData, type BurgerIngredientType, type IngredientsTableView } from "../../data"
 import { ErrorMessage } from "../error-message"
 
-const selectIngredients = (ingredients: IngredientsTableView) => {
-  const bunId = "bun"
-  const bun = ingredients[bunId][Math.floor(Math.random() * (ingredients[bunId].length - 1))]
+const selectIngredients = (ingredients: IngredientsTableView, bunId: string = "bun") => {
+  const randomIndex = (val: any[] | number) => Math.floor(Math.random() * (Array.isArray(val) ? val!.length : val))
+
+  const bun = { ingredient: ingredients[bunId][randomIndex(ingredients[bunId])], count: 1 }
   const innerIngredients = Object.keys(ingredients)
     .filter((key) => key !== bunId)
-    .reduce<BurgerIngredientType[]>((res, key) => {
-      res.push(...ingredients[key].slice(Math.floor(Math.random() * (ingredients[key].length - 1))))
+    .reduce<{ ingredient: BurgerIngredientType; count: number }[]>((res, key) => {
+      res.push(
+        ...ingredients[key]
+          .slice(Math.floor(randomIndex(ingredients[key])))
+          .map((ingredient) => ({ ingredient, count: 1 }))
+      )
       return res
     }, [])
   return [bun, ...innerIngredients]

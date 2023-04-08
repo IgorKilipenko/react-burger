@@ -20,8 +20,6 @@ export const CategorySection = React.memo(
         onCategoryInView({
           categoryId: category.id,
           ratio,
-          /*offsets: { top: categoryRef.current.offsetTop, height: categoryRef.current.offsetHeight, 
-          heightRatio: (categoryRef.current.offsetHeight / categoryRef.current)},*/
         })
     }, [category.id, inViewport, onCategoryInView, ratio])
 

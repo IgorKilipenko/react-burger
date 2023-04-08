@@ -6,15 +6,18 @@ import { Icon } from "../common/icon"
 import { Burger } from "./burger"
 
 const extractIngredientsByType = (ingredientsList) => {
-  const innerIngredients = ingredientsList.filter((item) => item.type !== "bun").slice(0, 12)
+  const innerIngredients = ingredientsList.filter((item) => item.ingredient.type !== "bun")
   const bun = ingredientsList.reduce((res, curr) => {
-    return (res = curr.type === "bun" ? curr : res)
+    return (res = curr.ingredient.type === "bun" ? curr : res)
   }, null)
   return [bun, innerIngredients]
 }
 
 const BurgerConstructor = ({ selectedIngredients }) => {
-  const calcTotalPrice = useCallback((ingredients) => ingredients.reduce((res, curr) => (res += curr.price), 0), [])
+  const calcTotalPrice = useCallback(
+    (ingredients) => ingredients.reduce((res, curr) => (res += curr.ingredient.price * curr.count), 0),
+    []
+  )
   const [bun, innerIngredients] = extractIngredientsByType(selectedIngredients)
   const [totalPrice, setTotalPrice] = React.useState(0)
 
