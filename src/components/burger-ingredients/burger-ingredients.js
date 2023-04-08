@@ -6,12 +6,6 @@ import { data as rawData } from "../../utils/data"
 import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
 
-const ingredientCategories = [
-  { id: "bun", name: "булки" },
-  { id: "sauce", name: "соусы" },
-  { id: "main", name: "начинки" },
-]
-
 const loadIngredients = () => {
   return rawData.reduce(
     (res, item) => {
@@ -23,7 +17,7 @@ const loadIngredients = () => {
   )
 }
 
-const BurgerIngredients = React.memo(({ categories = ingredientCategories, activeCategoryId = ingredientCategories[0].id }) => {
+const BurgerIngredients = React.memo(({ categories, activeCategoryId }) => {
   const data = loadIngredients()
   const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
@@ -59,7 +53,7 @@ const BurgerIngredients = React.memo(({ categories = ingredientCategories, activ
       <Text variant={"mainLarge"} pt={10} pb={5}>
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
-      <IngredientsTabPanel items={ingredientCategories} onTabClick={handleChangeActiveTab} activeTabId={currentTabId} />
+      <IngredientsTabPanel items={categories} onTabClick={handleChangeActiveTab} activeTabId={currentTabId} />
       <Flex direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
         {categories.map((category, i) => (
           <CategorySection
