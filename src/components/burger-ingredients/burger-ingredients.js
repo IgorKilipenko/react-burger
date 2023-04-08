@@ -2,10 +2,10 @@ import React from "react"
 import { Flex } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
-import { data as rawData } from "../../utils/data"
 import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
 
+/*
 const loadIngredients = () => {
   return rawData.reduce(
     (res, item) => {
@@ -16,9 +16,9 @@ const loadIngredients = () => {
     { bun: [] }
   )
 }
+*/
 
-const BurgerIngredients = React.memo(({ categories, activeCategoryId }) => {
-  const data = loadIngredients()
+const BurgerIngredients = React.memo(({ categories, activeCategoryId, ingredients }) => {
   const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
   const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
@@ -60,7 +60,7 @@ const BurgerIngredients = React.memo(({ categories, activeCategoryId }) => {
             key={`category-${category.id}-${i}`}
             ref={(el) => (categoriesRefs.current[i].ref = el)}
             category={category}
-            ingredients={data[category.id]}
+            ingredients={ingredients[category.id]}
             onCategoryInView={handleCategoryInView}
           />
         ))}

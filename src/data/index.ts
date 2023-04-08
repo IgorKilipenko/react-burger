@@ -4,32 +4,13 @@ export const apiClientConfig = {
 }
 
 export interface IngredientBase {
-  __id: string | number
+  __id: string
   type: string
 }
 
 export interface CategoryBase {
-  id: string | number
+  id: string
   name: string
-}
-
-export const categoryMapper = (categoryRaw: string) => {
-  const ingredientCategories = {
-    bun: "булки",
-    sauce: "соусы",
-    main: "начинки",
-  }
-
-  return ingredientCategories[categoryRaw as keyof typeof ingredientCategories]
-}
-
-export function getAllCategoriesFromData<T extends IngredientBase>(rawData: T[]): CategoryBase[] {
-  console.log('getAllCategoriesFromData', {rawData})
-  const categories = rawData.reduce<Set<T["type"]>>((res, item) => {
-    res.add(item.type)
-    return res
-  }, new Set())
-  return Array.from(categories).map((category) => ({ id: category, name: categoryMapper(category) }))
 }
 
 export interface BurgerIngredientType extends IngredientBase {
@@ -43,4 +24,30 @@ export interface BurgerIngredientType extends IngredientBase {
   image_mobile: string
   image_large: string
   __v: number
+}
+
+export interface IngredientsTableView {
+  [key: CategoryBase["id"]]: BurgerIngredientType[]
+}
+
+export const categoryMapper = (categoryRaw: string) => {
+  const ingredientCategories = {
+    bun: "булки",
+    sauce: "соусы",
+    main: "начинки",
+  }
+
+  return ingredientCategories[categoryRaw as keyof typeof ingredientCategories]
+}
+
+export function parseRawData<T extends BurgerIngredientType>(rawData: T[]) {
+  const table = rawData.reduce<IngredientsTableView>((res, item) => {
+    const category = (res[item.type] ??= [])
+    category.push(item)
+    return res
+  }, {})
+
+  const categories = Object.keys(table).map((category) => ({ id: category, name: categoryMapper(category) }))
+
+  return {table, categories}
 }

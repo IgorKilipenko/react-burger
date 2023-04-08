@@ -4,9 +4,21 @@ import AppHeader from "../app-header"
 import BurgerIngredients from "../burger-ingredients"
 import BurgerConstructor from "../burger-constructor"
 import theme from "../../theme/theme"
-import { Box, Flex, LayoutProps } from "@chakra-ui/react"
+import { Flex, LayoutProps } from "@chakra-ui/react"
 import { useFetch } from "../../hooks"
-import { apiClientConfig, getAllCategoriesFromData, type BurgerIngredientType } from "../../data"
+import { apiClientConfig, parseRawData, type BurgerIngredientType, type IngredientsTableView } from "../../data"
+
+const selectIngredients = (ingredients: IngredientsTableView) => {
+  const bunId = "bun"
+  const bun = ingredients[bunId][Math.floor(Math.random()*(ingredients[bunId].length-1))]
+  const innerIngredients = Object.keys(ingredients)
+    .filter((key) => key !== bunId)
+    .reduce<BurgerIngredientType[]>((res, key, i, arr) => {
+      res.push(...ingredients[key].slice(Math.floor(Math.random()*(ingredients[key].length-1))))
+      return res
+    }, [])
+  return [bun, ...innerIngredients]
+}
 
 interface MainContainerProps {
   children: React.ReactNode
@@ -28,7 +40,7 @@ const MainContainer: React.FC<MainContainerProps> = ({
     <Flex as="main" className="custom-scroll" overflow="auto" align="stretch" justify="stretch" h={currHeight}>
       <Flex grow={1} justify="space-around">
         <Flex maxW={maxContentWidth} justify="space-between" pl={5} pr={5} gap={10} pb={10}>
-          {messageComponent
+          {messageComponent != null
             ? messageComponent
             : React.Children.map(children, (child) => (
                 <Flex as="section" grow={1} basis={0} justify="center">
@@ -68,15 +80,25 @@ const App = () => {
     console.log(error)
   }
 
-  const categories = React.useMemo(() => {
-    const result = error || !data?.success ? [] : getAllCategoriesFromData(data.data)
-    console.log({ result, data: data })
-    return result
-  }, [data, error])
+  const { table: ingredients, categories } = React.useMemo(() => {
+    return parseRawData(data?.data ?? [])
+  }, [data])
+
+  const selectedIngredients = React.useMemo(() => {
+    return categories.length > 0 ? selectIngredients(ingredients) : []
+  }, [categories.length, ingredients])
 
   return (
     <ChakraProvider theme={theme}>
-      <Flex position='absolute' width="100vw" height="100vh" direction="column" align="stretch" justify="stretch" overflow="hidden">
+      <Flex
+        position="absolute"
+        width="100vw"
+        height="100vh"
+        direction="column"
+        align="stretch"
+        justify="stretch"
+        overflow="hidden"
+      >
         <AppHeader onChangeHeight={handleHeaderChangeHeight} />
         <MainContainer
           maxContentWidth={maxContentWidth}
@@ -84,11 +106,19 @@ const App = () => {
           messageComponent={
             error || (data && !data.success)
               ? errorMessage("Ошибка загрузки данных.")
-              : (!categories || categories.length === 0) && loadingMessage()
+              : (!categories || categories.length === 0) ? loadingMessage() : null
           }
         >
-          <BurgerIngredients categories={categories} activeCategoryId={categories[0]?.id} />
-          <BurgerConstructor />
+          {categories && (
+            <>
+              <BurgerIngredients
+                categories={categories}
+                activeCategoryId={categories[0]?.id ?? 0}
+                ingredients={ingredients}
+              />
+              <BurgerConstructor selectedIngredients={selectedIngredients} />
+            </>
+          )}
         </MainContainer>
       </Flex>
     </ChakraProvider>

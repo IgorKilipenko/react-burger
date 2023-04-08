@@ -10,7 +10,7 @@ export const Modal = ({ isOpen = false, onCloseClick }) => {
         <Flex direction='column' justify='stretch' w='lg' >
           <Flex gap={9} h={16} justify='space-between' align='center' bg='alt-body-bg'>
             <ModalHeader text={"HEADER"} />
-            <ModalCloseButton size={6}/>
+            <ModalCloseButton size={6} />
           </Flex>
           <Flex>
             <Text>CONTENT</Text>
