@@ -4,17 +4,18 @@ import AppHeader from "../app-header"
 import BurgerIngredients from "../burger-ingredients"
 import BurgerConstructor from "../burger-constructor"
 import theme from "../../theme/theme"
-import { Flex, LayoutProps } from "@chakra-ui/react"
+import { Flex, type LayoutProps } from "@chakra-ui/react"
 import { useFetch } from "../../hooks"
 import { apiClientConfig, parseRawData, type BurgerIngredientType, type IngredientsTableView } from "../../data"
+import { ErrorMessage } from "../error-message"
 
 const selectIngredients = (ingredients: IngredientsTableView) => {
   const bunId = "bun"
-  const bun = ingredients[bunId][Math.floor(Math.random() * ((ingredients[bunId].length - 1)))]
+  const bun = ingredients[bunId][Math.floor(Math.random() * (ingredients[bunId].length - 1))]
   const innerIngredients = Object.keys(ingredients)
     .filter((key) => key !== bunId)
-    .reduce<BurgerIngredientType[]>((res, key, i, arr) => {
-      res.push(...ingredients[key].slice(Math.floor(Math.random() * ((ingredients[key].length - 1)))))
+    .reduce<BurgerIngredientType[]>((res, key) => {
+      res.push(...ingredients[key].slice(Math.floor(Math.random() * (ingredients[key].length - 1))))
       return res
     }, [])
   return [bun, ...innerIngredients]
@@ -44,12 +45,6 @@ const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth
   )
 }
 
-const errorMessage = (message: string) => (
-  <Flex align="center" justify="center">
-    <Text variant="mainLarge">{message}</Text>
-  </Flex>
-)
-
 const loadingMessage = () => (
   <Flex align="center" justify="center">
     <Text variant="mainLarge">Загрузка...</Text>
@@ -58,18 +53,10 @@ const loadingMessage = () => (
 
 const App = () => {
   const [headerHeight, setHeight] = React.useState(0)
-  const handleHeaderChangeHeight = (value: number) => {
-    setHeight(value)
-  }
   const maxContentWidth = theme.sizes.container.maxContentWidth
-
   const { data, error } = useFetch<{ data: BurgerIngredientType[]; success: boolean } | undefined>(
     `${apiClientConfig.baseUrl}/${apiClientConfig.ingredientsPath}`
   )
-
-  if (error) {
-    console.log(error)
-  }
 
   const { table: ingredients, categories } = React.useMemo(() => {
     return parseRawData(data?.data ?? [])
@@ -78,6 +65,10 @@ const App = () => {
   const selectedIngredients = React.useMemo(() => {
     return categories.length > 0 ? selectIngredients(ingredients) : []
   }, [categories.length, ingredients])
+
+  const handleHeaderChangeHeight = (value: number) => {
+    setHeight(value)
+  }
 
   return (
     <ChakraProvider theme={theme}>
@@ -92,19 +83,21 @@ const App = () => {
       >
         <AppHeader onChangeHeight={handleHeaderChangeHeight} />
         <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
-          {categories.length > 0
-            ? [
-                <BurgerIngredients
-                  key={`section-BurgerIngredients`}
-                  categories={categories}
-                  activeCategoryId={categories[0]?.id ?? 0}
-                  ingredients={ingredients}
-                />,
-                <BurgerConstructor key={`section-BurgerConstructor`} selectedIngredients={selectedIngredients} />,
-              ]
-            : error || (data && !data.success)
-            ? errorMessage("Ошибка загрузки данных.")
-            : loadingMessage()}
+          {categories.length > 0 ? (
+            [
+              <BurgerIngredients
+                key={`section-BurgerIngredients`}
+                categories={categories}
+                activeCategoryId={categories[0]?.id ?? 0}
+                ingredients={ingredients}
+              />,
+              <BurgerConstructor key={`section-BurgerConstructor`} selectedIngredients={selectedIngredients} />,
+            ]
+          ) : error || (data && !data.success) ? (
+            <ErrorMessage message="Ошибка загрузки данных." />
+          ) : (
+            loadingMessage()
+          )}
         </MainContainer>
       </Flex>
     </ChakraProvider>
