@@ -3,7 +3,7 @@ import { Flex, Grid } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { IngredientCard } from "../common"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
-import { useInViewport } from "../../utils/hooks"
+import { useInViewport } from "../../hooks"
 
 export const CategorySection = React.memo(
   React.forwardRef(({ category, ingredients, containerRef, onCategoryInView }, ref) => {
