@@ -5,19 +5,6 @@ import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
 
-/*
-const loadIngredients = () => {
-  return rawData.reduce(
-    (res, item) => {
-      const category = (res[item.type] ??= [])
-      category.push(item)
-      return res
-    },
-    { bun: [] }
-  )
-}
-*/
-
 const BurgerIngredients = React.memo(({ categories, activeCategoryId, ingredients }) => {
   const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
