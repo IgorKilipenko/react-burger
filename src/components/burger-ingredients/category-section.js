@@ -32,7 +32,7 @@ export const CategorySection = React.memo(
     }
 
     return (
-      <Flex ref={(el) => initRefs(el)} /*key={`category-${category.id}-${i}`}*/ direction="column">
+      <Flex ref={(el) => initRefs(el)} direction="column">
         <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
         <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
           {ingredients.map((ingredient) => (

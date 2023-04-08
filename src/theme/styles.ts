@@ -13,10 +13,10 @@ export const semanticTokens = {
 }
 
 export const styles: ChakraThemeType["styles"] = {
-  global: (/*props*/) => ({
+  global: () => ({
     body: {
       fontFamily: "body",
-      color: "text-primary-color", //mode("gray.800", "white")(props),
+      color: "text-primary-color",
       bg: "body-bg",
     },
     "*::placeholder": {
