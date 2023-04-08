@@ -26,7 +26,7 @@ const MainContainer: React.FC<MainContainerProps> = ({
   const currHeight = h ?? height
   return (
     <Flex as="main" className="custom-scroll" overflow="auto" align="stretch" justify="stretch" h={currHeight}>
-      <Flex minW="min-content" grow={1}>
+      <Flex grow={1} justify="space-around">
         <Flex maxW={maxContentWidth} justify="space-between" pl={5} pr={5} gap={10} pb={10}>
           {messageComponent
             ? messageComponent
@@ -76,7 +76,7 @@ const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Flex width="100vw" height="100vh" direction="column" align="stretch" justify='stretch' overflow="hidden">
+      <Flex position='absolute' width="100vw" height="100vh" direction="column" align="stretch" justify="stretch" overflow="hidden">
         <AppHeader onChangeHeight={handleHeaderChangeHeight} />
         <MainContainer
           maxContentWidth={maxContentWidth}
@@ -84,10 +84,10 @@ const App = () => {
           messageComponent={
             error || (data && !data.success)
               ? errorMessage("Ошибка загрузки данных.")
-              : categories.length === 0 && loadingMessage()
+              : (!categories || categories.length === 0) && loadingMessage()
           }
         >
-          <BurgerIngredients categories={categories} activeCategoryId={categories[0]} />
+          <BurgerIngredients categories={categories} activeCategoryId={categories[0]?.id} />
           <BurgerConstructor />
         </MainContainer>
       </Flex>

@@ -3,7 +3,7 @@ import { type CategoryBase } from "../../data"
 
 export interface BurgerIngredientsProps {
   categories?: CategoryBase[]
-  activeCategoryId?: CategoryBase
+  activeCategoryId?: CategoryBase['id']
 }
 
 declare const BurgerIngredients: React.FC<BurgerIngredientsProps>
