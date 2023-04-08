@@ -1,11 +1,11 @@
 import React from "react"
 import { Flex, Center } from "@chakra-ui/react"
-import { useHeight } from "../../utils/hooks/useSize"
+import { useHeight } from "../../hooks/useSize"
 import { AppHeaderPropType } from "./app-header.types"
 import { buildLinks } from "./build-links"
 import { useMultiStyleConfig } from "@chakra-ui/react"
 
-const AppHeader = React.memo(({ variant = "desktop", onChangeHeight = null }) => {
+const AppHeader = React.memo(({ variant = "desktop", onChangeHeight }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
   const headerRef = React.useRef()
