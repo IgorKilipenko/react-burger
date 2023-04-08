@@ -1,9 +1,9 @@
 import React from "react"
-import isBrowser from "../is-browser"
+import isBrowser from "../utils/is-browser"
 
-type TargetValue<T> = T | undefined | null;
+type TargetValue<T> = T | undefined | null
 
-type TargetType = HTMLElement | Element | Window | Document;
+type TargetType = HTMLElement | Element | Window | Document
 
 export type BasicTarget<T extends TargetType = Element> =
   | (() => TargetValue<T>)
