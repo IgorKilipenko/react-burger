@@ -28,7 +28,7 @@ export const Burger = React.memo(({ bun, ingredients }) => {
         </Flex>
         <ConstructorElement
           type={type}
-          isLocked={element.isLocked || isBunElement || false}
+          isLocked={isBunElement || false}
           text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
           price={element.price}
           thumbnail={element.image}
