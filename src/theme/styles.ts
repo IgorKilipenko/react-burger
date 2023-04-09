@@ -10,6 +10,7 @@ export const semanticTokens = {
     "text-primary-color": { _light: "gray.800", _dark: "white" },
     "error-color": { _light: "#E52B1A", _dark: "#E52B1A" },
     "success-color": { _light: "#00CCCC", _dark: "#00CCCC" },
+    "overlay-bg":{ _light: "blackAlpha.600", _dark: "blackAlpha.600" },
   },
 }
 
