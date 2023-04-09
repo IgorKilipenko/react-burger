@@ -25,3 +25,5 @@ export function CreateCartContext<T extends CartItemBaseType>() {
 }
 
 export const BurgerCartContext = CreateCartContext<BurgerIngredientType>()
+
+export const useCartContext = () => React.useContext(BurgerCartContext);
