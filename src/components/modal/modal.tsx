@@ -1,7 +1,8 @@
-import { Flex, ModalOverlay } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 import { ModalHeader } from "./modal-header"
 import { ModalContainer } from "./modal-container"
 import { ModalCloseButton } from "./modal-close-button"
+import { ModalOverlay } from "./modal-overlay"
 
 export interface ModalProps {
   children?: React.ReactNode
