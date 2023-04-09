@@ -14,7 +14,7 @@ export const selectIngredients = (
       res.push(
         ...ingredients[key]
           .slice(0, randomIndex(Math.min(ingredients[key].length, 10)))
-          .map((ingredient) => ({ item: ingredient, quantity: randomIndex(4) }))
+          .map((ingredient) => ({ item: ingredient, quantity: randomIndex(4) + 1 }))
       )
       return res
     }, [])
