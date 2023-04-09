@@ -1,13 +1,17 @@
 import React from "react"
 import { Square, Flex, Image, Text } from "@chakra-ui/react"
-import { BurgerIngredientType } from "../../types"
 import { Link } from "../link"
 import { CurrencyIcon } from "../icons"
 import { Icon } from "../icon"
 import { Modal } from "../../modal"
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components"
+import {type BurgerIngredientType} from "../../../data"
 
-const IngredientCard = React.memo( ({ ingredient }) => {
+export interface IngredientCardProps {
+  ingredient: BurgerIngredientType
+}
+
+const IngredientCard = React.memo( ({ ingredient }:IngredientCardProps) => {
   const [modalOpen, setModalOpen] = React.useState(false)
 
   return (
@@ -31,9 +35,5 @@ const IngredientCard = React.memo( ({ ingredient }) => {
     </>
   )
 })
-
-IngredientCard.propTypes = {
-  ingredient: BurgerIngredientType.isRequired,
-}
 
 export { IngredientCard }
