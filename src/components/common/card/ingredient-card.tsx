@@ -6,6 +6,7 @@ import { Icon } from "../icon"
 import { Modal } from "../../modal"
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components"
 import { type BurgerIngredientType } from "../../../data"
+import { IngredientDetail, headerText } from "../../ingredient-detail"
 
 export interface IngredientCardProps {
   ingredient: BurgerIngredientType
@@ -17,7 +18,15 @@ const IngredientCard = React.memo(({ ingredient, selectedCount = 0 }: Ingredient
 
   return (
     <>
-      <Modal isOpen={modalOpen} onCloseClick={() => setModalOpen(false)} />
+      <Modal
+        headerText={headerText}
+        isOpen={modalOpen}
+        onCloseClick={() => {
+          setModalOpen(false)
+        }}
+      >
+        <IngredientDetail ingredient={ingredient}/>
+      </Modal>
       <Link isActive={true} onClick={() => setModalOpen(true)}>
         <Flex position="relative" direction="column" align="center" _hover={{ bg: "hovered-bg" }}>
           <Image src={ingredient.image} h={120} ml={4} mr={4} mt={6} />
