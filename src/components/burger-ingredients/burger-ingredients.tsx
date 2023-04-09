@@ -5,6 +5,8 @@ import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
 import { CategoryBase, IngredientsTableView } from "../../data"
+import { selectIngredients } from "./utils"
+import { useCartContext } from "../../context/cart"
 
 export interface BurgerIngredientsProps {
   categories: CategoryBase[]
@@ -12,12 +14,19 @@ export interface BurgerIngredientsProps {
   ingredients: IngredientsTableView
 }
 
-const BurgerIngredients = ({ categories, activeCategoryId, ingredients }: BurgerIngredientsProps) => {
+const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredientsTable }: BurgerIngredientsProps) => {
+  const {addProductToCart} = useCartContext()
   const categoriesRefs = React.useRef<({ ref: HTMLElement | null | undefined } & (typeof categories)[number])[]>(
     categories.map((c) => ({ ref: null, ...c }))
   )
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
   const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
+
+  React.useEffect(() => {
+    const selectedIngredients = selectIngredients(ingredientsTable)
+    selectedIngredients.forEach(x => {addProductToCart(x)})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   React.useEffect(() => {
     categoriesRefs.current = categoriesRefs.current.slice(0, categories.length)
@@ -56,7 +65,7 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients }: Burger
             key={`category-${category.id}-${i}`}
             ref={(el) => (categoriesRefs.current[i].ref = el)}
             category={category}
-            ingredients={ingredients[category.id]}
+            ingredients={ingredientsTable[category.id]}
             onCategoryInView={handleCategoryInView}
           />
         ))}
