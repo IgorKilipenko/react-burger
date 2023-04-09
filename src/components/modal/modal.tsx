@@ -1,19 +1,7 @@
-import { Flex } from "@chakra-ui/react"
+import { Flex, ModalOverlay } from "@chakra-ui/react"
 import { ModalHeader } from "./modal-header"
 import { ModalContainer } from "./modal-container"
 import { ModalCloseButton } from "./modal-close-button"
-
-export interface ModalContentProps {
-  children?: React.ReactNode
-}
-
-const ModalOverlay = ({ children }: ModalContentProps) => {
-  return (
-    <Flex bg="overlay-bg" justify="center" align="center" grow={1}>
-      {children}
-    </Flex>
-  )
-}
 
 export interface ModalProps {
   children?: React.ReactNode
