@@ -10,7 +10,7 @@ export const ModalOverlay = ({ children, onClick }: ModalOverlayProps) => {
     onClick && e.button === 0 && onClick(e)
   }
   return (
-    <Flex bg="overlay-bg" justify="center" align="center" grow={1} onMouseDown={handleMouseDown} cursor="auto">
+    <Flex bg="overlay-bg" justify="center" align="center" grow={1} onMouseDown={handleMouseDown}>
       {children}
     </Flex>
   )
