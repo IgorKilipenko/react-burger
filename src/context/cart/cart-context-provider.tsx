@@ -14,19 +14,23 @@ export function CartContextProvider<T extends CartItemBaseType>({ children, cont
 
   const addProductToCart = (product: CartListItemType<T>): void => {
     const existingProduct = getProductById(product.item._id)
-    let newState: CartListItemType<T>[] = []
     if (existingProduct) {
-      newState = products.map((p) =>
-        p.item._id === existingProduct.item._id
-          ? {
-              item: p.item,
-              quantity: p.quantity + product.quantity,
-            }
-          : p
-      )
-      setProducts(newState)
+      setProducts((products) => {
+        const newState = products.map((p) =>
+          p.item._id === existingProduct.item._id
+            ? {
+                item: p.item,
+                quantity: p.quantity + product.quantity,
+              }
+            : p
+        )
+        return newState
+      })
+    } else {
+      setProducts((prev) => {
+        return [...prev, product]
+      })
     }
-    setProducts([...products, product])
   }
 
   const removeProductFromCart = (product: T) => {
