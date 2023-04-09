@@ -1,7 +1,6 @@
 import React from "react"
 import { Flex, Center } from "@chakra-ui/react"
 import { useHeight } from "../../hooks/useSize"
-import { AppHeaderPropType } from "./app-header.types"
 import { buildLinks } from "./build-links"
 import { useMultiStyleConfig } from "@chakra-ui/react"
 
@@ -52,7 +51,5 @@ const AppHeader = React.memo(({ variant = "desktop", onChangeHeight }) => {
     </Center>
   )
 })
-
-AppHeader.propTypes = AppHeaderPropType
 
 export default AppHeader
