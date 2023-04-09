@@ -20,11 +20,12 @@ export interface ModalProps {
   isOpen?: boolean
   headerText?: string
   onCloseClick?: () => void
+  onEscKeyDown?: (event: KeyboardEvent) => void
 }
 
 export const Modal = ({ children, isOpen = false, headerText, onCloseClick }: ModalProps) => {
   return isOpen ? (
-    <ModalContainer>
+    <ModalContainer onEscKeyDown={onCloseClick}>
       <ModalOverlay>
         <Flex
           direction="column"
