@@ -5,8 +5,6 @@ export interface AppHeaderProps {
   onChangeHeight: (value: number) => void
 }
 
-//export function AppHeader:React.FC<AppHeaderProps>({ variant = "desktop", onChangeHeight }) 
-
 declare const AppHeader: React.FC<AppHeaderProps>;
 
 export default AppHeader;
