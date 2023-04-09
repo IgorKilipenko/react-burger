@@ -15,16 +15,22 @@ const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
 
 export const Burger = React.memo(({ bun, ingredients }: BurgerProps) => {
-  const buildItem = ({ element, type = null }: { element: BurgerIngredientType; type?: ElementType }) => {
+  const buildItem = ({
+    element,
+    type = null,
+    quantity = 1,
+  }: {
+    element: BurgerIngredientType
+    type?: ElementType
+    quantity?: number
+  }) => {
     const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
 
     const bunProps = isBunElement
       ? {
           ...{
             position: "sticky",
-
             alignSelf: type === allowableTypes.top ? "flex-start" : "flex-end",
-
             top: type === allowableTypes.top ? 0 : null,
             bottom: type === allowableTypes.bottom ? 0 : null,
             pb: type === allowableTypes.top ? "1px" : null,
@@ -43,7 +49,7 @@ export const Burger = React.memo(({ bun, ingredients }: BurgerProps) => {
           type={type ?? undefined}
           isLocked={isBunElement || false}
           text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
-          price={element.price}
+          price={element.price * quantity}
           thumbnail={element.image}
         />
       </Flex>
@@ -63,7 +69,7 @@ export const Burger = React.memo(({ bun, ingredients }: BurgerProps) => {
       pr={4}
     >
       {bun && buildItem({ element: bun.item, type: allowableTypes.top as ElementType })}
-      {ingredients?.map((element) => buildItem({ element: element.item }))}
+      {ingredients?.map((element) => buildItem({ element: element.item, quantity: element.quantity }))}
       {bun && buildItem({ element: bun.item, type: allowableTypes.bottom as ElementType })}
     </Flex>
   )
