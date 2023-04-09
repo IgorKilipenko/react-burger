@@ -1,16 +1,20 @@
+import { CartListItemType } from "../../context/cart/cart-context"
 import { BurgerIngredientType, IngredientsTableView } from "../../data"
 
-export const selectIngredients = (ingredients: IngredientsTableView, bunId: string = "bun") => {
+export const selectIngredients = (
+  ingredients: IngredientsTableView,
+  bunId: string = "bun"
+): CartListItemType<BurgerIngredientType>[] => {
   const randomIndex = (val: any[] | number) => Math.floor(Math.random() * (Array.isArray(val) ? val!.length : val))
 
-  const bun = { ingredient: ingredients[bunId][randomIndex(ingredients[bunId])], count: 1 }
+  const bun = { item: ingredients[bunId][randomIndex(ingredients[bunId])], quantity: 1 }
   const innerIngredients = Object.keys(ingredients)
     .filter((key) => key !== bunId)
-    .reduce<{ ingredient: BurgerIngredientType; count: number }[]>((res, key) => {
+    .reduce<CartListItemType<BurgerIngredientType>[]>((res, key) => {
       res.push(
         ...ingredients[key]
           .slice(Math.floor(randomIndex(ingredients[key])))
-          .map((ingredient) => ({ ingredient, count: 1 }))
+          .map((ingredient) => ({ item: ingredient, quantity: randomIndex(4) }))
       )
       return res
     }, [])
