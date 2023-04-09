@@ -1,5 +1,4 @@
 import { type ChakraTheme as ChakraThemeType } from "@chakra-ui/react"
-//import { mode } from "@chakra-ui/theme-tools"
 
 export const semanticTokens = {
   colors: {
@@ -27,7 +26,7 @@ export const styles: ChakraThemeType["styles"] = {
     "*, *::before, &::after": {
       borderColor: "chakra-border-color",
     },
-    //! Override yandex.p components styles
+    //~ Override yandex.p components styles
     ".constructor-element": {
       ".constructor-element__text": {
         marginRight: "20px",
