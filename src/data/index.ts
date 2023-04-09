@@ -4,7 +4,7 @@ export const apiClientConfig = {
 }
 
 export interface DbObjectType {
-  __id: string
+  _id: string
   __v: number
 }
 

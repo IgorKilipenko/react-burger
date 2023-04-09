@@ -9,15 +9,15 @@ export function CartContextProvider<T extends CartItemBaseType>({ children, cont
   const [products, setProducts] = useState<CartListItemType<T>[]>([])
 
   const getProductById = (id: string): CartListItemType<T> | undefined => {
-    return products.find((p) => p.item.__id === id)
+    return products.find((p) => p.item._id === id)
   }
 
   const addProductToCart = (product: CartListItemType<T>): void => {
-    const existingProduct = getProductById(product.item.__id)
+    const existingProduct = getProductById(product.item._id)
     let newState: CartListItemType<T>[] = []
     if (existingProduct) {
       newState = products.map((p) =>
-        p.item.__id === existingProduct.item.__id
+        p.item._id === existingProduct.item._id
           ? {
               item: p.item,
               quantity: p.quantity + product.quantity,
@@ -30,7 +30,7 @@ export function CartContextProvider<T extends CartItemBaseType>({ children, cont
   }
 
   const removeProductFromCart = (product: T) => {
-    const newProducts = products.filter((p) => p.item.__id !== product.__id)
+    const newProducts = products.filter((p) => p.item._id !== product._id)
 
     setProducts(newProducts)
   }
