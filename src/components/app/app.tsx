@@ -8,6 +8,7 @@ import { Flex, type LayoutProps } from "@chakra-ui/react"
 import { useFetch } from "../../hooks"
 import { apiClientConfig, parseRawData, type BurgerIngredientType, type IngredientsTableView } from "../../data"
 import { ErrorMessage } from "../error-message"
+import { CartContextProvider, BurgerCartContext } from "../../context/cart"
 
 const selectIngredients = (ingredients: IngredientsTableView, bunId: string = "bun") => {
   const randomIndex = (val: any[] | number) => Math.floor(Math.random() * (Array.isArray(val) ? val!.length : val))
@@ -77,34 +78,36 @@ const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Flex
-        position="absolute"
-        width="100vw"
-        height="100vh"
-        direction="column"
-        align="stretch"
-        justify="stretch"
-        overflow="hidden"
-      >
-        <AppHeader onChangeHeight={handleHeaderChangeHeight} />
-        <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
-          {categories.length > 0 ? (
-            [
-              <BurgerIngredients
-                key={`section-BurgerIngredients`}
-                categories={categories}
-                activeCategoryId={categories[0]?.id ?? 0}
-                ingredients={ingredients}
-              />,
-              <BurgerConstructor key={`section-BurgerConstructor`} selectedIngredients={selectedIngredients} />,
-            ]
-          ) : error || (data && !data.success) ? (
-            <ErrorMessage message="Ошибка загрузки данных." />
-          ) : (
-            loadingMessage()
-          )}
-        </MainContainer>
-      </Flex>
+      <CartContextProvider context={BurgerCartContext}>
+        <Flex
+          position="absolute"
+          width="100vw"
+          height="100vh"
+          direction="column"
+          align="stretch"
+          justify="stretch"
+          overflow="hidden"
+        >
+          <AppHeader onChangeHeight={handleHeaderChangeHeight} />
+          <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
+            {categories.length > 0 ? (
+              [
+                <BurgerIngredients
+                  key={`section-BurgerIngredients`}
+                  categories={categories}
+                  activeCategoryId={categories[0]?.id ?? 0}
+                  ingredients={ingredients}
+                />,
+                <BurgerConstructor key={`section-BurgerConstructor`} selectedIngredients={selectedIngredients} />,
+              ]
+            ) : error || (data && !data.success) ? (
+              <ErrorMessage message="Ошибка загрузки данных." />
+            ) : (
+              loadingMessage()
+            )}
+          </MainContainer>
+        </Flex>
+      </CartContextProvider>
     </ChakraProvider>
   )
 }
