@@ -3,8 +3,13 @@ export const apiClientConfig = {
   ingredientsPath: "api/ingredients",
 }
 
-export interface IngredientBase {
+export interface DbObjectType {
   __id: string
+  __v: number
+}
+
+export interface IngredientBase {
+  name: string
   type: string
 }
 
@@ -13,8 +18,7 @@ export interface CategoryBase {
   name: string
 }
 
-export interface BurgerIngredientType extends IngredientBase {
-  name: string
+export interface BurgerIngredientType extends IngredientBase, DbObjectType {
   proteins: number
   fat: number
   carbohydrates: number
@@ -23,11 +27,10 @@ export interface BurgerIngredientType extends IngredientBase {
   image: string
   image_mobile: string
   image_large: string
-  __v: number
 }
 
-export interface IngredientsTableView {
-  [key: CategoryBase["id"]]: BurgerIngredientType[]
+export interface IngredientsTableView<T extends BurgerIngredientType = BurgerIngredientType> {
+  [key: CategoryBase["id"]]: T[]
 }
 
 export const categoryMapper = (categoryRaw: string) => {
@@ -41,7 +44,7 @@ export const categoryMapper = (categoryRaw: string) => {
 }
 
 export function parseRawData<T extends BurgerIngredientType>(rawData: T[]) {
-  const table = rawData.reduce<IngredientsTableView>((res, item) => {
+  const table = rawData.reduce<IngredientsTableView<T>>((res, item) => {
     const category = (res[item.type] ??= [])
     category.push(item)
     return res
