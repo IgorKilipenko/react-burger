@@ -1,13 +1,13 @@
 import { Flex, Image, Text } from "@chakra-ui/react"
 import { BurgerIngredientType } from "../../data"
 
-export interface IngredientDetailProps {
+export interface IngredientDetailsProps {
   ingredient: BurgerIngredientType
 }
 
 export const headerText = "Детали ингредиента"
 
-export const IngredientDetail = ({ ingredient }: IngredientDetailProps) => {
+export const IngredientDetails = ({ ingredient }: IngredientDetailsProps) => {
   const makeTextDetails = (name: string, value: string | number) => {
     return (
       <Flex direction="column" align="center" justify="center" gap={2} grow={1}>

@@ -8,7 +8,7 @@ import { BurgerIngredientType, CategoryBase, IngredientsTableView } from "../../
 import { selectIngredients } from "./utils"
 import { useCartContext } from "../../context/cart"
 import { Modal } from "../modal"
-import { headerText, IngredientDetail } from "../ingredient-detail"
+import { headerText, IngredientDetail } from "../ingredient-details"
 
 export interface BurgerIngredientsProps {
   categories: CategoryBase[]
