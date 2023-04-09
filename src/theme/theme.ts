@@ -7,6 +7,7 @@ import { textTheme } from "./components/text-theme"
 import { typography } from "./foundations/typography"
 import { styles } from "./styles"
 import { semanticTokens } from "./styles"
+import { spacing } from "./foundations/spacing"
 
 const config: ThemeConfig = {
   initialColorMode: "dark",
@@ -25,6 +26,7 @@ const theme = extendTheme({
   styles,
   semanticTokens,
   sizes,
+  ...spacing,
   components: { Link: linkTheme, Text: textTheme, ModalCloseButton: modalCloseButtonTheme, Icon:iconTheme, AppHeader:appHeaderTheme },
 })
 
