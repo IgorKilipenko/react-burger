@@ -3,7 +3,12 @@ import SmallLogo from "./small-logo"
 import { useBreakpointValue } from "@chakra-ui/react"
 import { Box } from "@chakra-ui/react"
 
-const Logo = ({ type, breakpoint: bp }) => {
+export interface LogoProps {
+  type?: "small" | "large"
+  breakpoint: string
+}
+
+const Logo = ({ type = "large", breakpoint: bp }: LogoProps) => {
   const variant = useBreakpointValue({
     base: type ?? "small",
     [bp]: type ?? "large",
