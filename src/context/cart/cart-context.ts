@@ -1,7 +1,7 @@
 import React from "react"
-import { type BurgerIngredientType } from "../../data"
+import { type DbObjectType, type BurgerIngredientType } from "../../data"
 
-export type CartItemBaseType = BurgerIngredientType
+export type CartItemBaseType = DbObjectType
 
 export interface CartListItemType<T extends CartItemBaseType> {
   item: T
@@ -23,3 +23,5 @@ const defaultContext: CartContextType<any> = {
 export function CreateCartContext<T extends CartItemBaseType>() {
   return React.createContext<CartContextType<T>>(defaultContext)
 }
+
+export const BurgerCartContext = CreateCartContext<BurgerIngredientType>()
