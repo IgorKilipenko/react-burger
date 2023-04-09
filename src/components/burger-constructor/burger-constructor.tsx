@@ -4,25 +4,33 @@ import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
 import { CurrencyIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { Burger } from "./burger"
+import { BurgerIngredientType } from "../../data"
+import { CartListItemType, useCartContext } from "../../context/cart/cart-context"
 
-const extractIngredientsByType = (ingredientsList) => {
-  const innerIngredients = ingredientsList.filter((item) => item.ingredient.type !== "bun")
-  const bun = ingredientsList.reduce((res, curr) => {
-    return (res = curr.ingredient.type === "bun" ? curr : res)
-  }, null)
-  return [bun, innerIngredients]
+export interface BurgerConstructorProps {
+  //selectedIngredients?: CartListItemType<BurgerIngredientType>[]
 }
 
-const BurgerConstructor = ({ selectedIngredients }) => {
+const extractIngredientsByType = (ingredientsList: CartListItemType<BurgerIngredientType>[]) => {
+  const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
+  const bun = ingredientsList.reduce<CartListItemType<BurgerIngredientType> | null>((res, curr) => {
+    return (res = curr.item.type === "bun" ? curr : res)
+  }, null)
+  return { bun, innerIngredients }
+}
+
+const BurgerConstructor = (/*{ selectedIngredients }*/) => {
+  const { cart: selectedIngredients } = useCartContext()
   const calcTotalPrice = useCallback(
-    (ingredients) => ingredients.reduce((res, curr) => (res += curr.ingredient.price * curr.count), 0),
+    (ingredients: CartListItemType<BurgerIngredientType>[]) =>
+      ingredients.reduce((res, curr) => (res += curr.item.price * curr.quantity), 0),
     []
   )
-  const [bun, innerIngredients] = extractIngredientsByType(selectedIngredients)
+  const { bun, innerIngredients } = extractIngredientsByType(selectedIngredients ?? [])
   const [totalPrice, setTotalPrice] = React.useState(0)
 
   React.useEffect(() => {
-    setTotalPrice(calcTotalPrice(selectedIngredients))
+    setTotalPrice(calcTotalPrice(selectedIngredients ?? []))
   }, [calcTotalPrice, selectedIngredients])
 
   return (
