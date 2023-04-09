@@ -15,7 +15,7 @@ export interface ModalProps {
 export const Modal = ({ children, isOpen = false, headerText, onCloseClick }: ModalProps) => {
   return isOpen ? (
     <ModalContainer onEscKeyDown={onCloseClick}>
-      <ModalOverlay>
+      <ModalOverlay onClick={onCloseClick}>
         <Flex
           direction="column"
           bg="alt-body-bg"
