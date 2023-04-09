@@ -2,12 +2,12 @@ import React from "react"
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
 import { Flex } from "@chakra-ui/react"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
-import { CategoryBase } from "../../data"
+import { CategoryBase as CategoryType} from "../../data"
 
 export interface IngredientsTabPanelProps {
-  items: CategoryBase[]
-  activeTabId?: CategoryBase["id"]
-  onTabClick?: (tabId: CategoryBase["id"]) => void
+  items: CategoryType[]
+  activeTabId?: CategoryType["id"]
+  onTabClick?: (tabId: CategoryType["id"]) => void
 }
 
 export const IngredientsTabPanel = React.memo(
@@ -18,7 +18,7 @@ export const IngredientsTabPanel = React.memo(
       setCurrent(activeTabId)
     }, [activeTabId])
 
-    const handleTabClick = (tabId: CategoryBase["id"]) => {
+    const handleTabClick = (tabId: CategoryType["id"]) => {
       setCurrent(tabId)
       onTabClick && onTabClick(tabId)
     }
