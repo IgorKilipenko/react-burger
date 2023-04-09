@@ -1,16 +1,16 @@
 import React from "react"
-import { type DbObjectType, type BurgerIngredientType } from "../../data"
+import { type DbObjectType, type BurgerIngredientType, IngredientBase } from "../../data"
 
-export type CartItemBaseType = DbObjectType
+export type ProductType = DbObjectType & IngredientBase
 
-export interface CartListItemType<T extends CartItemBaseType> {
+export interface CartItemType<T extends ProductType> {
   item: T
   quantity: number
 }
 
-export interface CartContextType<T extends CartItemBaseType> {
-  cart: CartListItemType<T>[]
-  addProductToCart: (item: CartListItemType<T>) => void
+export interface CartContextType<T extends ProductType> {
+  cart: CartItemType<T>[]
+  addProductToCart: (item: CartItemType<T>) => void
   removeProductFromCart: (item: T) => void
 }
 
@@ -20,10 +20,10 @@ const defaultContext: CartContextType<any> = {
   removeProductFromCart: () => {},
 }
 
-export function CreateCartContext<T extends CartItemBaseType>() {
+export function CreateCartContext<T extends ProductType>() {
   return React.createContext<CartContextType<T>>(defaultContext)
 }
 
 export const BurgerCartContext = CreateCartContext<BurgerIngredientType>()
 
-export const useCartContext = () => React.useContext(BurgerCartContext);
+export const useCartContext = () => React.useContext(BurgerCartContext)

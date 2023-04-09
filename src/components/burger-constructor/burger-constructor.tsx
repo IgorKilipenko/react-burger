@@ -5,24 +5,20 @@ import { CurrencyIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { Burger } from "./burger"
 import { BurgerIngredientType } from "../../data"
-import { CartListItemType, useCartContext } from "../../context/cart/cart-context"
+import { CartItemType, useCartContext } from "../../context/cart/cart-context"
 
-export interface BurgerConstructorProps {
-  //selectedIngredients?: CartListItemType<BurgerIngredientType>[]
-}
-
-const extractIngredientsByType = (ingredientsList: CartListItemType<BurgerIngredientType>[]) => {
+const extractIngredientsByType = (ingredientsList: CartItemType<BurgerIngredientType>[]) => {
   const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
-  const bun = ingredientsList.reduce<CartListItemType<BurgerIngredientType> | null>((res, curr) => {
+  const bun = ingredientsList.reduce<CartItemType<BurgerIngredientType> | null>((res, curr) => {
     return (res = curr.item.type === "bun" ? curr : res)
   }, null)
   return { bun, innerIngredients }
 }
 
-const BurgerConstructor = (/*{ selectedIngredients }*/) => {
+const BurgerConstructor = () => {
   const { cart: selectedIngredients } = useCartContext()
   const calcTotalPrice = useCallback(
-    (ingredients: CartListItemType<BurgerIngredientType>[]) =>
+    (ingredients: CartItemType<BurgerIngredientType>[]) =>
       ingredients.reduce((res, curr) => (res += curr.item.price * curr.quantity), 0),
     []
   )

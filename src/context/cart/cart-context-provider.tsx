@@ -1,42 +1,52 @@
 import React, { useState, HTMLAttributes } from "react"
-import { type CartContextType, type CartListItemType, type CartItemBaseType } from "./cart-context"
+import { type CartContextType, type CartItemType, type ProductType } from "./cart-context"
 
-export type CartContextProps<T extends CartItemBaseType> = {
+export type CartContextProps<T extends ProductType> = {
   context: React.Context<CartContextType<T>>
 } & HTMLAttributes<HTMLDivElement>
 
-export function CartContextProvider<T extends CartItemBaseType>({ children, context }: CartContextProps<T>) {
-  const [products, setProducts] = useState<CartListItemType<T>[]>([])
+export declare type ProductItemType<T extends ProductType> = CartItemType<T>
+export declare type ProductsListType<T extends ProductType> = ProductItemType<T>[]
 
-  const getProductById = (id: string): CartListItemType<T> | undefined => {
-    return products.find((p) => p.item._id === id)
+export function CartContextProvider<T extends ProductType>({ children, context }: CartContextProps<T>) {
+  const [products, setProducts] = useState<ProductsListType<T>>([])
+
+  const getProductById = (id: string, prevState: ProductsListType<T>): CartItemType<T> | undefined => {
+    return prevState.find((p) => p.item._id === id)
   }
 
-  const addProductToCart = (product: CartListItemType<T>): void => {
-    const existingProduct = getProductById(product.item._id)
-    if (existingProduct) {
-      setProducts((products) => {
-        const newState = products.map((p) =>
-          p.item._id === existingProduct.item._id
-            ? {
-                item: p.item,
-                quantity: p.quantity + product.quantity,
-              }
-            : p
-        )
-        return newState
-      })
-    } else {
-      setProducts((prev) => {
-        return [...prev, product]
-      })
-    }
+  const getProductsByType = (type: string, prevState: ProductsListType<T>) => {
+    return prevState.filter((p) => p.item.type === type)
+  }
+
+  const addProductToCart = (product: ProductItemType<T>): void => {
+    setProducts((prevState) => {
+      if (product.item.type === "bun") {
+        const rmProducts = getProductsByType(product.item.type, prevState)
+        prevState = rmProducts ? prevState.filter((p) => rmProducts.findIndex((x) => p.item._id === x.item._id)) : prevState
+      }
+      
+      const existingProduct = getProductById(product.item._id, prevState)
+      if (!existingProduct) {
+        return [...prevState, product]
+      }
+      const newState = prevState.map((p) =>
+        p.item._id === existingProduct.item._id
+          ? {
+              item: p.item,
+              quantity: p.quantity + product.quantity,
+            }
+          : p
+      )
+      return newState
+    })
   }
 
   const removeProductFromCart = (product: T) => {
-    const newProducts = products.filter((p) => p.item._id !== product._id)
-
-    setProducts(newProducts)
+    setProducts((prevState) => {
+      const newProducts = prevState.filter((p) => p.item._id !== product._id)
+      return newProducts
+    })
   }
 
   const contextValue: CartContextType<T> = {

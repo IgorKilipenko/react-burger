@@ -3,12 +3,12 @@ import { Flex, Box } from "@chakra-ui/react"
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
-import { CartListItemType } from "../../context/cart/cart-context"
+import { type CartItemType } from "../../context/cart/cart-context"
 import { BurgerIngredientType } from "../../data"
 
 export interface BurgerProps {
-  bun?: CartListItemType<BurgerIngredientType> | null
-  ingredients?: CartListItemType<BurgerIngredientType>[]
+  bun?: CartItemType<BurgerIngredientType> | null
+  ingredients?: CartItemType<BurgerIngredientType>[]
 }
 
 const allowableTypes = { top: "top", bottom: "bottom" }
