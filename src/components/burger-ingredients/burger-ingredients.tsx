@@ -4,9 +4,18 @@ import { Text } from "@chakra-ui/react"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
+import { CategoryBase, IngredientsTableView } from "../../data"
 
-const BurgerIngredients = React.memo(({ categories, activeCategoryId, ingredients }) => {
-  const categoriesRefs = React.useRef(categories.map((c) => ({ ref: null, ...c })))
+export interface BurgerIngredientsProps {
+  categories: CategoryBase[]
+  activeCategoryId: CategoryBase["id"]
+  ingredients: IngredientsTableView
+}
+
+const BurgerIngredients = ({ categories, activeCategoryId, ingredients }: BurgerIngredientsProps) => {
+  const categoriesRefs = React.useRef<({ ref: HTMLElement | null | undefined } & (typeof categories)[number])[]>(
+    categories.map((c) => ({ ref: null, ...c }))
+  )
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
   const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
 
@@ -14,16 +23,16 @@ const BurgerIngredients = React.memo(({ categories, activeCategoryId, ingredient
     categoriesRefs.current = categoriesRefs.current.slice(0, categories.length)
   }, [categories])
 
-  const scrollIntoCategory = (id) => {
+  const scrollIntoCategory = (id: string) => {
     categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleChangeActiveTab = (tabId) => {
+  const handleChangeActiveTab = (tabId: string) => {
     scrollIntoCategory(tabId)
     setCurrentTabId(tabId)
   }
 
-  const handleCategoryInView = ({ categoryId, ratio }) => {
+  const handleCategoryInView = ({ categoryId, ratio }: { categoryId: string; ratio: number }) => {
     const activeRatio = ratioRef.current
     if (activeRatio.categoryId === categoryId) {
       ratioRef.current = { ...ratioRef.current, ratio }
@@ -36,7 +45,7 @@ const BurgerIngredients = React.memo(({ categories, activeCategoryId, ingredient
   }
 
   return (
-    <Flex direction="column">
+    <Flex ref={null} direction="column">
       <Text variant={"mainLarge"} pt={10} pb={5}>
         {capitalizeFirstLetter("соберите бургер")}
       </Text>
@@ -54,6 +63,6 @@ const BurgerIngredients = React.memo(({ categories, activeCategoryId, ingredient
       </Flex>
     </Flex>
   )
-})
+}
 
-export default BurgerIngredients
+export default React.memo(BurgerIngredients)
