@@ -9,27 +9,25 @@ export interface ModalContainerProps {
 }
 
 export const ModalContainer = ({ children, onEscKeyDown }: ModalContainerProps) => {
-  const handleKeyDown = (e:KeyboardEvent) => {
-    if (onEscKeyDown && e.code === "Escape") {
-      onEscKeyDown()
-    }
-  }
+  const handleKeyDown = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (onEscKeyDown && e.code === "Escape") {
+        onEscKeyDown()
+      }
+    },
+    [onEscKeyDown]
+  )
+
   React.useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown, false);
+    document.addEventListener("keydown", handleKeyDown, false)
     return () => {
       document.removeEventListener("keydown", handleKeyDown)
     }
-  },)
+  }, [handleKeyDown])
+
   return (
     <ModalPortal>
-      <Flex
-        position="absolute"
-        w="100vw"
-        h="100vh"
-        justify="stretch"
-        align="stretch"
-        zIndex="overlay"
-      >
+      <Flex position="absolute" w="100vw" h="100vh" justify="stretch" align="stretch" zIndex="overlay">
         {children}
       </Flex>
     </ModalPortal>
