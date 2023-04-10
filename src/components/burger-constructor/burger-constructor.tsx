@@ -50,15 +50,16 @@ const BurgerConstructor = () => {
           </Button>
         </Flex>
       </Flex>
-      <Modal
-        headerText=""
-        isOpen={modalOpen}
-        onCloseClick={() => {
-          setModalOpen(false)
-        }}
-      >
-        <OrderDetails />
-      </Modal>
+      {modalOpen ? (
+        <Modal
+          headerText=""
+          onClose={() => {
+            setModalOpen(false)
+          }}
+        >
+          <OrderDetails />
+        </Modal>
+      ) : null}
     </>
   )
 }

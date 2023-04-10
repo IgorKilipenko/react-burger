@@ -84,15 +84,16 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
           ))}
         </Flex>
       </Flex>
-      <Modal
-        headerText={headerText}
-        isOpen={modalOpen}
-        onCloseClick={() => {
-          setModalOpen(false)
-        }}
-      >
-        {modalIngredientRef.current ? <IngredientDetail ingredient={modalIngredientRef!.current} /> : null}
-      </Modal>
+      {modalOpen && modalIngredientRef.current ? (
+        <Modal
+          headerText={headerText}
+          onClose={() => {
+            setModalOpen(false)
+          }}
+        >
+          <IngredientDetail ingredient={modalIngredientRef!.current} />
+        </Modal>
+      ) : null}
     </>
   )
 }

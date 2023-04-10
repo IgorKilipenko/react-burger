@@ -8,14 +8,13 @@ export interface ModalProps {
   children?: React.ReactNode
   isOpen?: boolean
   headerText?: string
-  onCloseClick?: () => void
-  onEscKeyDown?: (event: KeyboardEvent) => void
+  onClose?: () => void
 }
 
-export const Modal = ({ children, isOpen = false, headerText, onCloseClick }: ModalProps) => {
-  return isOpen ? (
-    <ModalContainer onEscKeyDown={onCloseClick}>
-      <ModalOverlay onClick={onCloseClick}>
+export const Modal = ({ children, headerText, onClose }: ModalProps) => {
+  return (
+    <ModalContainer onEscKeyDown={onClose}>
+      <ModalOverlay onClick={onClose}>
         <Flex
           direction="column"
           bg="alt-body-bg"
@@ -23,13 +22,12 @@ export const Modal = ({ children, isOpen = false, headerText, onCloseClick }: Mo
           w={{ base: "lg", md: "720px" }}
           h="fit-content"
           p={10}
-          pb="40px"
           align="stretch"
           borderRadius={40}
         >
           <Flex gap={9} justify="space-between" align="center" h={16} mb={0} grow={1}>
             <ModalHeader text={headerText ?? ""} />
-            <ModalCloseButton size={6} onClick={onCloseClick} />
+            <ModalCloseButton size={6} onClick={onClose} />
           </Flex>
           <Flex grow={1} justify="center">
             {children}
@@ -37,5 +35,5 @@ export const Modal = ({ children, isOpen = false, headerText, onCloseClick }: Mo
         </Flex>
       </ModalOverlay>
     </ModalContainer>
-  ) : null
+  )
 }
