@@ -9,7 +9,7 @@ export const headerText = "Детали ингредиента"
 
 export const OrderDetails = ({ orderId = "034536" }: OrderDetailsProps) => {
   return (
-    <Flex direction="column" align="center" mb={8}>
+    <Flex direction="column" align="center" mb={20}>
       <Text variant="digitsLarge" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
         {orderId}
       </Text>
@@ -22,7 +22,7 @@ export const OrderDetails = ({ orderId = "034536" }: OrderDetailsProps) => {
       <Text variant="mainDefault" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" mb={2}>
         Ваш заказ начали готовить
       </Text>
-      <Text variant="mainDefault" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" mb={30} color={"link-inactive-color"}>
+      <Text variant="mainDefault" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" color={"link-inactive-color"}>
         Дождитесь готовности на орбитальной станции
       </Text>
     </Flex>
