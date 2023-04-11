@@ -75,7 +75,7 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
           {categories.map((category, i) => (
             <CategorySection
               key={`category-${category.id}-${i}`}
-              ref={(el) => (categoriesRefs.current[i].ref = el)}
+              ref={(el) => {categoriesRefs.current[i].ref = el}}
               category={category}
               ingredients={ingredientsTable[category.id]}
               onCategoryInView={handleCategoryInView}
