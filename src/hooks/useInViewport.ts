@@ -30,8 +30,7 @@ export function useInViewport(target: BasicTarget, options?: Options, withPresen
         element.clientHeight === 0 ||
         element.parentElement.clientHeight === 0
           ? 1
-          : Math.max(element.clientHeight / element.parentElement.clientHeight,1)
-      console.log({ element, heightRatio, parent: element.parentElement })
+          : Math.max(element.clientHeight / element.parentElement.clientHeight, 1)
 
       if (withPresentHeight && options?.threshold) {
         options.threshold = !Array.isArray(options.threshold)
@@ -42,7 +41,7 @@ export function useInViewport(target: BasicTarget, options?: Options, withPresen
       const observer = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
-            setRatio(entry.intersectionRatio * heightRatio )
+            setRatio(entry.intersectionRatio * heightRatio)
             setState(entry.isIntersecting)
           }
         },
