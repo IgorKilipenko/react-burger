@@ -24,13 +24,12 @@ export function useInViewport(target: BasicTarget, options?: Options, withPresen
         return
       }
 
+      const parentElement = options?.root ? getTargetElement(options.root) : element.parentElement
+
       const heightRatio =
-        !withPresentHeight ||
-        !element.parentElement ||
-        element.clientHeight === 0 ||
-        element.parentElement.clientHeight === 0
+        !withPresentHeight || !parentElement || element.clientHeight === 0 || parentElement.clientHeight === 0
           ? 1
-          : Math.max(element.clientHeight / element.parentElement.clientHeight, 1)
+          : Math.max(element.clientHeight / parentElement.clientHeight, 1)
 
       if (withPresentHeight && options?.threshold) {
         options.threshold = !Array.isArray(options.threshold)
@@ -47,7 +46,7 @@ export function useInViewport(target: BasicTarget, options?: Options, withPresen
         },
         {
           ...options,
-          root: getTargetElement(options?.root),
+          root: parentElement,
         }
       )
 
@@ -58,7 +57,7 @@ export function useInViewport(target: BasicTarget, options?: Options, withPresen
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [target, options?.rootMargin, options?.threshold]
+    [target, options?.rootMargin, options?.threshold, withPresentHeight]
   )
 
   return [state, ratio] as const
