@@ -15,7 +15,7 @@ export interface CategorySectionProps {
   onIngredientClick?: (ingredient: BurgerIngredientType) => void
 }
 
-export type Ref = HTMLElement | null
+export type Ref = HTMLDivElement | null
 
 export const CategorySection = React.memo(
   React.forwardRef<Ref, CategorySectionProps>(
@@ -37,18 +37,15 @@ export const CategorySection = React.memo(
           })
       }, [category.id, inViewport, onCategoryInView, ratio])
 
-      const handleIngredientClick = (ingredient: BurgerIngredientType) => {
-        onIngredientClick && onIngredientClick(ingredient)
-      }
-
-      const initRefs = (el: Ref) => {
-        categoryRef.current = el
-        if (!ref) return
-        typeof ref === "function" ? ref(el) : (ref.current = el)
-      }
+      const handleIngredientClick = React.useCallback(
+        (ingredient: BurgerIngredientType) => {
+          onIngredientClick && onIngredientClick(ingredient)
+        },
+        [onIngredientClick]
+      )
 
       return (
-        <Flex ref={(el) => initRefs(el)} direction="column">
+        <Flex ref={categoryRef} direction="column">
           <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
           <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
             {ingredients.map((ingredient) => (
