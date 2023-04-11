@@ -49,14 +49,14 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
 
   const handleCategoryInView = ({ categoryId, ratio }: { categoryId: string; ratio: number }) => {
     const activeRatio = ratioRef.current
-    if (activeRatio.categoryId === categoryId) {
-      ratioRef.current = { ...ratioRef.current, ratio }
-      return
-    }
-    if (ratio > activeRatio.ratio) {
+    
+    if (activeRatio.categoryId !== categoryId && ratio > activeRatio.ratio) {
       ratioRef.current = { ...ratioRef.current, categoryId, ratio }
       setCurrentTabId(categoryId)
+      return
     }
+
+    ratioRef.current = { ...ratioRef.current, ratio }
   }
 
   const handleIngredientClick = (ingredient: BurgerIngredientType) => {
