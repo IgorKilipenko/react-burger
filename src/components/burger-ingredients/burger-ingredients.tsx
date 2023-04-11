@@ -17,6 +17,7 @@ export interface BurgerIngredientsProps {
 }
 
 const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredientsTable }: BurgerIngredientsProps) => {
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null)
   const { addProductToCart } = useCartContext()
   const categoriesRefs = React.useRef<({ ref: HTMLElement | null | undefined } & (typeof categories)[number])[]>(
     categories.map((c) => ({ ref: null, ...c }))
@@ -74,7 +75,7 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
           {capitalizeFirstLetter("соберите бургер")}
         </Text>
         <IngredientsTabPanel items={categories} onTabClick={handleChangeActiveTab} activeTabId={currentTabId} />
-        <Flex direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
+        <Flex ref={scrollContainerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
           {categories.map((category, i) => (
             <CategorySection
               key={`category-${category.id}-${i}`}
@@ -85,6 +86,7 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
               ingredients={ingredientsTable[category.id]}
               onCategoryInView={handleCategoryInView}
               onIngredientClick={handleIngredientClick}
+              scrollContainerRef={scrollContainerRef}
             />
           ))}
         </Flex>
