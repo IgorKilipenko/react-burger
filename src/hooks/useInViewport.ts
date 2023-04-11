@@ -17,6 +17,12 @@ export function useInViewport(target: BasicTarget, options?: Options, withPresen
   const [state, setState] = useState<boolean>()
   const [ratio, setRatio] = useState<number>()
 
+  useEffect(() => {
+    if (withPresentHeight && !options?.root) {
+      console.warn("To calculate present height needed pass root element explicitly")
+    }
+  }, [options?.root, withPresentHeight])
+
   useEffect(
     () => {
       const element = getTargetElement(target)
