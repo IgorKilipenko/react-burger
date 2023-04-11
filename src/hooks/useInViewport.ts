@@ -46,7 +46,7 @@ export function useInViewport(target: BasicTarget, options?: Options, withPresen
         },
         {
           ...options,
-          root: parentElement,
+          root: getTargetElement(options?.root),
         }
       )
 
