@@ -38,18 +38,21 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
     categoriesRefs.current = categoriesRefs.current.slice(0, categories.length)
   }, [categories])
 
-  const scrollIntoCategory = (id: string) => {
+  const scrollIntoCategory = React.useCallback((id: string) => {
     categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
-  }
+  }, [])
 
-  const handleChangeActiveTab = (tabId: string) => {
-    scrollIntoCategory(tabId)
-    setCurrentTabId(tabId)
-  }
+  const handleChangeActiveTab = React.useCallback(
+    (tabId: string) => {
+      scrollIntoCategory(tabId)
+      setCurrentTabId(tabId)
+    },
+    [scrollIntoCategory]
+  )
 
-  const handleCategoryInView = ({ categoryId, ratio }: { categoryId: string; ratio: number }) => {
+  const handleCategoryInView = React.useCallback(({ categoryId, ratio }: { categoryId: string; ratio: number }) => {
     const activeRatio = ratioRef.current
-    
+
     if (activeRatio.categoryId !== categoryId && ratio > activeRatio.ratio) {
       ratioRef.current = { ...ratioRef.current, categoryId, ratio }
       setCurrentTabId(categoryId)
@@ -57,12 +60,12 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
     }
 
     ratioRef.current = { ...ratioRef.current, ratio }
-  }
+  }, [])
 
-  const handleIngredientClick = (ingredient: BurgerIngredientType) => {
+  const handleIngredientClick = React.useCallback((ingredient: BurgerIngredientType) => {
     modalIngredientRef.current = ingredient
     setModalOpen(true)
-  }
+  }, [])
 
   return (
     <>
@@ -75,7 +78,9 @@ const BurgerIngredients = ({ categories, activeCategoryId, ingredients: ingredie
           {categories.map((category, i) => (
             <CategorySection
               key={`category-${category.id}-${i}`}
-              ref={(el) => {categoriesRefs.current[i].ref = el}}
+              ref={(el) => {
+                categoriesRefs.current[i].ref = el
+              }}
               category={category}
               ingredients={ingredientsTable[category.id]}
               onCategoryInView={handleCategoryInView}
