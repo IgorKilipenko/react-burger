@@ -3,25 +3,25 @@ import { Flex, Grid } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { IngredientCard } from "../common"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
-import { useInViewport } from "../../hooks"
+import { useInViewport, BasicTarget } from "../../hooks"
 import { type CategoryBase, type BurgerIngredientType } from "../../data"
 import { useCartContext } from "../../context/cart"
+
+type RootElementType = HTMLDivElement
 
 export interface CategorySectionProps {
   category: CategoryBase
   ingredients: BurgerIngredientType[]
-  containerRef?: React.MutableRefObject<HTMLElement | Element | null | undefined>
+  containerRef?: BasicTarget
   onCategoryInView?: (args: { categoryId: string; ratio: number }) => void
   onIngredientClick?: (ingredient: BurgerIngredientType) => void
 }
 
-export type Ref = HTMLDivElement | null
-
 export const CategorySection = React.memo(
-  React.forwardRef<Ref, CategorySectionProps>(
+  React.forwardRef<RootElementType, CategorySectionProps>(
     ({ category, ingredients, containerRef, onCategoryInView, onIngredientClick }, ref) => {
       const { cart } = useCartContext()
-      const categoryRef = React.useRef<Ref>(null)
+      const categoryRef = React.useRef<RootElementType | null>(null)
       const [inViewport, ratio] = useInViewport(categoryRef, {
         threshold: [0, 0.25, 0.5, 0.75, 1],
         root: containerRef,
@@ -44,8 +44,14 @@ export const CategorySection = React.memo(
         [onIngredientClick]
       )
 
+      const initRefs = (el: RootElementType | null) => {
+        categoryRef.current = el
+        if (!ref) return
+        typeof ref === "function" ? ref(el) : (ref.current = el)
+      }
+
       return (
-        <Flex ref={categoryRef} direction="column">
+        <Flex ref={initRefs} direction="column">
           <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
           <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
             {ingredients.map((ingredient) => (
