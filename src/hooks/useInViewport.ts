@@ -13,7 +13,7 @@ export interface Options {
   root?: BasicTarget<Element>
 }
 
-export function useInViewport(target: BasicTarget, options?: Options, withPresentHeight: boolean = true) {
+export function useInViewport(target: BasicTarget, options?: Options, withPresentHeight: boolean = false) {
   const [state, setState] = useState<boolean>()
   const [ratio, setRatio] = useState<number>()
 

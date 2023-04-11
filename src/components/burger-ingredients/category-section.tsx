@@ -25,7 +25,7 @@ export const CategorySection = React.memo(
       const [inViewport, ratio] = useInViewport(categoryRef, {
         threshold: [0, 0.25, 0.5, 0.75, 1],
         root: containerRef,
-      })
+      }, true)
 
       React.useEffect(() => {
         categoryRef.current &&
