@@ -1,18 +1,16 @@
-import React from "react"
-import styles from "./promo-button.module.css"
-import closeIcon from "../../images/close.svg"
+import React from 'react';
+import styles from './promo-button.module.css';
+import closeIcon from '../../images/close.svg';
 
-export const PromoButton = ({ children, extraClass, setPromo, setDiscount, onDiscountApply }) => {
+export const PromoButton = ({ children, setPromo, setDiscount, extraClass }) => {
   const cancelPromo = () => {
-    setDiscount && setDiscount()
-    setPromo && setPromo("")
-    onDiscountApply && onDiscountApply(0)
-  }
-
+    setPromo('');
+    setDiscount(null);
+  };
   return (
     <button type="button" className={`${styles.button} ${extraClass}`} onClick={cancelPromo}>
       {children}
       <img className={styles.close} src={closeIcon} alt="кнопка закрытия" />
     </button>
-  )
-}
+  );
+};

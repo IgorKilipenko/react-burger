@@ -1,7 +1,7 @@
 import React from "react"
 import styles from "./total-price.module.css"
 
-export const TotalPrice = ({ extraClass, totalPrice = 0, discount = 0 }) => {
+export const TotalPrice = ({ totalPrice, discount, extraClass }) => {
   return (
     <div className={`${styles.container} ${extraClass}`}>
       <p className={styles.text}>Итого:</p>

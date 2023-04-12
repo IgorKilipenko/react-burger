@@ -7,13 +7,9 @@ import { MainButton } from "../../ui/main-button/main-button"
 import { PromoButton } from "../../ui/promo-button/promo-button"
 import { Loader } from "../../ui/loader/loader"
 
-export const ProductsContainer = ({ onCalculateTotalPrice, onDiscountApply }) => {
-  const [totalPrice, setTotalPrice] = React.useState(0)
-  const [discount, setDiscount] = React.useState(null)
-
+export const ProductsContainer = ({ setTotalPrice, totalPrice, setDiscount, discount }) => {
   const [data, setData] = useState([])
   const [promo, setPromo] = useState("")
-
   const [itemsRequest, setItemsRequest] = useState(false)
   const [promoFailed, setPromoFailed] = useState(false)
   const [promoRequest, setPromoRequest] = useState(false)
@@ -39,8 +35,7 @@ export const ProductsContainer = ({ onCalculateTotalPrice, onDiscountApply }) =>
     let total = 0
     data.map((item) => (total += item.price * item.qty))
     setTotalPrice(total)
-    onCalculateTotalPrice && onCalculateTotalPrice(total)
-  }, [data, onCalculateTotalPrice, setTotalPrice])
+  }, [data, setTotalPrice])
 
   const applyPromoCode = useCallback(() => {
     const inputValue = inputRef.current.value
@@ -52,7 +47,6 @@ export const ProductsContainer = ({ onCalculateTotalPrice, onDiscountApply }) =>
           setDiscount(res.discount)
           setPromoRequest(false)
           setPromoFailed(false)
-          onDiscountApply && onDiscountApply(res.discount)
         } else {
           setPromoFailed(true)
           setPromoRequest(false)
@@ -64,7 +58,7 @@ export const ProductsContainer = ({ onCalculateTotalPrice, onDiscountApply }) =>
         console.log(err)
         setPromoRequest(false)
       })
-  }, [onDiscountApply])
+  }, [setDiscount])
 
   const content = useMemo(() => {
     return itemsRequest ? (
@@ -115,7 +109,7 @@ export const ProductsContainer = ({ onCalculateTotalPrice, onDiscountApply }) =>
           </MainButton>
         </div>
         {promo && (
-          <PromoButton extraClass={styles.promocode} setPromo={setPromo} setDiscount={setDiscount} onDiscountApply={onDiscountApply}>
+          <PromoButton extraClass={styles.promocode} setPromo={setPromo} setDiscount={setDiscount}>
             {promo}
           </PromoButton>
         )}
