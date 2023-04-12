@@ -1,13 +1,12 @@
-import React from 'react';
-import { Tabs } from './tabs';
-import { ProductsContainer } from './products-container';
+import React from "react"
+import { Tabs } from "./tabs"
+import { ProductsContainer } from "./products-container"
 
-
-export const Cart = () => {
+export const Cart = ({ setTotalPrice, setDiscount }) => {
   return (
     <section>
       <Tabs />
-      <ProductsContainer />
+      <ProductsContainer onCalculateTotalPrice={setTotalPrice} onDiscountApply={setDiscount} />
     </section>
-  );
-};
+  )
+}
