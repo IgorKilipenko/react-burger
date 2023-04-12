@@ -1,5 +1,0 @@
-export { Link } from "./link/link"
-export { IngredientCard } from "./card"
-export * as Icons from "./icons"
-export { Icon } from "./icon"
-export * as Logo from "./logo"
