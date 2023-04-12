@@ -1,57 +1,47 @@
-import React, { useMemo } from 'react';
-import { AmountButton } from '../../ui/amount-button/amount-button';
-import { DeleteButton } from '../../ui/delete-button/delete-button';
-import styles from './product.module.css';
+import React, { useMemo, useContext } from "react"
+import { AmountButton } from "../../ui/amount-button/amount-button"
+import { DeleteButton } from "../../ui/delete-button/delete-button"
+import styles from "./product.module.css"
+import { DataContext } from "../../services/productsContext"
+import { TotalPriceContext, DiscountContext } from "../../services/appContext"
 
-export const Product = ({
-  src,
-  id,
-  text,
-  qty,
-  price,
-  discount,
-  data,
-  setData,
-  setTotalPrice,
-  totalPrice
-}) => {
-  const discountedPrice = useMemo(() => ((price - price * (discount / 100)) * qty).toFixed(0), [
-    discount,
-    price,
-    qty
-  ]);
+export const Product = ({ src, id, text, qty, price }) => {
+  const { data, setData } = useContext(DataContext)
+  const { discount } = useContext(DiscountContext)
+  const { totalPrice, setTotalPrice } = useContext(TotalPriceContext)
+  const discountedPrice = useMemo(() => ((price - price * (discount / 100)) * qty).toFixed(0), [discount, price, qty])
 
   const onDelete = () => {
-    setData(data.filter(item => item.id !== id));
-  };
+    setData(data.filter((item) => item.id !== id))
+  }
 
   const decrease = () => {
     if (qty === 1) {
-      onDelete();
+      onDelete()
     } else {
-      setTotalPrice(totalPrice - price);
-      const newData = data.map(item => {
+      setTotalPrice(totalPrice - price)
+      const newData = data.map((item) => {
         if (item.id === id) {
-          item.qty -= 1;
-          return item;
+          item.qty -= 1
+          return item
         }
-        return item;
-      });
-      setData(newData);
+        return item
+      })
+      setData(newData)
     }
-  };
+  }
 
   const increase = () => {
-    setTotalPrice(totalPrice + price);
-    const newData = data.map(item => {
+    setTotalPrice(totalPrice + price)
+    const newData = data.map((item) => {
       if (item.id === id) {
-        item.qty += 1;
-        return item;
+        item.qty += 1
+        return item
       }
-      return item;
-    });
-    setData(newData);
-  };
+      return item
+    })
+    setData(newData)
+  }
 
   return (
     <div className={`${styles.product}`}>
@@ -68,5 +58,5 @@ export const Product = ({
       </div>
       <DeleteButton onDelete={onDelete} />
     </div>
-  );
-};
+  )
+}
