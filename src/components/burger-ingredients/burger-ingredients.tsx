@@ -14,15 +14,18 @@ export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | ke
 
 const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions }) => {
   type CategoryRefType = HTMLDivElement
+  type CategoryIdType = CategoryBase["id"]
   const { products: ingredientsTable, categories } = useIngredientsContext()
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
   const { addProductToCart } = useCartContext()
   const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & (typeof categories)[number])[]>([])
-  const activeCategoryId: CategoryBase["id"] = categories[0]?.id
+  const activeCategoryId: CategoryIdType = categories[0]?.id
   const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
   const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
   const [modalOpen, setModalOpen] = React.useState(false)
   const modalIngredientRef = React.useRef<BurgerIngredientType | null>(null)
+
+  const scrollRef = React.useRef<CategoryIdType | null>(null)
 
   React.useEffect(() => {
     const selectedIngredients = Object.keys(ingredientsTable).length > 0 ? selectIngredients(ingredientsTable) : []
@@ -36,29 +39,29 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
     categoriesRefs.current = categories.map((c) => ({ ref: null, ...c }))
   }, [categories])
 
-  const scrollIntoCategory = React.useCallback((id: string) => {
-    categoriesRefs.current?.find((c) => c.id === id)?.ref?.scrollIntoView({ behavior: "smooth" })
+  const handleChangeActiveTab = React.useCallback((tabId: CategoryIdType) => {
+    scrollRef.current = tabId
+    categoriesRefs.current?.find((c) => c.id === tabId)?.ref?.scrollIntoView({ behavior: "smooth" })
+    return true
   }, [])
 
-  const handleChangeActiveTab = React.useCallback(
-    (tabId: string) => {
-      scrollIntoCategory(tabId)
-      setCurrentTabId(tabId)
+  const handleCategoryInView = React.useCallback(
+    ({ categoryId, ratio }: { categoryId: CategoryIdType; ratio: number }) => {
+      const activeRatio = ratioRef.current
+
+      if (activeRatio.categoryId !== categoryId && ratio > activeRatio.ratio) {
+        ratioRef.current = { ...ratioRef.current, categoryId, ratio }
+        if (scrollRef.current == null || scrollRef.current === categoryId) {
+          setCurrentTabId(categoryId)
+          scrollRef.current = null
+        }
+        return
+      }
+
+      ratioRef.current = { ...ratioRef.current, ratio }
     },
-    [scrollIntoCategory]
+    []
   )
-
-  const handleCategoryInView = React.useCallback(({ categoryId, ratio }: { categoryId: string; ratio: number }) => {
-    const activeRatio = ratioRef.current
-
-    if (activeRatio.categoryId !== categoryId && ratio > activeRatio.ratio) {
-      ratioRef.current = { ...ratioRef.current, categoryId, ratio }
-      setCurrentTabId(categoryId)
-      return
-    }
-
-    ratioRef.current = { ...ratioRef.current, ratio }
-  }, [])
 
   const handleIngredientClick = React.useCallback((ingredient: BurgerIngredientType) => {
     modalIngredientRef.current = ingredient

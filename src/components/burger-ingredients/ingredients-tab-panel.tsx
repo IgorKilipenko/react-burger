@@ -7,7 +7,7 @@ import { useIngredientsContext } from "../../context/products"
 
 export interface IngredientsTabPanelProps {
   activeTabId?: CategoryType["id"] | null
-  onTabClick?: ((tabId: CategoryType["id"]) => void) | null
+  onTabClick?: ((tabId: CategoryType["id"]) => boolean) | null
 }
 
 export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: IngredientsTabPanelProps) => {
@@ -19,8 +19,11 @@ export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: Ingr
   }, [activeTabId])
 
   const handleTabClick = (tabId: CategoryType["id"]) => {
-    setCurrent(tabId)
-    onTabClick && onTabClick(tabId)
+    let preventDefault = false
+    if (onTabClick) {
+      preventDefault = onTabClick(tabId)
+    }
+    !preventDefault && setCurrent(tabId)
   }
 
   return (
