@@ -3,16 +3,23 @@ import { apiClientConfig, BurgerIngredientType, parseRawData } from "../data"
 import { useFetch } from "./useFetch"
 
 export interface ApiResponseType {
-  data: BurgerIngredientType[]; success: boolean 
+  data?: BurgerIngredientType[]
+  success: boolean
+  message?: string
 }
 
 export const useFetchIngredients = () => {
   const { data, error } = useFetch<ApiResponseType>(
-    `${apiClientConfig.baseUrl}/${apiClientConfig.endpoints.ingredients}`
+    `${apiClientConfig.baseUrl}/${apiClientConfig.endpoints.ingredients}`,
+    { method: "GET" }
   )
   const { table: ingredients, categories } = React.useMemo(() => {
     return parseRawData(data?.data ?? [])
   }, [data])
 
-  return { data: { ingredients, categories, success: data?.success ?? false }, loading:data == null , error }
+  return {
+    response: { ingredients, categories, success: data?.success ?? false, message: data?.message },
+    loading: data == null,
+    error,
+  }
 }

@@ -21,17 +21,17 @@ const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth
   const { setProducts, setCategories } = useIngredientsContext()
   const currHeight = h ?? height
 
-  const { data, loading, error } = useFetchIngredients()
+  const { response, loading, error } = useFetchIngredients()
 
   React.useEffect(() => {
-    setProducts(data.ingredients)
-    setCategories(data.categories)
-  }, [data.ingredients, data.categories, setCategories, setProducts])
+    setProducts(response.ingredients)
+    setCategories(response.categories)
+  }, [response.ingredients, response.categories, setCategories, setProducts])
 
   return (
     <Flex as="main" className="custom-scroll" overflow="auto" align="stretch" justify="stretch" h={currHeight}>
       <Flex grow={1} justify="space-around">
-        {data.categories.length > 0 ? (
+        {response.categories.length > 0 ? (
           <Flex
             maxW={maxContentWidth}
             justify="space-between"
@@ -48,8 +48,12 @@ const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth
               </Flex>
             ))}
           </Flex>
-        ) : error || (!loading && !data.success) ? (
-          <ErrorMessage message="Ошибка загрузки данных." />
+        ) : error || (!loading && !response.success) ? (
+          <ErrorMessage
+            message={`Ошибка загрузки данных.${error || response.message ? " " : ""}${
+              response.message ? response.message : error ?? ""
+            }`}
+          />
         ) : (
           loadingMessage()
         )}
