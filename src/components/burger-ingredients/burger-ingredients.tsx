@@ -42,19 +42,25 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const handleChangeActiveTab = React.useCallback((tabId: CategoryIdType) => {
     scrollRef.current = tabId
     categoriesRefs.current?.find((c) => c.id === tabId)?.ref?.scrollIntoView({ behavior: "smooth" })
+    setCurrentTabId(tabId)
     return true
   }, [])
 
   const handleCategoryInView = React.useCallback(
     ({ categoryId, ratio }: { categoryId: CategoryIdType; ratio: number }) => {
+      if (scrollRef.current != null) {
+        if (scrollRef.current === categoryId) {
+          scrollRef.current = null
+        } else {
+          return
+        }
+      }
+
       const activeRatio = ratioRef.current
 
       if (activeRatio.categoryId !== categoryId && ratio > activeRatio.ratio) {
         ratioRef.current = { ...ratioRef.current, categoryId, ratio }
-        if (scrollRef.current == null || scrollRef.current === categoryId) {
-          setCurrentTabId(categoryId)
-          scrollRef.current = null
-        }
+        setCurrentTabId(categoryId)
         return
       }
 
