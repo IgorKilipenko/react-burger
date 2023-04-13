@@ -5,8 +5,7 @@ import BurgerIngredients from "../burger-ingredients"
 import BurgerConstructor from "../burger-constructor"
 import theme from "../../theme/theme"
 import { Flex, type LayoutProps } from "@chakra-ui/react"
-import { useFetch } from "../../hooks"
-import { apiClientConfig, parseRawData, type BurgerIngredientType } from "../../data"
+import { useFetchIngredients } from "../../hooks"
 import { ErrorMessage } from "../error-message"
 import { CartContextProvider, BurgerCartContext } from "../../context/cart"
 import { BurgerProductsContext, ProductsContextProvider, useIngredientsContext } from "../../context/products"
@@ -22,43 +21,40 @@ const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth
   const { setProducts, setCategories } = useIngredientsContext()
   const currHeight = h ?? height
 
-  const { data, error } = useFetch<{ data: BurgerIngredientType[]; success: boolean } | undefined>(
-    `${apiClientConfig.baseUrl}/${apiClientConfig.ingredientsPath}`
-  )
-  const { table: ingredients, categories } = React.useMemo(() => {
-    return parseRawData(data?.data ?? [])
-  }, [data])
+  const { data, loading, error } = useFetchIngredients()
 
   React.useEffect(() => {
-    setProducts(ingredients)
-    setCategories(categories)
-  }, [categories, ingredients, setCategories, setProducts])
+    setProducts(data.ingredients)
+    setCategories(data.categories)
+  }, [data.ingredients, data.categories, setCategories, setProducts])
 
-  return categories.length > 0 ? (
+  return (
     <Flex as="main" className="custom-scroll" overflow="auto" align="stretch" justify="stretch" h={currHeight}>
       <Flex grow={1} justify="space-around">
-        <Flex
-          maxW={maxContentWidth}
-          justify="space-between"
-          pl={5}
-          pr={5}
-          gap={10}
-          pb={10}
-          justifySelf="stretch"
-          grow={1}
-        >
-          {React.Children.map(children, (child) => (
-            <Flex as="section" grow={1} basis={0} justify="stretch">
-              {child}
-            </Flex>
-          ))}
-        </Flex>
+        {data.categories.length > 0 ? (
+          <Flex
+            maxW={maxContentWidth}
+            justify="space-between"
+            pl={5}
+            pr={5}
+            gap={10}
+            pb={10}
+            justifySelf="stretch"
+            grow={1}
+          >
+            {React.Children.map(children, (child) => (
+              <Flex as="section" grow={1} basis={0} justify="stretch">
+                {child}
+              </Flex>
+            ))}
+          </Flex>
+        ) : error || (!loading && !data.success) ? (
+          <ErrorMessage message="Ошибка загрузки данных." />
+        ) : (
+          loadingMessage()
+        )}
       </Flex>
     </Flex>
-  ) : error || (data && !data.success) ? (
-    <ErrorMessage message="Ошибка загрузки данных." />
-  ) : (
-    loadingMessage()
   )
 }
 
