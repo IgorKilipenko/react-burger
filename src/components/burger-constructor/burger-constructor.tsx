@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import { Flex, Text } from "@chakra-ui/react"
+import { Flex, FlexProps, HTMLChakraProps, Text } from "@chakra-ui/react"
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
 import { CurrencyIcon } from "../common/icons"
 import { Icon } from "../common/icon"
@@ -9,24 +9,27 @@ import { CartItemType, useCartContext } from "../../context/cart/cart-context"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
 
-const extractIngredientsByType = (ingredientsList: CartItemType<BurgerIngredientType>[]) => {
-  const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
-  const bun = ingredientsList.reduce<CartItemType<BurgerIngredientType> | null>((res, curr) => {
-    return (res = curr.item.type === "bun" ? curr : res)
-  }, null)
-  return { bun, innerIngredients }
-}
+export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | keyof HTMLChakraProps<"div">> {}
 
-const BurgerConstructor = () => {
-  const { cart: selectedIngredients } = useCartContext()
+const BurgerConstructor: React.FC<BurgerConstructorProps> = ({ ...flexOptions }) => {
   const calcTotalPrice = useCallback(
     (ingredients: CartItemType<BurgerIngredientType>[]) =>
       ingredients.reduce((res, curr) => (res += curr.item.price * curr.quantity), 0),
     []
   )
-  const { bun, innerIngredients } = extractIngredientsByType(selectedIngredients ?? [])
+  const extractIngredientsByType = useCallback((ingredientsList: CartItemType<BurgerIngredientType>[]) => {
+    const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
+    const bun = ingredientsList.reduce<CartItemType<BurgerIngredientType> | null>((res, curr) => {
+      return (res = curr.item.type === "bun" ? curr : res)
+    }, null)
+    return { bun, innerIngredients }
+  }, [])
+
+  const { cart: selectedIngredients } = useCartContext()
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
+
+  const { bun, innerIngredients } = extractIngredientsByType(selectedIngredients)
 
   React.useEffect(() => {
     setTotalPrice(calcTotalPrice(selectedIngredients ?? []))
@@ -38,7 +41,7 @@ const BurgerConstructor = () => {
 
   return (
     <>
-      <Flex direction={"column"} gap={10} pt={100} justify="space-between" align="center" h="100%" w="100%">
+      <Flex direction={"column"} gap={10} pt={100} justify="space-between" align="center" {...flexOptions}>
         <Burger bun={bun} ingredients={innerIngredients} />
         <Flex justify="end" align="center" w="100%" gap={10}>
           <Flex align="center" gap={2}>
