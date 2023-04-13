@@ -29,8 +29,9 @@ export interface BurgerIngredientType extends IngredientBase, DbObjectType {
   image_large: string
 }
 
-export interface IngredientsTableView<T extends BurgerIngredientType = BurgerIngredientType> {
-  [key: CategoryBase["id"]]: T[]
+export type IngredientsTableViewKeyType = CategoryBase["id"]
+export interface IngredientsTableView<T extends IngredientBase & DbObjectType = BurgerIngredientType> {
+  [key: IngredientsTableViewKeyType]: T[]
 }
 
 export const categoryMapper = (categoryRaw: string) => {
