@@ -1,6 +1,9 @@
 export const apiClientConfig = {
   baseUrl: "https://norma.nomoreparties.space",
-  ingredientsPath: "api/ingredients",
+  endpoints: {
+    orders: "api/orders",
+    ingredients: "api/ingredients",
+  },
 }
 
 export interface DbObjectType {
@@ -53,5 +56,5 @@ export function parseRawData<T extends BurgerIngredientType>(rawData: T[]) {
 
   const categories = Object.keys(table).map((category) => ({ id: category, name: categoryMapper(category) }))
 
-  return {table, categories}
+  return { table, categories }
 }
