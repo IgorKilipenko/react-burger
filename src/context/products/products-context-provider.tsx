@@ -40,10 +40,7 @@ export function ProductsContextProvider<TProduct extends ProductBaseType, TCateg
   const contextValue: ProductsContextType<TProduct, TCategory> = {
     products: products,
     categories: categories,
-    setProducts: (products) => {
-      console.log("setProducts", products)
-      setProducts(products)
-    },
+    setProducts: setProducts,
     setCategories: setCategories,
     clear: clear,
   }
