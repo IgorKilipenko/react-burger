@@ -3,15 +3,16 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
 import { Flex } from "@chakra-ui/react"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { CategoryBase as CategoryType } from "../../data"
+import { useIngredientsContext } from "../../context/products"
 
 export interface IngredientsTabPanelProps {
-  items: CategoryType[]
-  activeTabId?: CategoryType["id"]
-  onTabClick?: (tabId: CategoryType["id"]) => void
+  activeTabId?: CategoryType["id"] | null
+  onTabClick?: ((tabId: CategoryType["id"]) => void) | null
 }
 
-export const IngredientsTabPanel = React.memo(({ items, onTabClick, activeTabId }: IngredientsTabPanelProps) => {
+export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: IngredientsTabPanelProps) => {
   const [current, setCurrent] = React.useState(activeTabId)
+  const { categories: items } = useIngredientsContext()
 
   React.useEffect(() => {
     setCurrent(activeTabId)
@@ -28,7 +29,7 @@ export const IngredientsTabPanel = React.memo(({ items, onTabClick, activeTabId 
         <Tab
           key={`tab-${item.id}`}
           value={item.id}
-          active={current === item.id}
+          active={current ? current === item.id : item === items.at(0)}
           onClick={() => handleTabClick(item.id)}
         >
           {capitalizeFirstLetter(item.name)}

@@ -71,11 +71,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         <Text variant={"mainLarge"} pt={10} pb={5}>
           {capitalizeFirstLetter("соберите бургер")}
         </Text>
-        <IngredientsTabPanel
-          items={categoriesRefs.current}
-          onTabClick={handleChangeActiveTab}
-          activeTabId={currentTabId}
-        />
+        <IngredientsTabPanel onTabClick={handleChangeActiveTab} activeTabId={currentTabId} />
         <Flex ref={scrollContainerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
           {categoriesRefs.current?.map((category, i) => (
             <CategorySection
