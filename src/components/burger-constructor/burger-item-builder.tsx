@@ -32,18 +32,20 @@ export const burgerItemBuilder = ({
       }
     : {}
 
-  return (
-    <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
-      <Flex w={8} align="center">
-        <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
+  return Array(quantity)
+    .fill(0)
+    .map((_: number, i: number) => (
+      <Flex key={`bc-${element._id ?? element.name}-${i}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
+        <Flex w={8} align="center">
+          <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
+        </Flex>
+        <ConstructorElement
+          type={type ?? undefined}
+          isLocked={isBunElement || false}
+          text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
+          price={element.price}
+          thumbnail={element.image}
+        />
       </Flex>
-      <ConstructorElement
-        type={type ?? undefined}
-        isLocked={isBunElement || false}
-        text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
-        price={element.price * quantity}
-        thumbnail={element.image}
-      />
-    </Flex>
-  )
+    ))
 }
