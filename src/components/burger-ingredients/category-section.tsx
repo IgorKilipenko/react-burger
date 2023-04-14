@@ -26,7 +26,7 @@ export const CategorySection = React.memo(
       const [inViewport, ratio] = useInViewport(
         categoryRef,
         {
-          threshold: [0, 1],
+          threshold: [0, 0.5, 1],
           root: scrollContainerRef,
         },
         true
