@@ -48,7 +48,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const handleCategoryInView = React.useCallback(
     ({ categoryId, ratio }: { categoryId: CategoryIdType; ratio: number }) => {
-      setInViewState({ categoryIdInView: categoryId, ratio })
+      setInViewState({ itemIdInView: categoryId, ratio })
     },
     [setInViewState]
   )
