@@ -1,8 +1,6 @@
 import { apiClientConfig } from "../data"
 import { useFetch } from "./useFetch"
 
-export type OrderType = string
-
 export interface ApiResponseType {
   name?: string
   order?: {
@@ -12,14 +10,20 @@ export interface ApiResponseType {
   message?: string
 }
 
-export const useFetchOrders = (orders: OrderType[]): { response: ApiResponseType; loading: boolean; error?: Error } => {
+export const useFetchOrders = (
+  ingredientsIds: string[]
+): { response: ApiResponseType; loading: boolean; error?: Error } => {
   const { data, error } = useFetch<ApiResponseType>(`${apiClientConfig.baseUrl}/${apiClientConfig.endpoints.orders}`, {
-    method: "POST", body: JSON.stringify(orders)
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ingredients: ingredientsIds }),
   })
 
   return {
-    response: { name: data?.name, order: data?.order, success: data?.success ?? false },
-    loading: data == null,
+    response: { name: data?.name, order: data?.order, success: data?.success ?? false, message: data?.message },
+    loading: !error && data == null,
     error,
-  }
+  } as const
 }
