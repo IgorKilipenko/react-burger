@@ -18,20 +18,19 @@ interface MainContainerProps {
 }
 
 const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth, h, height = "100%" }) => {
-  const { setProducts, setCategories } = useIngredientsContext()
+  const {categories, setProducts } = useIngredientsContext()
   const currHeight = h ?? height
 
   const { response, loading, error } = useFetchIngredients()
 
   React.useEffect(() => {
     setProducts(response.ingredients)
-    setCategories(response.categories)
-  }, [response.ingredients, response.categories, setCategories, setProducts])
+  }, [response.ingredients, setProducts])
 
   return (
     <Flex as="main" className="custom-scroll" overflow="auto" align="stretch" justify="stretch" h={currHeight}>
       <Flex grow={1} justify="space-around">
-        {response.categories.length > 0 ? (
+        {categories.length > 0 ? (
           <Flex
             maxW={maxContentWidth}
             justify="space-between"

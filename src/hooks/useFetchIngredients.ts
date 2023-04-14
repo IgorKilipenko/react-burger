@@ -13,12 +13,12 @@ export const useFetchIngredients = () => {
     `${apiClientConfig.baseUrl}/${apiClientConfig.endpoints.ingredients}`,
     { method: "GET" }
   )
-  const { table: ingredients, categories } = React.useMemo(() => {
+  const { table: ingredients } = React.useMemo(() => {
     return parseRawIngredientsData(data?.data ?? [])
   }, [data])
 
   return {
-    response: { ingredients, categories, success: data?.success ?? false, message: data?.message },
+    response: { ingredients, success: data?.success ?? false, message: data?.message },
     loading: data == null,
     error,
   }

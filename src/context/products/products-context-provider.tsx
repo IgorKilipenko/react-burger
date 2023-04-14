@@ -1,4 +1,5 @@
 import React, { useState, HTMLAttributes } from "react"
+import { categoryMapper } from "../../data"
 import { Omitted } from "../../utils/types"
 import {
   type ProductBaseType,
@@ -31,17 +32,41 @@ export function ProductsContextProvider<TProduct extends ProductBaseType, TCateg
   const [categories, setCategories] = useState<ProductsContextType<TProduct, TCategory>["categories"]>(
     initialValue.categories
   )
+  const needUpdateCategoriesRef = React.useRef<boolean | null>(false)
+
+  React.useEffect(() => {
+    if (!needUpdateCategoriesRef.current) {
+      return
+    }
+    setCategories(() => {
+      const categories = Object.keys(products).map((category) => ({
+        id: category,
+        name: categoryMapper(category),
+      })) as CategoriesListType<TCategory>
+      needUpdateCategoriesRef.current = false
+      return categories
+    })
+  }, [products])
 
   const clear = () => {
     setProducts(initialValue.products)
     setCategories(initialValue.categories)
   }
 
+  const setAllProducts = React.useCallback<typeof setProducts>((state) => {
+    setProducts((prevState) => {
+      const products = typeof state === "function" ? state(prevState) : state
+      if (prevState !== products) {
+        needUpdateCategoriesRef.current = true
+      }
+      return products
+    })
+  }, [])
+
   const contextValue: ProductsContextType<TProduct, TCategory> = {
     products: products,
     categories: categories,
-    setProducts: setProducts,
-    setCategories: setCategories,
+    setProducts: setAllProducts,
     clear: clear,
   }
 
