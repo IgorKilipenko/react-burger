@@ -3,7 +3,8 @@ import { BurgerIngredientType, IngredientsTableView } from "../../data"
 
 export const selectIngredients = (
   ingredients: IngredientsTableView,
-  bunId: string = "bun"
+  bunId: string = "bun",
+  maxQuantity: number = 3
 ): CartItemType<BurgerIngredientType>[] => {
   const randomIndex = (val: any[] | number) => Math.floor(Math.random() * (Array.isArray(val) ? val!.length : val))
 
@@ -13,7 +14,7 @@ export const selectIngredients = (
     .reduce<CartItemType<BurgerIngredientType>[]>((res, key) => {
       res.push(
         ...ingredients[key]
-          .slice(0, randomIndex(Math.min(ingredients[key].length, 10)))
+          .slice(0, randomIndex(Math.min(ingredients[key].length, maxQuantity)))
           .map((ingredient) => ({ item: ingredient, quantity: randomIndex(4) + 1 }))
       )
       return res
