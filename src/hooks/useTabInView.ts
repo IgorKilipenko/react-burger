@@ -6,7 +6,7 @@ export interface TabsCategoryBase {
   id: CategoryIdType
 }
 
-export function useTabInView(tabs: TabsCategoryBase[]) {
+export function useTabInView(tabs: TabsCategoryBase[], lockScrollTimeout = 1000) {
   const [state, setState] = React.useState<{ categoryIdInView: CategoryIdType | null; ratio: number }>({
     categoryIdInView: tabs[0]?.id,
     ratio: 1,
@@ -16,13 +16,33 @@ export function useTabInView(tabs: TabsCategoryBase[]) {
   const ratioRef = React.useRef({ categoryId: state.categoryIdInView, ratio: state.ratio })
   const scrollRef = React.useRef<CategoryIdType | null>(null)
 
-  const setCurrentTabIdForce = React.useCallback((id: CategoryIdType) => {
-    scrollRef.current = id
-    setCurrentTabId(id)
-  }, [])
+  const setCurrentTabIdForce = React.useCallback(
+    (id: CategoryIdType) => {
+      scrollRef.current = id
+      setCurrentTabId(id)
+      setTimeout(() => {
+        if (scrollRef.current === id) {
+          scrollRef.current = null
+        }
+      }, lockScrollTimeout)
+    },
+    [lockScrollTimeout]
+  )
 
   const setInViewState = React.useCallback<typeof setState>((state) => {
-    setState(state)
+    setState((prevState) => {
+      const inViewItem = typeof state === "function" ? state(prevState) : state
+      return inViewItem
+    })
+  }, [])
+
+  const updateCurrentTab = React.useCallback((categoryId: CategoryIdType) => {
+    setCurrentTabId((prevState) => {
+      if (scrollRef.current && scrollRef.current === categoryId) {
+        scrollRef.current = null
+      }
+      return scrollRef.current ? prevState : categoryId
+    })
   }, [])
 
   React.useEffect(() => {
@@ -35,14 +55,8 @@ export function useTabInView(tabs: TabsCategoryBase[]) {
     } else {
       ratioRef.current = { ...ratioRef.current, ratio: state.ratio ?? 0 }
     }
-    setCurrentTabId((prevState) => {
-      if (scrollRef.current && scrollRef.current === ratioRef.current.categoryId) {
-        scrollRef.current = null
-      }
-
-      return scrollRef.current ? prevState : ratioRef.current.categoryId
-    })
-  }, [scrollRef, state])
+    ratioRef.current.categoryId && updateCurrentTab(ratioRef.current.categoryId)
+  }, [state.categoryIdInView, state.ratio, updateCurrentTab])
 
   return { currentTabId, ratio: ratioRef.current.ratio, setInViewState, setCurrentTabIdForce } as const
 }
