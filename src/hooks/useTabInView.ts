@@ -26,23 +26,22 @@ export function useTabInView(tabs: TabsCategoryBase[]) {
   }, [])
 
   React.useEffect(() => {
-    if (scrollRef && scrollRef.current != null) {
-      if (scrollRef.current === state?.categoryIdInView) {
-        scrollRef.current = null
-      } else {
-        return
+    if (ratioRef.current.categoryId !== state.categoryIdInView && state.ratio > ratioRef.current.ratio) {
+      ratioRef.current = {
+        ...ratioRef.current,
+        categoryId: state.categoryIdInView,
+        ratio: state.ratio,
       }
+    } else {
+      ratioRef.current = { ...ratioRef.current, ratio: state.ratio ?? 0 }
     }
+    setCurrentTabId((prevState) => {
+      if (scrollRef.current && scrollRef.current === ratioRef.current.categoryId) {
+        scrollRef.current = null
+      }
 
-    const activeRatio = ratioRef.current
-
-    if (activeRatio.categoryId !== state.categoryIdInView && state.ratio > activeRatio.ratio) {
-      ratioRef.current = { ...ratioRef.current, categoryId: state.categoryIdInView, ratio: state.ratio }
-      setCurrentTabId(state.categoryIdInView)
-      return
-    }
-
-    ratioRef.current = { ...ratioRef.current, ratio: state.ratio ?? 0 }
+      return scrollRef.current ? prevState : ratioRef.current.categoryId
+    })
   }, [scrollRef, state])
 
   return { currentTabId, ratio: ratioRef.current.ratio, setInViewState, setCurrentTabIdForce } as const
