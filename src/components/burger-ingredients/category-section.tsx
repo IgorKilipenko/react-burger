@@ -12,7 +12,6 @@ type RootElementType = HTMLDivElement
 
 export interface CategorySectionProps {
   category: CategoryBase
-  //ingredients: BurgerIngredientType[]
   scrollContainerRef?: BasicTarget
   onCategoryInView?: (args: { categoryId: string; ratio: number }) => void
   onIngredientClick?: (ingredient: BurgerIngredientType) => void
@@ -20,14 +19,14 @@ export interface CategorySectionProps {
 
 export const CategorySection = React.memo(
   React.forwardRef<RootElementType, CategorySectionProps>(
-    ({ category, /*ingredients,*/ scrollContainerRef, onCategoryInView, onIngredientClick }, ref) => {
+    ({ category, scrollContainerRef, onCategoryInView, onIngredientClick }, ref) => {
       const { products: ingredients } = useIngredientsContext()
       const { cart } = useCartContext()
       const categoryRef = React.useRef<RootElementType | null>(null)
       const [inViewport, ratio] = useInViewport(
         categoryRef,
         {
-          threshold: [0, 0.25, 0.5, 0.75, 1],
+          threshold: [0, 1],
           root: scrollContainerRef,
         },
         true
