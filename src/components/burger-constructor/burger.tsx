@@ -1,20 +1,18 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { Flex, Box } from "@chakra-ui/react"
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
-import { type CartItemType } from "../../context/cart/cart-context"
+import { useCartContext, type CartItemType } from "../../context/cart/cart-context"
 import { BurgerIngredientType } from "../../data"
 
 export interface BurgerProps {
-  bun?: CartItemType<BurgerIngredientType> | null
-  ingredients?: CartItemType<BurgerIngredientType>[]
 }
 
 const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
 
-export const Burger = React.memo(({ bun, ingredients }: BurgerProps) => {
+export const Burger = React.memo<BurgerProps>(() => {
   const buildItem = ({
     element,
     type = null,
@@ -55,6 +53,17 @@ export const Burger = React.memo(({ bun, ingredients }: BurgerProps) => {
       </Flex>
     )
   }
+
+  const extractIngredientsByType = useCallback((ingredientsList: CartItemType<BurgerIngredientType>[]) => {
+    const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
+    const bun = ingredientsList.reduce<CartItemType<BurgerIngredientType> | null>((res, curr) => {
+      return (res = curr.item.type === "bun" ? curr : res)
+    }, null)
+    return { bun, ingredients:innerIngredients }
+  }, [])
+
+  const { cart: selectedIngredients } = useCartContext()
+  const { bun, ingredients } = extractIngredientsByType(selectedIngredients)
 
   return (
     <Flex

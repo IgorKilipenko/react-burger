@@ -17,19 +17,10 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({ ...flexOptions })
       ingredients.reduce((res, curr) => (res += curr.item.price * curr.quantity), 0),
     []
   )
-  const extractIngredientsByType = useCallback((ingredientsList: CartItemType<BurgerIngredientType>[]) => {
-    const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
-    const bun = ingredientsList.reduce<CartItemType<BurgerIngredientType> | null>((res, curr) => {
-      return (res = curr.item.type === "bun" ? curr : res)
-    }, null)
-    return { bun, innerIngredients }
-  }, [])
 
   const { cart: selectedIngredients } = useCartContext()
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
-
-  const { bun, innerIngredients } = extractIngredientsByType(selectedIngredients)
 
   React.useEffect(() => {
     setTotalPrice(calcTotalPrice(selectedIngredients ?? []))
@@ -42,7 +33,7 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({ ...flexOptions })
   return (
     <>
       <Flex direction={"column"} gap={10} pt={100} justify="space-between" align="center" {...flexOptions}>
-        <Burger bun={bun} ingredients={innerIngredients} />
+        <Burger />
         <Flex justify="end" align="center" w="100%" gap={10}>
           <Flex align="center" gap={2}>
             <Text variant={"digitsMedium"}>{totalPrice}</Text>
