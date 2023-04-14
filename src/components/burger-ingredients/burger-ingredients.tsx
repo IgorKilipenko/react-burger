@@ -19,9 +19,8 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
   const { addProductToCart } = useCartContext()
   const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & (typeof categories)[number])[]>([])
-  const activeCategoryId: CategoryIdType = categories[0]?.id
-  const [currentTabId, setCurrentTabId] = React.useState(activeCategoryId)
-  const ratioRef = React.useRef({ categoryId: activeCategoryId, ratio: 1 })
+  const [currentTabId, setCurrentTabId] = React.useState<CategoryIdType | null>(categories[0]?.id)
+  const ratioRef = React.useRef({ categoryId: currentTabId, ratio: 1 })
   const [modalOpen, setModalOpen] = React.useState(false)
   const modalIngredientRef = React.useRef<BurgerIngredientType | null>(null)
 
