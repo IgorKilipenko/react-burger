@@ -47,7 +47,7 @@ export const categoryMapper = (categoryRaw: string) => {
   return ingredientCategories[categoryRaw as keyof typeof ingredientCategories]
 }
 
-export function parseRawData<T extends BurgerIngredientType>(rawData: T[]) {
+export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData: T[]) {
   const table = rawData.reduce<IngredientsTableView<T>>((res, item) => {
     const category = (res[item.type] ??= [])
     category.push(item)

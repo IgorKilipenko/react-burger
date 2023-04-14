@@ -1,5 +1,5 @@
 import React from "react"
-import { apiClientConfig, BurgerIngredientType, parseRawData } from "../data"
+import { apiClientConfig, BurgerIngredientType, parseRawIngredientsData } from "../data"
 import { useFetch } from "./useFetch"
 
 export interface ApiResponseType {
@@ -14,7 +14,7 @@ export const useFetchIngredients = () => {
     { method: "GET" }
   )
   const { table: ingredients, categories } = React.useMemo(() => {
-    return parseRawData(data?.data ?? [])
+    return parseRawIngredientsData(data?.data ?? [])
   }, [data])
 
   return {
