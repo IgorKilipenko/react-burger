@@ -12,12 +12,14 @@ export interface CartContextType<T extends ProductType> {
   cart: CartItemType<T>[]
   addProductToCart: (item: CartItemType<T>) => void
   removeProductFromCart: (item: T) => void
+  clearCart: () => void
 }
 
 const defaultContext: CartContextType<any> = {
   cart: [],
   addProductToCart: () => {},
   removeProductFromCart: () => {},
+  clearCart: () => {},
 }
 
 export function CreateCartContext<T extends ProductType>() {

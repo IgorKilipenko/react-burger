@@ -23,9 +23,11 @@ export function CartContextProvider<T extends ProductType>({ children, context }
     setProducts((prevState) => {
       if (product.item.type === "bun") {
         const rmProducts = getProductsByType(product.item.type, prevState)
-        prevState = rmProducts ? prevState.filter((p) => rmProducts.findIndex((x) => p.item._id === x.item._id)) : prevState
+        prevState = rmProducts
+          ? prevState.filter((p) => rmProducts.findIndex((x) => p.item._id === x.item._id))
+          : prevState
       }
-      
+
       const existingProduct = getProductById(product.item._id, prevState)
       if (!existingProduct) {
         return [...prevState, product]
@@ -49,10 +51,15 @@ export function CartContextProvider<T extends ProductType>({ children, context }
     })
   }
 
+  const clearCart = () => {
+    setProducts([])
+  }
+
   const contextValue: CartContextType<T> = {
     cart: products,
     addProductToCart: addProductToCart,
     removeProductFromCart: removeProductFromCart,
+    clearCart: clearCart,
   }
 
   return <context.Provider value={contextValue}>{children}</context.Provider>

@@ -18,7 +18,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   type CategoryIdType = CategoryBase["id"]
   const { products: ingredientsTable, categories } = useIngredientsContext()
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
-  const { addProductToCart } = useCartContext()
+  const { addProductToCart, clearCart } = useCartContext()
   const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & (typeof categories)[number])[]>([])
   const [modalOpen, setModalOpen] = React.useState(false)
   const modalIngredientRef = React.useRef<BurgerIngredientType | null>(null)
@@ -26,6 +26,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories)
 
   React.useEffect(() => {
+    clearCart()
     const selectedIngredients = Object.keys(ingredientsTable).length > 0 ? selectIngredients(ingredientsTable) : []
     selectedIngredients.forEach((x) => {
       addProductToCart(x)
