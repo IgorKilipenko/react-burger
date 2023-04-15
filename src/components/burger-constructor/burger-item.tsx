@@ -1,8 +1,10 @@
+import React from "react"
 import { Flex, Box } from "@chakra-ui/react"
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
+import { useCartContext } from "../../context/cart"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
@@ -14,6 +16,7 @@ export interface BurgerItemProps {
 }
 
 export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, quantity = 1 }) => {
+  const { removeProductFromCart } = useCartContext()
   const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
 
   const bunProps = isBunElement
@@ -30,6 +33,10 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
       }
     : {}
 
+  const handleRemove = React.useCallback(() => {
+    removeProductFromCart(element)
+  },[element, removeProductFromCart])
+
   return (
     <>
       {Array(quantity)
@@ -45,6 +52,7 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
               text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
               price={element.price}
               thumbnail={element.image}
+              handleClose={handleRemove}
             />
           </Flex>
         ))}
