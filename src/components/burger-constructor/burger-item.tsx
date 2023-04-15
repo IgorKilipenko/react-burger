@@ -43,7 +43,7 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
       {Array(quantity)
         .fill(0)
         .map((_: number, i: number) => (
-          <Flex key={`bi-${element._id}-${uid()}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
+          <Flex key={`bi-${element._id}-${uid()}` + (type ? `-${type}` : "")} gridColumn={1} {...bunProps}>
             <Flex w={8} align="center">
               <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
             </Flex>

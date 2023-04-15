@@ -23,7 +23,7 @@ export const Burger = React.memo<BurgerProps>(() => {
     <Flex
       direction="column"
       justify="start"
-      align="center"
+      align="stretch"
       gap={4}
       maxH="100%"
       overflowY="auto"
