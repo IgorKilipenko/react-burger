@@ -32,13 +32,14 @@ export function CartContextProvider<T extends ProductType>({ children, context }
       if (!existingProduct) {
         return [...prevState, product]
       }
-      const newState = prevState.map((p) =>
-        p.item._id === existingProduct.item._id
+
+      const newState = prevState.map((product) =>
+        product.item._id === existingProduct.item._id
           ? {
-              item: p.item,
-              quantity: p.quantity + product.quantity,
+              item: product.item,
+              quantity: product.quantity + product.quantity,
             }
-          : p
+          : product
       )
       return newState
     })
@@ -46,8 +47,16 @@ export function CartContextProvider<T extends ProductType>({ children, context }
 
   const removeProductFromCart = (product: T) => {
     setProducts((prevState) => {
-      const newProducts = prevState.filter((p) => p.item._id !== product._id)
-      return newProducts
+      const updatedProducts = prevState.reduce<typeof prevState>((res, p) => {
+        let updatedProduct:typeof p | null = p
+        if (p.item._id === product._id) {
+          updatedProduct.quantity--
+          updatedProduct = updatedProduct.quantity > 0 ? p : null
+        }
+        updatedProduct && res.push(updatedProduct)
+        return res
+      },[])
+      return updatedProducts
     })
   }
 
