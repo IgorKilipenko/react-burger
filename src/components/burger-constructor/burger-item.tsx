@@ -5,6 +5,7 @@ import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
 import { useCartContext } from "../../context/cart"
+import { uid } from "uid"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
@@ -42,7 +43,7 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
       {Array(quantity)
         .fill(0)
         .map((_: number, i: number) => (
-          <Flex key={`bc-${element._id ?? element.name}-${i}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
+          <Flex key={`bi-${element._id}-${uid()}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
             <Flex w={8} align="center">
               <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
             </Flex>

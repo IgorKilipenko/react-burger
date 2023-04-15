@@ -3,6 +3,7 @@ import { Flex } from "@chakra-ui/react"
 import { useCartContext, type CartItemType } from "../../context/cart/cart-context"
 import { BurgerIngredientType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
+import { uid } from "uid"
 
 export interface BurgerProps {}
 
@@ -31,8 +32,8 @@ export const Burger = React.memo<BurgerProps>(() => {
       pr={4}
     >
       {bun && <BurgerItem element={bun.item} type={allowableTypes.top as ElementType} />}
-      {ingredients?.map((element, i) => (
-        <BurgerItem key={i} element={element.item} quantity={element.quantity} />
+      {ingredients?.map((element) => (
+        <BurgerItem key={`bi-${element.item._id}-${uid()}`} element={element.item} quantity={element.quantity} />
       ))}
       {bun && <BurgerItem element={bun.item} type={allowableTypes.bottom as ElementType} />}
     </Flex>
