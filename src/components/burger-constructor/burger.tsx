@@ -2,7 +2,7 @@ import React, { useCallback } from "react"
 import { Flex } from "@chakra-ui/react"
 import { useCartContext, type CartItemType } from "../../context/cart/cart-context"
 import { BurgerIngredientType } from "../../data"
-import { burgerItemBuilder, ElementType, allowableTypes } from "./burger-item-builder"
+import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 
 export interface BurgerProps {}
 
@@ -30,9 +30,11 @@ export const Burger = React.memo<BurgerProps>(() => {
       className="custom-scroll"
       pr={4}
     >
-      {bun && burgerItemBuilder({ element: bun.item, type: allowableTypes.top as ElementType })}
-      {ingredients?.map((element) => burgerItemBuilder({ element: element.item, quantity: element.quantity }))}
-      {bun && burgerItemBuilder({ element: bun.item, type: allowableTypes.bottom as ElementType })}
+      {bun && <BurgerItem element={bun.item} type={allowableTypes.top as ElementType} />}
+      {ingredients?.map((element) => (
+        <BurgerItem element={element.item} quantity={element.quantity} />
+      ))}
+      {bun && <BurgerItem element={bun.item} type={allowableTypes.bottom as ElementType} />}
     </Flex>
   )
 })

@@ -7,15 +7,13 @@ import { BurgerIngredientType } from "../../data"
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
 
-export const burgerItemBuilder = ({
-  element,
-  type = null,
-  quantity = 1,
-}: {
+export interface BurgerItemProps {
   element: BurgerIngredientType
   type?: ElementType
   quantity?: number
-}) => {
+}
+
+export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, quantity = 1 }) => {
   const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
 
   const bunProps = isBunElement
@@ -32,20 +30,24 @@ export const burgerItemBuilder = ({
       }
     : {}
 
-  return Array(quantity)
-    .fill(0)
-    .map((_: number, i: number) => (
-      <Flex key={`bc-${element._id ?? element.name}-${i}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
-        <Flex w={8} align="center">
-          <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
-        </Flex>
-        <ConstructorElement
-          type={type ?? undefined}
-          isLocked={isBunElement || false}
-          text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
-          price={element.price}
-          thumbnail={element.image}
-        />
-      </Flex>
-    ))
+  return (
+    <>
+      {Array(quantity)
+        .fill(0)
+        .map((_: number, i: number) => (
+          <Flex key={`bc-${element._id ?? element.name}-${i}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
+            <Flex w={8} align="center">
+              <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
+            </Flex>
+            <ConstructorElement
+              type={type ?? undefined}
+              isLocked={isBunElement || false}
+              text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
+              price={element.price}
+              thumbnail={element.image}
+            />
+          </Flex>
+        ))}
+    </>
+  )
 }
