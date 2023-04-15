@@ -2,6 +2,7 @@ import React from "react"
 import { type DbObjectType, type BurgerIngredientType, IngredientBase } from "../../data"
 
 export type ProductType = DbObjectType & IngredientBase
+export type ProductIdType = ProductType['_id']
 
 export interface CartItemType<T extends ProductType> {
   item: T
@@ -11,7 +12,7 @@ export interface CartItemType<T extends ProductType> {
 export interface CartContextType<T extends ProductType> {
   cart: CartItemType<T>[]
   addProductToCart: (item: CartItemType<T>) => void
-  removeProductFromCart: (item: T) => void
+  removeProductFromCart: (id: ProductIdType) => void
   clearCart: () => void
 }
 

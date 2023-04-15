@@ -35,7 +35,7 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
     : {}
 
   const handleRemove = React.useCallback(() => {
-    removeProductFromCart(element)
+    removeProductFromCart(element._id)
   },[element, removeProductFromCart])
 
   return (
