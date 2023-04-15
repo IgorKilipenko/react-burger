@@ -1,18 +1,21 @@
 import { combineReducers } from "redux"
 import { cartReducer } from "./cart"
+import { PREVIOUS_STEP, NEXT_STEP } from "../actions"
 
 const stepReducer = (state = "cart", action) => {
   switch (action.type) {
-    // Раскомментируйте код ниже и опишите шаг PREV_STEP
-    // case NEXT_STEP: {
-    //   return state === 'cart'
-    //     ? 'delivery'
-    //     : state === 'delivery'
-    //     ? 'checkout'
-    //     : state === 'checkout'
-    //     ? 'checkout'
-    //     : 'checkout';
-    // }
+    case NEXT_STEP: {
+      return state === "cart"
+        ? "delivery"
+        : state === "delivery"
+        ? "checkout"
+        : state === "checkout"
+        ? "checkout"
+        : "checkout"
+    }
+    case PREVIOUS_STEP: {
+      return state === "cart" ? "cart" : state === "delivery" ? "cart" : state === "checkout" ? "delivery" : "cart"
+    }
     default: {
       return state
     }
@@ -21,4 +24,5 @@ const stepReducer = (state = "cart", action) => {
 
 export const rootReducer = combineReducers({
   cart: cartReducer,
+  step: stepReducer,
 })
