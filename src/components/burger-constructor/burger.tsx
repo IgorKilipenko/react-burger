@@ -31,8 +31,8 @@ export const Burger = React.memo<BurgerProps>(() => {
       pr={4}
     >
       {bun && <BurgerItem element={bun.item} type={allowableTypes.top as ElementType} />}
-      {ingredients?.map((element) => (
-        <BurgerItem element={element.item} quantity={element.quantity} />
+      {ingredients?.map((element, i) => (
+        <BurgerItem key={i} element={element.item} quantity={element.quantity} />
       ))}
       {bun && <BurgerItem element={bun.item} type={allowableTypes.bottom as ElementType} />}
     </Flex>
