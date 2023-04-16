@@ -1,131 +1,131 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { YMaps, Map } from 'react-yandex-maps';
-import { InputsBox } from './inputs-box';
-import styles from './delivery.module.css';
-import { DeliveryMethod } from './delivery-method';
-import { MapSuggestComponent } from './delivery-suggest-input';
+import React, { useRef, useEffect, useCallback } from "react"
+import { YMaps, Map } from "react-yandex-maps"
+import { useDispatch, useSelector } from "react-redux"
+import { SET_DELIVERY_FORM_VALUE } from "../../services/actions/delivery"
+import { InputsBox } from "./inputs-box"
+import styles from "./delivery.module.css"
+import { DeliveryMethod } from "./delivery-method"
+import { MapSuggestComponent } from "./delivery-suggest-input"
 
 const mapState = {
   center: [55.753994, 37.622093],
   zoom: 9,
-  behaviors: ['scrollZoom'],
-  controls: []
-};
+  behaviors: ["scrollZoom"],
+  controls: [],
+}
 
 export default function SuggestInput({ onChange, value }) {
   return (
     <YMaps>
       <MapSuggestComponent onChange={onChange} value={value} />
     </YMaps>
-  );
+  )
 }
 
 export const Delivery = () => {
-  const [address, setAddress] = useState('');
+  const address = useSelector((state) => state.delivery.deliveryForm.address)
+  const dispatch = useDispatch()
+  const setAddress = (address) => {
+    dispatch({ type: SET_DELIVERY_FORM_VALUE, field: "address", value: address })
+  }
+  const ymaps = useRef(null)
+  const placemarkRef = useRef(null)
+  const mapRef = useRef(null)
 
-  const ymaps = useRef(null);
-  const placemarkRef = useRef(null);
-  const mapRef = useRef(null);
-
-  const getGeocodeResult = async criteria => {
-    return !!ymaps.current && !!criteria ? await ymaps.current.geocode(criteria) : null;
-  };
+  const getGeocodeResult = async (criteria) => {
+    return !!ymaps.current && !!criteria ? await ymaps.current.geocode(criteria) : null
+  }
   const createPlacemark = useCallback(
-    coords => {
+    (coords) => {
       return new ymaps.current.Placemark(
         coords,
         {},
         {
-          preset: 'islands#blueCircleDotIcon'
+          preset: "islands#blueCircleDotIcon",
         }
-      );
+      )
     },
     [ymaps]
-  );
+  )
 
-  const getAddressByCoords = async coords => {
-    placemarkRef.current.properties.set('iconCaption', 'Загрузка...');
-    const result = await getGeocodeResult(coords);
+  const getAddressByCoords = async (coords) => {
+    placemarkRef.current.properties.set("iconCaption", "Загрузка...")
+    const result = await getGeocodeResult(coords)
     if (result) {
-      const newAddress = getAddressFromGeocodeResult(result);
-      setAddress(newAddress);
+      const newAddress = getAddressFromGeocodeResult(result)
+      setAddress(newAddress)
 
       placemarkRef.current.properties.set({
-        iconCaption: ''
-      });
+        iconCaption: "",
+      })
     }
-  };
+  }
 
-  const getAddressFromGeocodeResult = useCallback(data => {
-    const firstGeoObject = data.geoObjects.get(0);
+  const getAddressFromGeocodeResult = useCallback((data) => {
+    const firstGeoObject = data.geoObjects.get(0)
     const newAddress = [
-      firstGeoObject.getLocalities().length
-        ? firstGeoObject.getLocalities()
-        : firstGeoObject.getAdministrativeAreas(),
+      firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
       firstGeoObject.getThoroughfare() || firstGeoObject.getPremise(),
-      !!firstGeoObject.getPremiseNumber() && firstGeoObject.getPremiseNumber()
+      !!firstGeoObject.getPremiseNumber() && firstGeoObject.getPremiseNumber(),
     ]
       .filter(Boolean)
-      .join(', ');
-    return newAddress;
-  }, []);
+      .join(", ")
+    return newAddress
+  }, [])
 
-  const zoomToPoint = coords => {
-    mapRef.current.setCenter(coords);
+  const zoomToPoint = (coords) => {
+    mapRef.current.setCenter(coords)
 
     mapRef.current.setZoom(18, {
       smooth: true,
       position: coords,
       centering: true,
-      duration: 5
-    });
-  };
+      duration: 5,
+    })
+  }
 
   const updatePlaceMark = async () => {
-    const result = await getGeocodeResult(address);
+    const result = await getGeocodeResult(address)
     if (result) {
-      const firstObject = result.geoObjects.get(0);
+      const firstObject = result.geoObjects.get(0)
       if (firstObject) {
-        const coords = result.geoObjects.get(0).geometry.getCoordinates();
-        renderPlaceMark(coords);
-        zoomToPoint(coords);
+        const coords = result.geoObjects.get(0).geometry.getCoordinates()
+        renderPlaceMark(coords)
+        zoomToPoint(coords)
       }
     }
-  };
+  }
 
   const renderPlaceMark = useCallback(
-    coords => {
+    (coords) => {
       if (placemarkRef.current) {
-        placemarkRef.current.geometry.setCoordinates(coords);
+        placemarkRef.current.geometry.setCoordinates(coords)
       } else {
-        placemarkRef.current = createPlacemark(coords);
-        mapRef.current.geoObjects.add(placemarkRef.current);
+        placemarkRef.current = createPlacemark(coords)
+        mapRef.current.geoObjects.add(placemarkRef.current)
       }
     },
     [placemarkRef, mapRef, createPlacemark]
-  );
+  )
 
   const onMapClick = useCallback(
-    e => {
-      const coords = e.get('coords');
-      renderPlaceMark(coords);
-      getAddressByCoords(coords);
+    (e) => {
+      const coords = e.get("coords")
+      renderPlaceMark(coords)
+      getAddressByCoords(coords)
     },
     [getAddressByCoords, renderPlaceMark]
-  );
+  )
 
-  useEffect(
-    () => {
-      if (address) {
-        updatePlaceMark();
-      }
-    },
-    [address]
-  );
+  useEffect(() => {
+    if (address) {
+      updatePlaceMark()
+    }
+  }, [address])
 
-  const onLoad = ymapsInstance => {
-    ymaps.current = ymapsInstance;
-  };
+  const onLoad = (ymapsInstance) => {
+    ymaps.current = ymapsInstance
+  }
 
   return (
     <section className={`${styles.delivery}`}>
@@ -135,7 +135,7 @@ export const Delivery = () => {
       <div className={styles.map}>
         <YMaps>
           <Map
-            modules={['Placemark', 'geocode', 'geoObject.addon.balloon']}
+            modules={["Placemark", "geocode", "geoObject.addon.balloon"]}
             instanceRef={mapRef}
             onLoad={onLoad}
             onClick={onMapClick}
@@ -148,5 +148,5 @@ export const Delivery = () => {
       <InputsBox />
       <DeliveryMethod />
     </section>
-  );
-};
+  )
+}

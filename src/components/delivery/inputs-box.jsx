@@ -1,20 +1,18 @@
-import styles from './inputs-box.module.css';
-import { Input } from '../../ui/input/input';
-import React from 'react';
+/* eslint-disable import/prefer-default-export */
+import React from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { SET_DELIVERY_FORM_VALUE } from "../../services/actions/delivery"
+import styles from "./inputs-box.module.css"
+import { Input } from "../../ui/input/input"
 
+// eslint-disable-next-line react/function-component-definition
 export const InputsBox = () => {
-  const { deliveryForm } = {
-    deliveryForm: {
-      name: '',
-      phone: '',
-      address: '',
-      unitNumber: '',
-      intercom: '',
-      floor: ''
-    }
-  };
+  const { deliveryForm } = useSelector((state) => state.delivery)
+  const dispatch = useDispatch()
 
-  const onChange = e => {};
+  const onChange = (e) => {
+    dispatch({ type: SET_DELIVERY_FORM_VALUE, field: e.target.name, value: e.target.value })
+  }
 
   return (
     <div className={`${styles.container}`}>
@@ -26,7 +24,7 @@ export const InputsBox = () => {
             </label>
             <Input
               onChange={onChange}
-              name={'unitNumber'}
+              name={"unitNumber"}
               value={deliveryForm.unitNumber}
               extraClass={styles.input}
               type="text"
@@ -39,7 +37,7 @@ export const InputsBox = () => {
             </label>
             <Input
               onChange={onChange}
-              name={'intercom'}
+              name={"intercom"}
               value={deliveryForm.intercom}
               extraClass={styles.input}
               type="text"
@@ -53,7 +51,7 @@ export const InputsBox = () => {
           </label>
           <Input
             onChange={onChange}
-            name={'floor'}
+            name={"floor"}
             value={deliveryForm.floor}
             extraClass={styles.input}
             type="text"
@@ -68,7 +66,7 @@ export const InputsBox = () => {
           </label>
           <Input
             onChange={onChange}
-            name={'name'}
+            name={"name"}
             value={deliveryForm.name}
             type="text"
             extraClass={styles.input}
@@ -82,7 +80,7 @@ export const InputsBox = () => {
           </label>
           <Input
             onChange={onChange}
-            name={'phone'}
+            name={"phone"}
             value={deliveryForm.phone}
             extraClass={styles.input}
             type="tel"
@@ -92,5 +90,5 @@ export const InputsBox = () => {
         </li>
       </ul>
     </div>
-  );
-};
+  )
+}
