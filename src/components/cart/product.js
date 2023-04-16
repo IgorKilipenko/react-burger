@@ -1,39 +1,32 @@
-import React, { useContext, useMemo } from 'react';
-import { AmountButton } from '../../ui/amount-button/amount-button';
-import { DeleteButton } from '../../ui/delete-button/delete-button';
-import styles from './product.module.css';
+import React, { useMemo } from "react"
+import { AmountButton } from "../../ui/amount-button/amount-button"
+import { DeleteButton } from "../../ui/delete-button/delete-button"
+import styles from "./product.module.css"
 
-import { DiscountContext, TotalCostContext } from '../../services/appContext';
-import { useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { DELETE_ITEM, DECREASE_ITEM, INCREASE_ITEM } from "../../services/actions/cart"
 
 export const Product = ({ src, id, text, qty, price }) => {
-  const { totalPrice, setTotalPrice } = useContext(TotalCostContext);
-  const { discount } = useContext(DiscountContext);
+  //!const totalPrice = useSelector((store) => store.cart.totalPrice)
+  const discount = useSelector((store) => store.cart.promoDiscount)
   const dispatch = useDispatch()
-  const discountedPrice = useMemo(() => ((price - price * (discount / 100)) * qty).toFixed(0), [
-    discount,
-    price,
-    qty
-  ]);
+  const discountedPrice = useMemo(() => ((price - price * (discount / 100)) * qty).toFixed(0), [discount, price, qty])
 
   const onDelete = () => {
-    dispatch({type:  DELETE_ITEM, id})
-  };
+    dispatch({ type: DELETE_ITEM, id })
+  }
 
   const decrease = () => {
     if (qty === 1) {
-      onDelete();
+      onDelete()
     } else {
-      setTotalPrice(totalPrice - price);
-      dispatch({type:  DECREASE_ITEM, id})
+      dispatch({ type: DECREASE_ITEM, id })
     }
-  };
+  }
 
   const increase = () => {
-    setTotalPrice(totalPrice + price);
-    dispatch({type:  INCREASE_ITEM, id})
-  };
+    dispatch({ type: INCREASE_ITEM, id })
+  }
 
   return (
     <div className={`${styles.product}`}>
@@ -50,5 +43,5 @@ export const Product = ({ src, id, text, qty, price }) => {
       </div>
       <DeleteButton onDelete={onDelete} />
     </div>
-  );
-};
+  )
+}

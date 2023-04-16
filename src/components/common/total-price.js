@@ -1,11 +1,12 @@
-import React, { useContext } from "react"
+import React from "react"
 import styles from "./total-price.module.css"
-
-import { DiscountContext, TotalCostContext } from "../../services/appContext"
+import { useSelector } from "react-redux"
 
 export const TotalPrice = ({ extraClass }) => {
-  const { totalPrice } = useContext(TotalCostContext)
-  const { discount } = useContext(DiscountContext)
+  const totalPrice = useSelector((store) => store.cart.items.reduce((res, item) => {
+    return res + item.price * item.qty
+  }, 0))
+  const discount = useSelector((store) => store.cart.promoDiscount)
 
   return (
     <div className={`${styles.container} ${extraClass}`}>
