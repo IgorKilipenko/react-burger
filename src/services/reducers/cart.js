@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import {
   DELETE_ITEM,
   CANCEL_PROMO,
@@ -8,13 +7,18 @@ import {
   GET_ITEMS_FAILED,
   GET_ITEMS_SUCCESS,
   GET_ITEMS_REQUEST,
+  GET_RECOMMENDED_ITEMS_FAILED,
+  GET_RECOMMENDED_ITEMS_SUCCESS,
+  GET_RECOMMENDED_ITEMS_REQUEST,
+  APPLY_PROMO_FAILED,
+  APPLY_PROMO_SUCCESS,
+  APPLY_PROMO_REQUEST,
 } from "../actions/cart"
-import { recommendedItems } from "../initialData"
 
 const initialState = {
   items: [],
 
-  recommendedItems,
+  recommendedItems: [],
 
   promoCode: "PROMOCODE",
   promoDiscount: 50,
@@ -22,6 +26,10 @@ const initialState = {
   currentTab: "items",
   itemsRequest: false,
   itemsFailed: false,
+  recommendedItemsRequest: false,
+  recommendedItemsFailed: false,
+  promoRequest: false,
+  promoFailed: false,
 }
 
 export const cartReducer = (state = initialState, action) => {
@@ -66,6 +74,48 @@ export const cartReducer = (state = initialState, action) => {
     case GET_ITEMS_FAILED: {
       return { ...state, itemsRequest: false, itemsFailed: true }
     }
+
+    case GET_RECOMMENDED_ITEMS_REQUEST: {
+      return { ...state, recommendedItemsRequest: true }
+    }
+
+    case GET_RECOMMENDED_ITEMS_SUCCESS: {
+      return {
+        ...state,
+        recommendedItems: [...action.items],
+        recommendedItemsRequest: false,
+        recommendedItemsFailed: false,
+      }
+    }
+
+    case GET_RECOMMENDED_ITEMS_FAILED: {
+      return { ...state, recommendedItemsRequest: false, recommendedItemsFailed: true }
+    }
+
+    case APPLY_PROMO_REQUEST: {
+      return { ...state, promoRequest: true }
+    }
+
+    case APPLY_PROMO_SUCCESS: {
+      return {
+        ...state,
+        promoDiscount: action.value.discount,
+        promoCode: action.value.code,
+        promoRequest: false,
+        promoFailed: false,
+      }
+    }
+
+    case APPLY_PROMO_FAILED: {
+      return {
+        ...state,
+        promoDiscount: null,
+        promoCode: "",
+        promoRequest: false,
+        promoFailed: true,
+      }
+    }
+
     default: {
       return state
     }
