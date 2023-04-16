@@ -1,8 +1,18 @@
-import { DELETE_ITEM, CANCEL_PROMO, DECREASE_ITEM, INCREASE_ITEM, TAB_SWITCH } from "../actions/cart"
-import { recommendedItems, items } from "../initialData"
+/* eslint-disable import/prefer-default-export */
+import {
+  DELETE_ITEM,
+  CANCEL_PROMO,
+  DECREASE_ITEM,
+  INCREASE_ITEM,
+  TAB_SWITCH,
+  GET_ITEMS_FAILED,
+  GET_ITEMS_SUCCESS,
+  GET_ITEMS_REQUEST,
+} from "../actions/cart"
+import { recommendedItems } from "../initialData"
 
 const initialState = {
-  items,
+  items: [],
 
   recommendedItems,
 
@@ -10,6 +20,8 @@ const initialState = {
   promoDiscount: 50,
 
   currentTab: "items",
+  itemsRequest: false,
+  itemsFailed: false,
 }
 
 export const cartReducer = (state = initialState, action) => {
@@ -41,6 +53,18 @@ export const cartReducer = (state = initialState, action) => {
         promoCode: "",
         promoDiscount: null,
       }
+    }
+
+    case GET_ITEMS_REQUEST: {
+      return { ...state, itemsRequest: true }
+    }
+
+    case GET_ITEMS_SUCCESS: {
+      return { ...state, items: [...action.items], itemsRequest: false, itemsFailed: false }
+    }
+
+    case GET_ITEMS_FAILED: {
+      return { ...state, itemsRequest: false, itemsFailed: true }
     }
     default: {
       return state
