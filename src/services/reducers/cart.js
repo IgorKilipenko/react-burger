@@ -6,14 +6,20 @@ const initialState = {
 
   recommendedItems,
 
-  promoCode: "",
-  promoDiscount: null,
+  promoCode: "PROMOCODE",
+  promoDiscount: 50,
 
   currentTab: "items",
 }
 
 export const cartReducer = (state = initialState, action) => {
   switch (action.type) {
+    case TAB_SWITCH: {
+      return {
+        ...state,
+        currentTab: state.currentTab === "items" ? "postponed" : "items",
+      }
+    }
     case INCREASE_ITEM: {
       return {
         ...state,
@@ -34,12 +40,6 @@ export const cartReducer = (state = initialState, action) => {
         ...state,
         promoCode: "",
         promoDiscount: null,
-      }
-    }
-    case TAB_SWITCH: {
-      return {
-        ...state,
-        currentTab: state.currentTab === "items" ? "postponed" : "items",
       }
     }
     default: {

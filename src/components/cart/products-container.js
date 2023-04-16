@@ -11,7 +11,7 @@ import { useSelector } from "react-redux"
 
 export const ProductsContainer = () => {
   const items = useSelector((store) => store.cart.items)
-  const promoCode = useSelector((store) => store.cart.promoCode)
+  const promoCode = useSelector((state) => state.cart.promoCode)
 
   const [itemsRequest, setItemsRequest] = useState(false)
   const [promoFailed, setPromoFailed] = useState(false)
@@ -32,11 +32,6 @@ export const ProductsContainer = () => {
         setItemsRequest(false)
       })
   }, [])
-
-  useEffect(() => {
-    let total = 0
-    items.map((item) => (total += item.price * item.qty))
-  }, [items])
 
   const applyPromoCode = useCallback(() => {
     const inputValue = inputRef.current.value

@@ -2,30 +2,38 @@ import React, { useMemo } from "react"
 import { AmountButton } from "../../ui/amount-button/amount-button"
 import { DeleteButton } from "../../ui/delete-button/delete-button"
 import styles from "./product.module.css"
-
-import { useSelector, useDispatch } from "react-redux"
-import { DELETE_ITEM, DECREASE_ITEM, INCREASE_ITEM } from "../../services/actions/cart"
+import { useDispatch, useSelector } from "react-redux"
+import { DECREASE_ITEM, DELETE_ITEM, INCREASE_ITEM } from "../../services/actions/cart"
 
 export const Product = ({ src, id, text, qty, price }) => {
-  //!const totalPrice = useSelector((store) => store.cart.totalPrice)
-  const discount = useSelector((store) => store.cart.promoDiscount)
   const dispatch = useDispatch()
+
+  const discount = useSelector((store) => store.cart.promoDiscount)
+
   const discountedPrice = useMemo(() => ((price - price * (discount / 100)) * qty).toFixed(0), [discount, price, qty])
 
   const onDelete = () => {
-    dispatch({ type: DELETE_ITEM, id })
+    dispatch({
+      type: DELETE_ITEM,
+      id,
+    })
   }
 
   const decrease = () => {
     if (qty === 1) {
       onDelete()
     } else {
-      dispatch({ type: DECREASE_ITEM, id })
+      dispatch({
+        type: DECREASE_ITEM,
+        id,
+      })
     }
   }
-
   const increase = () => {
-    dispatch({ type: INCREASE_ITEM, id })
+    dispatch({
+      type: INCREASE_ITEM,
+      id,
+    })
   }
 
   return (
