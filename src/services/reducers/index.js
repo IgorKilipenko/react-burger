@@ -1,6 +1,6 @@
 import { combineReducers } from "redux"
 import { cartReducer } from "./cart"
-import { PREVIOUS_STEP, NEXT_STEP } from "../actions"
+import { NEXT_STEP, PREVIOUS_STEP } from "../actions"
 
 const stepReducer = (state = "cart", action) => {
   switch (action.type) {
