@@ -3,42 +3,71 @@ import {
   CANCEL_PROMO,
   DECREASE_ITEM,
   INCREASE_ITEM,
-  TAB_SWITCH,
   GET_ITEMS_FAILED,
-  GET_ITEMS_SUCCESS,
   GET_ITEMS_REQUEST,
-  GET_RECOMMENDED_ITEMS_FAILED,
-  GET_RECOMMENDED_ITEMS_SUCCESS,
-  GET_RECOMMENDED_ITEMS_REQUEST,
+  GET_ITEMS_SUCCESS,
   APPLY_PROMO_FAILED,
-  APPLY_PROMO_SUCCESS,
   APPLY_PROMO_REQUEST,
+  APPLY_PROMO_SUCCESS,
+  TAB_SWITCH,
+  GET_RECOMMENDED_ITEMS_FAILED,
+  GET_RECOMMENDED_ITEMS_REQUEST,
+  GET_RECOMMENDED_ITEMS_SUCCESS,
 } from "../actions/cart"
 
 const initialState = {
   items: [],
-
-  recommendedItems: [],
-
-  promoCode: "PROMOCODE",
-  promoDiscount: 50,
-
-  currentTab: "items",
   itemsRequest: false,
   itemsFailed: false,
+
+  recommendedItems: [],
   recommendedItemsRequest: false,
   recommendedItemsFailed: false,
+
+  promoCode: "",
+  promoDiscount: null,
   promoRequest: false,
   promoFailed: false,
+
+  currentTab: "items",
 }
 
 export const cartReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_ITEMS_REQUEST: {
+      return {
+        ...state,
+        itemsRequest: true,
+      }
+    }
+    case GET_ITEMS_SUCCESS: {
+      return { ...state, itemsFailed: false, items: action.items, itemsRequest: false }
+    }
+    case GET_ITEMS_FAILED: {
+      return { ...state, itemsFailed: true, itemsRequest: false }
+    }
     case TAB_SWITCH: {
       return {
         ...state,
         currentTab: state.currentTab === "items" ? "postponed" : "items",
       }
+    }
+    case GET_RECOMMENDED_ITEMS_REQUEST: {
+      return {
+        ...state,
+        recommendedItemsRequest: true,
+      }
+    }
+    case GET_RECOMMENDED_ITEMS_SUCCESS: {
+      return {
+        ...state,
+        recommendedItemsFailed: false,
+        recommendedItems: action.items,
+        recommendedItemsRequest: false,
+      }
+    }
+    case GET_RECOMMENDED_ITEMS_FAILED: {
+      return { ...state, recommendedItemsFailed: true, recommendedItemsRequest: false }
     }
     case INCREASE_ITEM: {
       return {
@@ -55,6 +84,30 @@ export const cartReducer = (state = initialState, action) => {
     case DELETE_ITEM: {
       return { ...state, items: [...state.items].filter((item) => item.id !== action.id) }
     }
+    case APPLY_PROMO_FAILED: {
+      return {
+        ...state,
+        promoRequest: false,
+        promoFailed: true,
+        promoDiscount: null,
+        promoCode: "",
+      }
+    }
+    case APPLY_PROMO_REQUEST: {
+      return {
+        ...state,
+        promoFailed: false,
+        promoRequest: true,
+      }
+    }
+    case APPLY_PROMO_SUCCESS: {
+      return {
+        ...state,
+        promoRequest: false,
+        promoCode: action.value.code,
+        promoDiscount: action.value.discount,
+      }
+    }
     case CANCEL_PROMO: {
       return {
         ...state,
@@ -62,60 +115,6 @@ export const cartReducer = (state = initialState, action) => {
         promoDiscount: null,
       }
     }
-
-    case GET_ITEMS_REQUEST: {
-      return { ...state, itemsRequest: true }
-    }
-
-    case GET_ITEMS_SUCCESS: {
-      return { ...state, items: [...action.items], itemsRequest: false, itemsFailed: false }
-    }
-
-    case GET_ITEMS_FAILED: {
-      return { ...state, itemsRequest: false, itemsFailed: true }
-    }
-
-    case GET_RECOMMENDED_ITEMS_REQUEST: {
-      return { ...state, recommendedItemsRequest: true }
-    }
-
-    case GET_RECOMMENDED_ITEMS_SUCCESS: {
-      return {
-        ...state,
-        recommendedItems: [...action.items],
-        recommendedItemsRequest: false,
-        recommendedItemsFailed: false,
-      }
-    }
-
-    case GET_RECOMMENDED_ITEMS_FAILED: {
-      return { ...state, recommendedItemsRequest: false, recommendedItemsFailed: true }
-    }
-
-    case APPLY_PROMO_REQUEST: {
-      return { ...state, promoRequest: true }
-    }
-
-    case APPLY_PROMO_SUCCESS: {
-      return {
-        ...state,
-        promoDiscount: action.value.discount,
-        promoCode: action.value.code,
-        promoRequest: false,
-        promoFailed: false,
-      }
-    }
-
-    case APPLY_PROMO_FAILED: {
-      return {
-        ...state,
-        promoDiscount: null,
-        promoCode: "",
-        promoRequest: false,
-        promoFailed: true,
-      }
-    }
-
     default: {
       return state
     }
