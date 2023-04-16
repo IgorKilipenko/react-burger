@@ -1,4 +1,5 @@
 import React, { useMemo } from "react"
+import { useSelector } from "react-redux"
 import styles from "./app.module.css"
 import { Title } from "../../ui/title/title"
 import { Cart } from "../cart"
@@ -6,17 +7,22 @@ import { Delivery } from "../delivery"
 import { Checkout } from "../checkout"
 import { Recommend } from "../cart/recommend"
 import { TotalPrice } from "../common/total-price"
-import { useSelector } from "react-redux"
 
 const title = { cart: "Корзина", delivery: "Доставка", checkout: "Подтверждение заказа" }
 
 function App() {
-  const step = "cart"
+  const step = useSelector((store) => store.step)
 
   const content = useMemo(() => {
     switch (step) {
       case "cart": {
         return <Cart />
+      }
+      case "delivery": {
+        return <Delivery />
+      }
+      case "checkout": {
+        return <Checkout />
       }
       default: {
         return <Cart />
