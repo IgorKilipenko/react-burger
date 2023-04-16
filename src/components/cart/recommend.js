@@ -1,14 +1,20 @@
-import React, { useMemo, useEffect } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { Title } from "../../ui/title/title"
-import { Loader } from "../../ui/loader/loader"
-import { RecommendItem } from "./recommend-item"
-import { getRecommendedItems } from "../../services/actions/cart"
+import React, { useEffect, useMemo } from "react"
 import styles from "./recommend.module.css"
+import { Title } from "../../ui/title/title"
+import { RecommendItem } from "./recommend-item"
+import { useDispatch, useSelector } from "react-redux"
+import { getRecommendedItems } from "../../services/actions/cart"
+import { Loader } from "../../ui/loader/loader"
 
 export const Recommend = ({ extraClass }) => {
-  const { recommendedItems, recommendedItemsRequest } = useSelector((state) => state.cart)
   const dispatch = useDispatch()
+
+  const { recommendedItems, recommendedItemsRequest } = useSelector((state) => state.cart)
+
+  useEffect(() => {
+    dispatch(getRecommendedItems())
+  }, [dispatch])
+
   const content = useMemo(() => {
     return recommendedItemsRequest ? (
       <Loader size="large" />
@@ -18,9 +24,6 @@ export const Recommend = ({ extraClass }) => {
       })
     )
   }, [recommendedItemsRequest, recommendedItems])
-  useEffect(() => {
-    dispatch(getRecommendedItems())
-  }, [dispatch])
 
   return (
     <section className={`${styles.container} ${extraClass}`}>
