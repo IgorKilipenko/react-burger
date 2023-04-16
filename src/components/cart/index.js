@@ -5,7 +5,7 @@ import { Postponed } from "./postponed"
 import { useSelector } from "react-redux"
 
 export const Cart = () => {
-  const currentTab = useSelector((store) => store.cart.currentTab)
+  const currentTab = useSelector((state) => state.cart.currentTab)
   return (
     <section>
       <Tabs />
