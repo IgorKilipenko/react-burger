@@ -1,5 +1,5 @@
-import React from "react"
-import styles from "./postponed.module.css"
+import React from 'react';
+import styles from './postponed.module.css';
 
 export const Postponed = () => {
   return (
@@ -10,5 +10,5 @@ export const Postponed = () => {
       </p>
       <p className={styles.text}>Положить их обратно в корзину можно аналогичным способом.</p>
     </div>
-  )
-}
+  );
+};

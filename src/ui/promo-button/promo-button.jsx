@@ -10,7 +10,6 @@ export const PromoButton = ({ children, extraClass }) => {
   const cancelPromo = () => {
     dispatch({ type: CANCEL_PROMO });
   };
-
   return (
     <button type="button" className={`${styles.button} ${extraClass}`} onClick={cancelPromo}>
       {children}
