@@ -9,7 +9,7 @@ import { CartItemType, useCartContext } from "../../context/cart/cart-context"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
 
-export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | keyof HTMLChakraProps<"div">> {}
+export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor: React.FC<BurgerConstructorProps> = ({ ...flexOptions }) => {
   const calcTotalPrice = useCallback(
