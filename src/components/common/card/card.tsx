@@ -1,27 +1,38 @@
 import React from "react"
 import { Square, Flex, Image, Text } from "@chakra-ui/react"
+import type { ImageProps, FlexProps, HTMLChakraProps } from "@chakra-ui/react"
 import { Link } from "../link"
 import { CurrencyIcon } from "../icons"
 import { Icon } from "../icon"
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components"
+
+export interface CardContainerProps extends Omit<FlexProps, "direction" | keyof HTMLChakraProps<"div">> {}
+export interface CardImageProps extends ImageProps {}
+export interface CardOptions {
+  containerProps?: CardContainerProps
+  imageProps?: CardImageProps
+}
 
 export interface CardProps {
   name: string
   image: string
   price: number
   count?: number
+  options?: CardOptions
   onClick?: () => void
 }
 
-export const Card = ({ name, image, price, count = 0, onClick }: CardProps) => {
+export const Card: React.FC<CardProps> = ({ name, image, price, count = 0, options, onClick }) => {
   const handleItemClick = () => {
     onClick && onClick()
   }
 
+  const { containerProps, imageProps } = options ?? {}
+
   return (
     <Link isActive={true} onClick={handleItemClick}>
-      <Flex position="relative" direction="column" align="center" _hover={{ bg: "hovered-bg" }}>
-        <Image src={image} h={120} ml={4} mr={4} mt={6} />
+      <Flex direction="column" align="center" _hover={{ bg: "hovered-bg" }} {...(containerProps ? containerProps : {})}>
+        <Image src={image} ml={4} mr={4} mt={6} {...(imageProps ? imageProps : {})} />
         <Flex gap={2} pt={1} pb={1}>
           <Text variant={"digitsDefault"} align="center">
             {price}

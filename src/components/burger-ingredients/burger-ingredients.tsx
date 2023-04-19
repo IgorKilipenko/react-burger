@@ -57,7 +57,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
     },
     [setCurrentTabIdForce]
   )
-  
+
   /// Handle category inVew ratio changes on scroll
   /// then pass info to useTabInView hook for calculate active tab
   const handleCategoryInView = React.useCallback(

@@ -1,7 +1,7 @@
 import React from "react"
 import { Flex, Grid } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
-import { IngredientCard } from "../common"
+import { IngredientCard } from "./ingredient-card"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { useInViewport, BasicTarget } from "../../hooks"
 import { type CategoryBase, type BurgerIngredientType } from "../../data"

@@ -1,6 +1,6 @@
 import { useCallback, memo } from "react"
-import { type BurgerIngredientType } from "../../../data"
-import { Card } from "./card"
+import { type BurgerIngredientType } from "../../data"
+import { Card } from "../common/card/card"
 
 export interface IngredientCardProps {
   ingredient: BurgerIngredientType
@@ -19,6 +19,7 @@ const IngredientCard = memo<IngredientCardProps>(({ ingredient, selectedCount = 
       image={ingredient.image}
       price={ingredient.price}
       count={selectedCount}
+      options={{ imageProps: { h: 120 } }}
       onClick={handleItemClick}
     />
   )
