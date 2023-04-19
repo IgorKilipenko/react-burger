@@ -5,10 +5,13 @@ import BurgerIngredients from "../burger-ingredients"
 import BurgerConstructor from "../burger-constructor"
 import theme from "../../theme/theme"
 import { Flex, type LayoutProps } from "@chakra-ui/react"
-import { useFetchIngredients } from "../../hooks"
+import { useFetchIngredients, useIsTouchEnabled } from "../../hooks"
 import { ErrorMessage } from "../error-message"
 import { CartContextProvider, BurgerCartContext } from "../../context/cart"
 import { BurgerProductsContext, ProductsContextProvider, useIngredientsContext } from "../../context/products"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import { DndProvider } from "react-dnd"
+import { TouchBackend } from "react-dnd-touch-backend"
 
 interface MainContainerProps {
   children: React.ReactNode
@@ -18,9 +21,9 @@ interface MainContainerProps {
 }
 
 const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth, h, height = "100%" }) => {
-  const {categories, setProducts } = useIngredientsContext()
+  const { categories, setProducts } = useIngredientsContext()
   const currHeight = h ?? height
-
+  const isTouchEnabled = useIsTouchEnabled()
   const { response, loading, error } = useFetchIngredients()
 
   React.useEffect(() => {
@@ -41,11 +44,13 @@ const MainContainer: React.FC<MainContainerProps> = ({ children, maxContentWidth
             justifySelf="stretch"
             grow={1}
           >
-            {React.Children.map(children, (child) => (
-              <Flex as="section" grow={1} basis={0} justify="stretch">
-                {child}
-              </Flex>
-            ))}
+            <DndProvider backend={!isTouchEnabled ? HTML5Backend : TouchBackend}>
+              {React.Children.map(children, (child) => (
+                <Flex as="section" grow={1} basis={0} justify="stretch">
+                  {child}
+                </Flex>
+              ))}
+            </DndProvider>
           </Flex>
         ) : error || (!loading && !response.success) ? (
           <ErrorMessage
