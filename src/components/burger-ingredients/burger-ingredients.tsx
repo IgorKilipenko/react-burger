@@ -11,7 +11,7 @@ import { headerText, IngredientDetail } from "../ingredient-details"
 import { useIngredientsContext } from "../../context/products"
 import { useTabInView } from "../../hooks"
 
-export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | keyof HTMLChakraProps<"div">> {}
+export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions }) => {
   type CategoryRefType = HTMLDivElement
