@@ -1,9 +1,13 @@
 import React from "react"
 import { getTargetElement } from "./utils"
 
+type TargetValue<T> = T | undefined | null
+
 type TargetType = HTMLElement | Element
 
-export function useHeight<T extends TargetType>(target: React.MutableRefObject<T>): number {
+export type BasicTarget<T extends TargetType = Element> = React.MutableRefObject<TargetValue<T>>
+
+export function useHeight<T extends BasicTarget>(target: T): number {
   const [height, setHeight] = React.useState(0)
 
   React.useLayoutEffect(() => {
