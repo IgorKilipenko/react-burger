@@ -64,7 +64,7 @@ export const CategorySection = React.memo(
                 key={`ingredient-${ingredient._id}`}
                 ingredient={ingredient}
                 selectedCount={cart.find((x) => x.item._id === ingredient._id)?.quantity ?? 0}
-                onItemClick={() => {
+                onClick={() => {
                   handleIngredientClick(ingredient)
                 }}
               />
