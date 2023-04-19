@@ -6,6 +6,12 @@ import puzzleImage from "../../images/puzzle.png"
 export default function DragContainer() {
   const [sourceElements, setSourceElements] = useState([])
   const [draggedElements, setDraggedElements] = useState([])
+  const [draggedElement, setDraggedElement] = useState([])
+
+  const handleDrag = React.useCallback((e, currentElement) => {
+    e.preventDefault()
+    setDraggedElement(currentElement)
+  }, [])
 
   useEffect(() => {
     const parts = [...Array(25)]
@@ -24,7 +30,7 @@ export default function DragContainer() {
     <section className="container">
       <ul className="list">
         {sourceElements.map((item) => (
-          <DragList key={item.id} puzzleElement={item} />
+          <DragList key={item.id} puzzleElement={item} handleDrag={handleDrag} />
         ))}
       </ul>
 

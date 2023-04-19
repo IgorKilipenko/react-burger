@@ -1,11 +1,13 @@
 import React from "react"
 
 export default function DragList(props) {
-  const { puzzleElement } = props
+  const { puzzleElement, handleDrag } = props
 
   return (
     <li key={puzzleElement.id} className="listItem">
-      {puzzleElement && <img src={`./${puzzleElement.elementSrc}`} />}
+      {puzzleElement && (
+        <img src={`./${puzzleElement.elementSrc}`} draggable onDrag={(e) => handleDrag && handleDrag(e, puzzleElement)} />
+      )}
     </li>
   )
 }
