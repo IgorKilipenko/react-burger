@@ -6,7 +6,7 @@ import { CurrencyIcon } from "../icons"
 import { Icon } from "../icon"
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components"
 
-export interface CardContainerProps extends Omit<FlexProps, "direction" | keyof HTMLChakraProps<"div">> {}
+export interface CardContainerProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 export interface CardImageProps extends ImageProps {}
 export interface CardOptions {
   containerProps?: CardContainerProps
@@ -22,32 +22,40 @@ export interface CardProps {
   onClick?: () => void
 }
 
-export const Card: React.FC<CardProps> = ({ name, image, price, count = 0, options, onClick }) => {
-  const handleItemClick = () => {
-    onClick && onClick()
-  }
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ name, image, price, count = 0, options, onClick }, ref) => {
+    const handleItemClick = () => {
+      onClick && onClick()
+    }
 
-  const { containerProps, imageProps } = options ?? {}
+    const { containerProps, imageProps } = options ?? {}
 
-  return (
-    <Link isActive={true} onClick={handleItemClick}>
-      <Flex direction="column" align="center" _hover={{ bg: "hovered-bg" }} {...(containerProps ? containerProps : {})}>
-        <Image src={image} ml={4} mr={4} mt={6} {...(imageProps ? imageProps : {})} />
-        <Flex gap={2} pt={1} pb={1}>
-          <Text variant={"digitsDefault"} align="center">
-            {price}
+    return (
+      <Link ref={ref} isActive={true} onClick={handleItemClick}>
+        <Flex
+          position="relative"
+          direction="column"
+          align="center"
+          _hover={{ bg: "hovered-bg" }}
+          {...(containerProps ? containerProps : {})}
+        >
+          <Image src={image} ml={4} mr={4} mt={6} {...(imageProps ? imageProps : {})} />
+          <Flex gap={2} pt={1} pb={1}>
+            <Text variant={"digitsDefault"} align="center">
+              {price}
+            </Text>
+            <Icon as={CurrencyIcon} />
+          </Flex>
+          <Text variant={"mainDefault"} align="center" h={12}>
+            {name}
           </Text>
-          <Icon as={CurrencyIcon} />
+          {count > 0 && (
+            <Square position="absolute" size={8} m={1} top={0} right={0}>
+              <Counter count={count} size="default" />
+            </Square>
+          )}
         </Flex>
-        <Text variant={"mainDefault"} align="center" h={12}>
-          {name}
-        </Text>
-        {count > 0 && (
-          <Square position="absolute" size={8} top={0} right={0}>
-            <Counter count={count} size="default" />
-          </Square>
-        )}
-      </Flex>
-    </Link>
-  )
-}
+      </Link>
+    )
+  }
+)
