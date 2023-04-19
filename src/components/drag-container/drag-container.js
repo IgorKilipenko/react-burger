@@ -13,6 +13,14 @@ export default function DragContainer() {
     setDraggedElement(currentElement)
   }, [])
 
+  const handleDrop = React.useCallback((e, index) => {
+    e.preventDefault()
+
+    setSourceElements((prevState) => prevState.filter((el) => el.id !== draggedElement.id))
+    setDraggedElements((prevState) => prevState.map((el, i) => (i === index ? draggedElement : el)))
+    setDraggedElement({})
+  }, [draggedElement])
+
   useEffect(() => {
     const parts = [...Array(25)]
       .map((element, index) => ({
@@ -36,7 +44,7 @@ export default function DragContainer() {
 
       <ul className="list" style={{ backgroundImage: `url(${puzzleImage})` }}>
         {draggedElements.map((item, index) => (
-          <DropTarget key={index} dropTargetIndex={index} puzzleElement={item} />
+          <DropTarget key={index} dropTargetIndex={index} puzzleElement={item} handleDrop={handleDrop} />
         ))}
       </ul>
     </section>
