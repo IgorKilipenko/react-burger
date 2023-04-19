@@ -6,13 +6,13 @@ import { useDrag } from "react-dnd"
 export interface IngredientCardProps {
   ingredient: BurgerIngredientType
   selectedCount?: number
-  onClick?: () => void
+  onClick?: (ingredient: BurgerIngredientType) => void
 }
 
 const IngredientCard = memo<IngredientCardProps>(({ ingredient, selectedCount = 0, onClick }) => {
   const handleItemClick = useCallback(() => {
-    onClick && onClick()
-  }, [onClick])
+    onClick && onClick(ingredient)
+  }, [ingredient, onClick])
   const [, dragRef] = useDrag({
     type: "ingredient",
     item: { id: ingredient._id },

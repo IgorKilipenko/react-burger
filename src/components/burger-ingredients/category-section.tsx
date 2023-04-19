@@ -49,11 +49,14 @@ export const CategorySection = React.memo(
         [onIngredientClick]
       )
 
-      const initRefs = (el: RootElementType | null) => {
-        categoryRef.current = el
-        if (!ref) return
-        typeof ref === "function" ? ref(el) : (ref.current = el)
-      }
+      const initRefs = React.useCallback(
+        (el: RootElementType | null) => {
+          categoryRef.current = el
+          if (!ref) return
+          typeof ref === "function" ? ref(el) : (ref.current = el)
+        },
+        [ref]
+      )
 
       return (
         <Flex ref={initRefs} direction="column">
@@ -64,9 +67,7 @@ export const CategorySection = React.memo(
                 key={`ingredient-${ingredient._id}`}
                 ingredient={ingredient}
                 selectedCount={cart.find((x) => x.item._id === ingredient._id)?.quantity ?? 0}
-                onClick={() => {
-                  handleIngredientClick(ingredient)
-                }}
+                onClick={handleIngredientClick}
               />
             ))}
           </Grid>
