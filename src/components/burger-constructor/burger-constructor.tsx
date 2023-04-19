@@ -26,9 +26,9 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
     setTotalPrice(calcTotalPrice(selectedIngredients ?? []))
   }, [calcTotalPrice, selectedIngredients])
 
-  const handleOrderButtonClick = () => {
+  const handleOrderButtonClick = React.useCallback(() => {
     setModalOpen(true)
-  }
+  }, [])
 
   return (
     <>
