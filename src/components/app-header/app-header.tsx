@@ -1,13 +1,18 @@
 import React from "react"
-import { Flex, Center } from "@chakra-ui/react"
+import { Flex, Center, type FlexProps } from "@chakra-ui/react"
 import { useHeight } from "../../hooks/useSize"
 import { buildLinks } from "./build-links"
 import { useMultiStyleConfig } from "@chakra-ui/react"
 
-const AppHeader = React.memo(({ variant = "desktop", onChangeHeight }) => {
+export interface AppHeaderProps {
+  variant?: string
+  onChangeHeight?: (value: number) => void
+}
+
+const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHeight }) => {
   const links = buildLinks()
   const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
-  const headerRef = React.useRef()
+  const headerRef = React.useRef<HTMLDivElement | null>(null)
   const height = useHeight(headerRef)
   const styles = useMultiStyleConfig("AppHeader", { variant })
 
@@ -16,7 +21,7 @@ const AppHeader = React.memo(({ variant = "desktop", onChangeHeight }) => {
   }, [onChangeHeight, height])
 
   const headerItems = [
-    (props) => (
+    (props: FlexProps) => (
       <Flex
         justify={{ base: "center", lg: "start" }}
         align={{ base: "start", lg: "center" }}
@@ -31,12 +36,12 @@ const AppHeader = React.memo(({ variant = "desktop", onChangeHeight }) => {
         {links.orderList.element({ isActive: currentLink === links.orderList.tag, onClick: setCurrentLink })}
       </Flex>
     ),
-    (props) => (
+    (props: FlexProps) => (
       <Flex justify="center" align="center" {...props}>
         {links.homeLink.element({ isActive: currentLink === links.homeLink.tag, onClick: setCurrentLink })}
       </Flex>
     ),
-    (props) => (
+    (props: FlexProps) => (
       <Flex justify="end" {...props}>
         {links.userProfile.element({ isActive: currentLink === links.userProfile.tag, onClick: setCurrentLink })}
       </Flex>
@@ -44,9 +49,9 @@ const AppHeader = React.memo(({ variant = "desktop", onChangeHeight }) => {
   ]
 
   return (
-    <Center ref={headerRef} as="header" {...styles.container}>
-      <Flex as="nav" {...styles.nav}>
-        {headerItems.map((item, i) => item({ key: `header-item-id-${i}`, ...styles.items }))}
+    <Center ref={headerRef} as="header" {...(styles.container as FlexProps)}>
+      <Flex as="nav" {...(styles.nav as FlexProps)}>
+        {headerItems.map((item, i) => item({ key: `header-item-id-${i}`, ...(styles.items as FlexProps) }))}
       </Flex>
     </Center>
   )
