@@ -11,7 +11,7 @@ import { OrderDetails } from "../order-details"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
-const BurgerConstructor: React.FC<BurgerConstructorProps> = ({ ...flexOptions }) => {
+const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
   const calcTotalPrice = useCallback(
     (ingredients: CartItemType<BurgerIngredientType>[]) =>
       ingredients.reduce((res, curr) => (res += curr.item.price * curr.quantity), 0),
@@ -56,6 +56,6 @@ const BurgerConstructor: React.FC<BurgerConstructorProps> = ({ ...flexOptions })
       ) : null}
     </>
   )
-}
+})
 
 export default BurgerConstructor
