@@ -2,42 +2,40 @@ import React from "react"
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
 import { Flex } from "@chakra-ui/react"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
-import { CategoryBase as CategoryType } from "../../data"
-import { useIngredientsContext } from "../../context/products"
+import { CategoryBase as CategoryType} from "../../data"
 
 export interface IngredientsTabPanelProps {
-  activeTabId?: CategoryType["id"] | null
-  onTabClick?: ((tabId: CategoryType["id"]) => boolean) | null
+  items: CategoryType[]
+  activeTabId?: CategoryType["id"]
+  onTabClick?: (tabId: CategoryType["id"]) => void
 }
 
-export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: IngredientsTabPanelProps) => {
-  const [current, setCurrent] = React.useState(activeTabId)
-  const { categories: items } = useIngredientsContext()
+export const IngredientsTabPanel = React.memo(
+  ({ items, onTabClick, activeTabId = items[0].id }: IngredientsTabPanelProps) => {
+    const [current, setCurrent] = React.useState(activeTabId)
 
-  React.useEffect(() => {
-    setCurrent(activeTabId)
-  }, [activeTabId])
+    React.useEffect(() => {
+      setCurrent(activeTabId)
+    }, [activeTabId])
 
-  const handleTabClick = (tabId: CategoryType["id"]) => {
-    let preventDefault = false
-    if (onTabClick) {
-      preventDefault = onTabClick(tabId)
+    const handleTabClick = (tabId: CategoryType["id"]) => {
+      setCurrent(tabId)
+      onTabClick && onTabClick(tabId)
     }
-    !preventDefault && setCurrent(tabId)
-  }
 
-  return (
-    <Flex>
-      {items.map((item) => (
-        <Tab
-          key={`tab-${item.id}`}
-          value={item.id}
-          active={current ? current === item.id : item === items.at(0)}
-          onClick={() => handleTabClick(item.id)}
-        >
-          {capitalizeFirstLetter(item.name)}
-        </Tab>
-      ))}
-    </Flex>
-  )
-})
+    return (
+      <Flex>
+        {items.map((item) => (
+          <Tab
+            key={`tab-${item.id}`}
+            value={item.id}
+            active={current === item.id}
+            onClick={() => handleTabClick(item.id)}
+          >
+            {capitalizeFirstLetter(item.name)}
+          </Tab>
+        ))}
+      </Flex>
+    )
+  }
+)

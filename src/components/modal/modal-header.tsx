@@ -6,6 +6,6 @@ export interface ModalHeaderProps {
 
 export const ModalHeader = ({ text }: ModalHeaderProps) => (
   <Flex>
-    <Text noOfLines={2} variant="mainLarge">{text}</Text>
+    <Text variant="mainLarge">{text}</Text>
   </Flex>
 )

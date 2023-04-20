@@ -1,5 +1,5 @@
 import React, { useState, HTMLAttributes } from "react"
-import { ProductIdType, type CartContextType, type CartItemType, type ProductType } from "./cart-context"
+import { type CartContextType, type CartItemType, type ProductType } from "./cart-context"
 
 export type CartContextProps<T extends ProductType> = {
   context: React.Context<CartContextType<T>>
@@ -23,52 +23,36 @@ export function CartContextProvider<T extends ProductType>({ children, context }
     setProducts((prevState) => {
       if (product.item.type === "bun") {
         const rmProducts = getProductsByType(product.item.type, prevState)
-        prevState = rmProducts
-          ? prevState.filter((p) => rmProducts.findIndex((x) => p.item._id === x.item._id))
-          : prevState
+        prevState = rmProducts ? prevState.filter((p) => rmProducts.findIndex((x) => p.item._id === x.item._id)) : prevState
       }
-
+      
       const existingProduct = getProductById(product.item._id, prevState)
       if (!existingProduct) {
         return [...prevState, product]
       }
-
-      const newState = prevState.map((product) =>
-        product.item._id === existingProduct.item._id
+      const newState = prevState.map((p) =>
+        p.item._id === existingProduct.item._id
           ? {
-              item: product.item,
-              quantity: product.quantity + product.quantity,
+              item: p.item,
+              quantity: p.quantity + product.quantity,
             }
-          : product
+          : p
       )
       return newState
     })
   }
 
-  const removeProductFromCart = (id: ProductIdType) => {
+  const removeProductFromCart = (product: T) => {
     setProducts((prevState) => {
-      const updatedProducts = prevState.reduce<typeof prevState>((res, product) => {
-        let updatedProduct:typeof product | null = product
-        if (product.item._id === id) {
-          updatedProduct.quantity--
-          updatedProduct = updatedProduct.quantity > 0 ? product : null
-        }
-        updatedProduct && res.push(updatedProduct)
-        return res
-      },[])
-      return updatedProducts
+      const newProducts = prevState.filter((p) => p.item._id !== product._id)
+      return newProducts
     })
-  }
-
-  const clearCart = () => {
-    setProducts([])
   }
 
   const contextValue: CartContextType<T> = {
     cart: products,
     addProductToCart: addProductToCart,
     removeProductFromCart: removeProductFromCart,
-    clearCart: clearCart,
   }
 
   return <context.Provider value={contextValue}>{children}</context.Provider>

@@ -1,6 +1,3 @@
 export { useHeight } from "./useSize"
-export { useInViewport, type BasicTarget } from "./useInViewport"
+export { useInViewport } from "./useInViewport"
 export { useFetch } from "./useFetch"
-export { useFetchIngredients } from "./useFetchIngredients"
-export { useFetchOrders } from "./useFetchOrders"
-export { useTabInView } from "./useTabInView"
