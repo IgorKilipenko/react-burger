@@ -4,7 +4,7 @@
   "homepage": "https://igorkilipenko.github.io/react-burger",
   "private": true,
   "dependencies": {
-    "@chakra-ui/react": "^2.5.4",
+    "@chakra-ui/react": "^2.5.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@reduxjs/toolkit": "^1.9.5",
