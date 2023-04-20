@@ -6,8 +6,10 @@ export const apiClientConfig = {
   },
 }
 
+export type DbIndexType = string
+
 export interface DbObjectType {
-  _id: string
+  _id: DbIndexType
   __v: number
 }
 
