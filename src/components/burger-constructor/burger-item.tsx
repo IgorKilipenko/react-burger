@@ -1,6 +1,6 @@
 import React from "react"
 import { Flex, Box } from "@chakra-ui/react"
-import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
+import { ConstructorElement } from "./constructor-element"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
@@ -36,14 +36,14 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
 
   const handleRemove = React.useCallback(() => {
     removeProductFromCart(element._id)
-  },[element, removeProductFromCart])
+  }, [element, removeProductFromCart])
 
   return (
     <>
       {Array(quantity)
         .fill(0)
         .map(() => (
-          <Flex key={`bi-${element._id}-${uid()}` + (type ? `-${type}` : "")} gridColumn={1} {...bunProps}>
+          <Flex key={`bi-${element._id}-${uid()}` + (type ? `-${type}` : "")} gridColumn={1} {...bunProps} w="100%">
             <Flex w={8} align="center">
               <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
             </Flex>
