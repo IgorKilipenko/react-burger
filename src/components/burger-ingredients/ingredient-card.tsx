@@ -13,9 +13,12 @@ const IngredientCard = memo<IngredientCardProps>(({ ingredient, selectedCount = 
   const handleItemClick = useCallback(() => {
     onClick && onClick(ingredient)
   }, [ingredient, onClick])
-  const [, dragRef] = useDrag({
+  const [{ isDrag }, dragRef] = useDrag({
     type: "ingredient",
     item: { id: ingredient._id },
+    collect: (monitor) => ({
+      isDrag: monitor.isDragging(),
+    }),
   })
 
   return (
