@@ -34,7 +34,7 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
     <>
       <Flex direction={"column"} gap={10} pt={100} justify="space-between" align="center" {...flexOptions}>
         <Burger />
-        <Flex justify="end" align="center" w="100%" gap={10}>
+        <Flex justify="end" align="center" w="100%" gap={10} pr={4}>
           <Flex align="center" gap={2}>
             <Text variant={"digitsMedium"}>{totalPrice}</Text>
             <Icon as={CurrencyIcon} boxSize={9} />
