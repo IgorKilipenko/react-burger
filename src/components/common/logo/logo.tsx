@@ -8,11 +8,14 @@ export interface LogoProps {
   breakpoint: string
 }
 
-const Logo = ({ type = "large", breakpoint: bp }: LogoProps) => {
-  const variant = useBreakpointValue({
-    base: type ?? "small",
-    [bp]: type ?? "large",
-  })
+const Logo = ({ type, breakpoint: bp }: LogoProps) => {
+  const variant = useBreakpointValue(
+    {
+      base: "small",
+      [bp]: type ?? "large",
+    },
+    type ?? "large"
+  )
 
   return <Box> {variant === "large" ? <LargeLogo /> : <SmallLogo />} </Box>
 }
