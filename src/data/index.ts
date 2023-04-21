@@ -10,7 +10,7 @@ export type DbIndexType = string
 
 export interface DbObjectType {
   _id: DbIndexType
-  __v: number
+  __v?: number
 }
 
 export interface IngredientBase {
