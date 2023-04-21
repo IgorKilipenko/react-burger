@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
-import { BurgerIngredientType, DbObjectType, IngredientBase } from "../../../data"
+import { allowableCategories, BurgerIngredientType, DbObjectType, IngredientBase } from "../../../data"
 import { uid } from "uid"
 
 export type ProductBase = DbObjectType & IngredientBase
@@ -50,7 +50,7 @@ export const burgerSlice = createSlice({
 
       const { product, quantity = 0 } = action.payload
 
-      if (product.type === "bun") {
+      if (product.type === allowableCategories.bun) {
         const rmProducts = getProductsByType(product.type, state.products)
         state.products = rmProducts
           ? state.products.filter((p) => rmProducts.findIndex((x) => p.product._id === x.product._id))

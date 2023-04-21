@@ -1,6 +1,6 @@
 import React, { useCallback } from "react"
 import { Flex } from "@chakra-ui/react"
-import { DbIndexType } from "../../data"
+import { allowableCategories, DbIndexType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 import { uid } from "uid"
 import { useDrop } from "react-dnd"
@@ -12,9 +12,9 @@ export interface BurgerProps {}
 
 export const Burger = React.memo<BurgerProps>(() => {
   const extractIngredientsByType = useCallback((ingredientsList: BurgerItemType[]) => {
-    const innerIngredients = ingredientsList.filter((item) => item.product.type !== "bun")
+    const innerIngredients = ingredientsList.filter((item) => item.product.type !== allowableCategories.bun)
     const bun = ingredientsList.reduce<BurgerItemType | null>((res, curr) => {
-      return (res = curr.product.type === "bun" ? curr : res)
+      return (res = curr.product.type === allowableCategories.bun ? curr : res)
     }, null)
     return { bun, ingredients: innerIngredients }
   }, [])

@@ -1,8 +1,8 @@
-import { BurgerIngredientType, IngredientsTableView } from "../../data"
+import { allowableCategories, BurgerIngredientType, IngredientsTableView } from "../../data"
 
 export const selectIngredients = (
   ingredients: IngredientsTableView,
-  bunId: string = "bun",
+  bunId: string = allowableCategories.bun,
   maxIngredientsCount: number = 3,
   maxQuantity: number = 2
 ) => {

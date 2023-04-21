@@ -39,14 +39,16 @@ export interface IngredientsTableView<T extends IngredientBase & DbObjectType = 
   [key: IngredientsTableViewKeyType]: T[]
 }
 
-export const categoryMapper = (categoryRaw: string) => {
-  const ingredientCategories = {
-    bun: "булки",
-    sauce: "соусы",
-    main: "начинки",
-  }
+export const allowableCategories = { bun: "bun", sauce: "sauce", main: "main" }
 
-  return ingredientCategories[categoryRaw as keyof typeof ingredientCategories]
+export const ingredientCategoriesMap:Record<keyof typeof allowableCategories, string> = {
+  bun: "булки",
+  sauce: "соусы",
+  main: "начинки",
+}
+
+export const categoryMapper = (categoryRaw: string) => {
+  return ingredientCategoriesMap[categoryRaw as keyof typeof ingredientCategoriesMap]
 }
 
 export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData: T[]) {

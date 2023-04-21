@@ -9,13 +9,14 @@ import { OrderDetails } from "../order-details"
 import { useSelector } from "react-redux"
 import type { BurgerItemType } from "../../services/slices/burger-constructor"
 import { RootState } from "../../services/store"
+import { allowableCategories } from "../../data"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
   const calcTotalPrice = useCallback(
     (ingredients: BurgerItemType[]) =>
-      ingredients.reduce((res, curr) => (res += curr.product.price * (curr.product.type === "bun" ? 2 : 1)), 0),
+      ingredients.reduce((res, curr) => (res += curr.product.price * (curr.product.type === allowableCategories.bun ? 2 : 1)), 0),
     []
   )
 
