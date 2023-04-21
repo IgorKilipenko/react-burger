@@ -35,7 +35,6 @@ export const cartSlice = createSlice({
   reducers: {
     addProductToCart: (state, action: PayloadAction<BurgerCartItemType>) => {
       const { item: product, quantity } = action.payload
-      console.log({ product })
 
       if (product.type === "bun") {
         const rmProducts = getProductsByType(product.type, state.products)
