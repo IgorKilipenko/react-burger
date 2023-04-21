@@ -4,8 +4,9 @@ import { ConstructorElement } from "./constructor-element"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
-import { useCartContext } from "../../context/cart"
 import { uid } from "uid"
+import { useDispatch } from "react-redux"
+import { burgerActions } from "../../services/slices/burger-constructor"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
@@ -17,7 +18,7 @@ export interface BurgerItemProps {
 }
 
 export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, quantity = 1 }) => {
-  const { removeProductFromCart } = useCartContext()
+  const dispatch = useDispatch()
   const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
 
   const bunProps = isBunElement
@@ -35,8 +36,8 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
     : {}
 
   const handleRemove = React.useCallback(() => {
-    removeProductFromCart(element._id)
-  }, [element, removeProductFromCart])
+    dispatch(burgerActions.removeProductFromCart({ id: element._id }))
+  }, [dispatch, element._id])
 
   return (
     <>

@@ -5,8 +5,9 @@ import { IngredientCard } from "./ingredient-card"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { useInViewport, BasicTarget } from "../../hooks"
 import { type CategoryBase, type BurgerIngredientType } from "../../data"
-import { useCartContext } from "../../context/cart"
 import { useIngredientsContext } from "../../context/products"
+import { useSelector } from "react-redux"
+import { RootState } from "../../services/store"
 
 type RootElementType = HTMLDivElement
 
@@ -21,7 +22,7 @@ export const CategorySection = React.memo(
   React.forwardRef<RootElementType, CategorySectionProps>(
     ({ category, scrollContainerRef, onCategoryInView, onIngredientClick }, ref) => {
       const { products: ingredients } = useIngredientsContext()
-      const { cart } = useCartContext()
+      const { productQuantities } = useSelector((store: RootState) => store.burgerConstructor)
       const categoryRef = React.useRef<RootElementType | null>(null)
       const [inViewport, ratio] = useInViewport(
         categoryRef,
@@ -66,7 +67,7 @@ export const CategorySection = React.memo(
               <IngredientCard
                 key={`ingredient-${ingredient._id}`}
                 ingredient={ingredient}
-                selectedCount={cart.find((x) => x.item._id === ingredient._id)?.quantity ?? 0}
+                selectedCount={productQuantities[ingredient._id] ?? 0}
                 onClick={handleIngredientClick}
               />
             ))}

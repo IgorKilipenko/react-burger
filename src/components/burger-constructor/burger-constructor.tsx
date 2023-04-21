@@ -7,19 +7,19 @@ import { Burger } from "./burger"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
 import { useSelector } from "react-redux"
-import type { BurgerCartItemType } from "../../services/slices/cart"
+import type { BurgerItemType } from "../../services/slices/burger-constructor"
 import { RootState } from "../../services/store"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
   const calcTotalPrice = useCallback(
-    (ingredients: BurgerCartItemType[]) =>
-      ingredients.reduce((res, curr) => (res += curr.item.price * curr.quantity), 0),
+    (ingredients: BurgerItemType[]) =>
+      ingredients.reduce((res, curr) => (res += curr.product.price * (curr.product.type === "bun" ? 2 : 1)), 0),
     []
   )
 
-  const selectedIngredients = useSelector((store: RootState) => store.cart.products)
+  const selectedIngredients = useSelector((store: RootState) => store.burgerConstructor.products)
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
 

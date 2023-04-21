@@ -5,16 +5,16 @@ import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 import { uid } from "uid"
 import { useDrop } from "react-dnd"
 import { useSelector } from "react-redux"
-import type { BurgerCartItemType } from "../../services/slices/cart"
+import type { BurgerItemType } from "../../services/slices/burger-constructor"
 import { RootState } from "../../services/store"
 
 export interface BurgerProps {}
 
 export const Burger = React.memo<BurgerProps>(() => {
-  const extractIngredientsByType = useCallback((ingredientsList: BurgerCartItemType[]) => {
-    const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
-    const bun = ingredientsList.reduce<BurgerCartItemType | null>((res, curr) => {
-      return (res = curr.item.type === "bun" ? curr : res)
+  const extractIngredientsByType = useCallback((ingredientsList: BurgerItemType[]) => {
+    const innerIngredients = ingredientsList.filter((item) => item.product.type !== "bun")
+    const bun = ingredientsList.reduce<BurgerItemType | null>((res, curr) => {
+      return (res = curr.product.type === "bun" ? curr : res)
     }, null)
     return { bun, ingredients: innerIngredients }
   }, [])
@@ -22,7 +22,7 @@ export const Burger = React.memo<BurgerProps>(() => {
     console.log("drop")
   }, [])
 
-  const selectedIngredients = useSelector((store: RootState) => store.cart.products)
+  const selectedIngredients = useSelector((store: RootState) => store.burgerConstructor.products)
   const { bun, ingredients } = extractIngredientsByType(selectedIngredients)
 
   const [{ isHover }, dropTarget] = useDrop({
@@ -47,11 +47,11 @@ export const Burger = React.memo<BurgerProps>(() => {
       className="custom-scroll"
       pr={4}
     >
-      {bun && <BurgerItem element={bun.item} type={allowableTypes.top as ElementType} />}
+      {bun && <BurgerItem element={bun.product} type={allowableTypes.top as ElementType} />}
       {ingredients?.map((element) => (
-        <BurgerItem key={`bi-${element.item._id}-${uid()}`} element={element.item} quantity={element.quantity} />
+        <BurgerItem key={`bi-${element.product._id}-${uid()}`} element={element.product} />
       ))}
-      {bun && <BurgerItem element={bun.item} type={allowableTypes.bottom as ElementType} />}
+      {bun && <BurgerItem element={bun.product} type={allowableTypes.bottom as ElementType} />}
     </Flex>
   )
 })

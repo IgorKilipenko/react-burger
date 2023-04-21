@@ -1,27 +1,28 @@
 import { Flex, Text } from "@chakra-ui/react"
 import React from "react"
-import { useCartContext } from "../../context/cart"
 import { DbObjectType } from "../../data"
 import { useFetchOrders } from "../../hooks"
 import { Icon, Icons } from "../common"
 import { ErrorMessage } from "../error-message"
+import { useSelector } from "react-redux"
+import { RootState } from "../../services/store"
 
 export interface OrderDetailsProps {}
 
 export const headerText = "Детали ингредиента"
 
 export const OrderDetails: React.FC<OrderDetailsProps> = () => {
-  const { cart } = useCartContext()
+  const { products: cart, productQuantities } = useSelector((store: RootState) => store.burgerConstructor)
   const getIngredientsIds = React.useCallback(() => {
-    return cart.reduce<DbObjectType["_id"][]>((res, product) => {
+    return cart.reduce<DbObjectType["_id"][]>((res, item) => {
       res.push(
-        ...Array(product.quantity)
+        ...Array(productQuantities[item.product._id])
           .fill(0)
-          .map(() => product.item._id)
+          .map(() => item.product._id)
       )
       return res
     }, [])
-  }, [cart])
+  }, [cart, productQuantities])
   const { response, loading, error } = useFetchOrders(getIngredientsIds())
 
   return (
@@ -51,7 +52,7 @@ export const OrderDetails: React.FC<OrderDetailsProps> = () => {
           </Text>
         </>
       ) : loading ? (
-        <Text variant='mainMedium'>Обработка заказа...</Text>
+        <Text variant="mainMedium">Обработка заказа...</Text>
       ) : (
         <ErrorMessage message={`Ошибка получения номера заказа. ${response.message ?? error ?? ""}`} />
       )}

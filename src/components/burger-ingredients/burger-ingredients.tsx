@@ -10,7 +10,7 @@ import { headerText, IngredientDetail } from "../ingredient-details"
 import { useIngredientsContext } from "../../context/products"
 import { useTabInView } from "../../hooks"
 import { useDispatch } from "react-redux"
-import { cartActions } from "../../services/slices/cart"
+import { burgerActions } from "../../services/slices/burger-constructor"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -19,7 +19,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   type CategoryIdType = CategoryBase["id"]
 
   const dispatch = useDispatch()
-  const { addProductToCart, clearCart } = cartActions
+  const { addProductToCart, clearCart } = burgerActions
   const { products: ingredientsTable, categories } = useIngredientsContext()
 
   /// Need for calculate adaptive inView rate in CategorySection
@@ -39,7 +39,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
     dispatch(clearCart())
     const selectedIngredients = Object.keys(ingredientsTable).length > 0 ? selectIngredients(ingredientsTable) : []
     selectedIngredients.forEach((x) => {
-      dispatch(addProductToCart(x))
+      dispatch(addProductToCart({ product: x.item, quantity: x.quantity }))
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientsTable])
