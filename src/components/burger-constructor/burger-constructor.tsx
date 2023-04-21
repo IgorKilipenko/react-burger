@@ -4,21 +4,22 @@ import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
 import { CurrencyIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { Burger } from "./burger"
-import { BurgerIngredientType } from "../../data"
-import { CartItemType, useCartContext } from "../../context/cart/cart-context"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
+import { useSelector } from "react-redux"
+import type { BurgerCartItemType } from "../../services/slices/cart"
+import { RootState } from "../../services/store"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
   const calcTotalPrice = useCallback(
-    (ingredients: CartItemType<BurgerIngredientType>[]) =>
+    (ingredients: BurgerCartItemType[]) =>
       ingredients.reduce((res, curr) => (res += curr.item.price * curr.quantity), 0),
     []
   )
 
-  const { cart: selectedIngredients } = useCartContext()
+  const selectedIngredients = useSelector((store: RootState) => store.cart.products)
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
 

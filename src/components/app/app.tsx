@@ -5,7 +5,6 @@ import BurgerIngredients from "../burger-ingredients"
 import BurgerConstructor from "../burger-constructor"
 import theme from "../../theme/theme"
 import { Flex } from "@chakra-ui/react"
-import { CartContextProvider, BurgerCartContext } from "../../context/cart"
 import { BurgerProductsContext, ProductsContextProvider } from "../../context/products"
 import { MainContainer } from "./main-container"
 
@@ -30,12 +29,10 @@ const App = () => {
       >
         <AppHeader onChangeHeight={handleHeaderChangeHeight} />
         <ProductsContextProvider context={BurgerProductsContext}>
-          <CartContextProvider context={BurgerCartContext}>
-            <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
-              <BurgerIngredients grow={1} />
-              <BurgerConstructor grow={1} />
-            </MainContainer>
-          </CartContextProvider>
+          <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
+            <BurgerIngredients grow={1} />
+            <BurgerConstructor grow={1} />
+          </MainContainer>
         </ProductsContextProvider>
       </Flex>
     </ChakraProvider>

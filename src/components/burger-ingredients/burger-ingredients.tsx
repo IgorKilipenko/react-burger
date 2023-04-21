@@ -5,11 +5,12 @@ import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
 import { BurgerIngredientType, CategoryBase } from "../../data"
 import { selectIngredients } from "./utils"
-import { useCartContext } from "../../context/cart"
 import { Modal } from "../modal"
 import { headerText, IngredientDetail } from "../ingredient-details"
 import { useIngredientsContext } from "../../context/products"
 import { useTabInView } from "../../hooks"
+import { useDispatch } from "react-redux"
+import { cartActions } from "../../services/slices/cart"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -17,12 +18,12 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   type CategoryRefType = HTMLDivElement
   type CategoryIdType = CategoryBase["id"]
 
+  const dispatch = useDispatch()
+  const { addProductToCart, clearCart } = cartActions
   const { products: ingredientsTable, categories } = useIngredientsContext()
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
-
-  const { addProductToCart, clearCart } = useCartContext()
 
   const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & (typeof categories)[number])[]>([])
 
@@ -35,10 +36,10 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
-    clearCart()
+    dispatch(clearCart())
     const selectedIngredients = Object.keys(ingredientsTable).length > 0 ? selectIngredients(ingredientsTable) : []
     selectedIngredients.forEach((x) => {
-      addProductToCart(x)
+      dispatch(addProductToCart(x))
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientsTable])

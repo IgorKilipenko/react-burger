@@ -1,17 +1,19 @@
 import React, { useCallback } from "react"
 import { Flex } from "@chakra-ui/react"
-import { useCartContext, type CartItemType } from "../../context/cart/cart-context"
-import { BurgerIngredientType, DbIndexType } from "../../data"
+import { DbIndexType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 import { uid } from "uid"
 import { useDrop } from "react-dnd"
+import { useSelector } from "react-redux"
+import type { BurgerCartItemType } from "../../services/slices/cart"
+import { RootState } from "../../services/store"
 
 export interface BurgerProps {}
 
 export const Burger = React.memo<BurgerProps>(() => {
-  const extractIngredientsByType = useCallback((ingredientsList: CartItemType<BurgerIngredientType>[]) => {
+  const extractIngredientsByType = useCallback((ingredientsList: BurgerCartItemType[]) => {
     const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
-    const bun = ingredientsList.reduce<CartItemType<BurgerIngredientType> | null>((res, curr) => {
+    const bun = ingredientsList.reduce<BurgerCartItemType | null>((res, curr) => {
       return (res = curr.item.type === "bun" ? curr : res)
     }, null)
     return { bun, ingredients: innerIngredients }
@@ -20,7 +22,7 @@ export const Burger = React.memo<BurgerProps>(() => {
     console.log("drop")
   }, [])
 
-  const { cart: selectedIngredients } = useCartContext()
+  const selectedIngredients = useSelector((store: RootState) => store.cart.products)
   const { bun, ingredients } = extractIngredientsByType(selectedIngredients)
 
   const [{ isHover }, dropTarget] = useDrop({
