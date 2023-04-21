@@ -45,16 +45,22 @@ export const burgerSlice = createSlice({
   name: "burgerConstructor",
   initialState,
   reducers: {
+    clearBuns: (state) => {
+      const rmProducts = getProductsByType(allowableCategories.bun, state.products)
+      state.products = rmProducts
+        ? state.products.filter((p) => rmProducts.findIndex((x) => p.product._id === x.product._id))
+        : state.products
+      rmProducts.forEach((p) => {
+        delete state.productQuantities[p.product._id]
+      })
+    },
     addIngredient: (state, action: PayloadAction<BurgerItemType & { quantity?: number }>) => {
       console.assert(action.payload?.quantity && action.payload.quantity > 0)
 
       const { product, quantity = 0 } = action.payload
 
       if (product.type === allowableCategories.bun) {
-        const rmProducts = getProductsByType(product.type, state.products)
-        state.products = rmProducts
-          ? state.products.filter((p) => rmProducts.findIndex((x) => p.product._id === x.product._id))
-          : state.products
+        burgerSlice.caseReducers.clearBuns(state)
       }
 
       const existingProduct = getProductById(product._id, state.products)
@@ -71,7 +77,8 @@ export const burgerSlice = createSlice({
           }
         })
       }
-      state.productQuantities[product._id] = state.productQuantities[product._id] ?? 0 + quantity
+      state.productQuantities[product._id] =
+        product.type === allowableCategories.bun ? 1 : state.productQuantities[product._id] ?? 0 + quantity
     },
     removeIngredient: (state, action: PayloadAction<{ id: ProductIdType } | { uid: OrderedItemType["uid"] }>) => {
       const id = "id" in action.payload ? action.payload.id : null
@@ -96,5 +103,5 @@ export const burgerSlice = createSlice({
   },
 })
 
-export const { addIngredient, removeIngredient, clearBurgerConstructor } = burgerSlice.actions
+export const { addIngredient, removeIngredient, clearBurgerConstructor, clearBuns } = burgerSlice.actions
 export const burgerReducer = burgerSlice.reducer
