@@ -30,10 +30,6 @@ const initialState: BurgerState = {
   productQuantities: {},
 }
 
-const getProductById = <T extends ProductBase>(id: ProductIdType, products: BurgerStateBase<T>["products"]) => {
-  return products.find((item) => item.product._id === id)
-}
-
 const getProductsByType = <T extends ProductBase>(
   type: ProductBase["type"],
   products: BurgerStateBase<T>["products"]
@@ -55,30 +51,20 @@ export const burgerSlice = createSlice({
       })
     },
     addIngredient: (state, action: PayloadAction<BurgerItemType & { quantity?: number }>) => {
-      console.assert(action.payload?.quantity && action.payload.quantity > 0)
-
-      const { product, quantity = 0 } = action.payload
+      const { product, quantity = 1 } = action.payload
+      console.assert(quantity > 0)
 
       if (product.type === allowableCategories.bun) {
         burgerSlice.caseReducers.clearBuns(state)
       }
 
-      const existingProduct = getProductById(product._id, state.products)
-      if (!existingProduct) {
-        const prevLength = state.products.length
-        Array(quantity)
-          .fill(0)
-          .forEach((_, i) => state.products.push({ product, uid: uid(), sortIndex: i + prevLength }))
-      } else {
-        /// update product and quantities
-        state.products.forEach((item, i, products) => {
-          if (item.product._id === existingProduct.product._id) {
-            products[i] = { ...item, ...product }
-          }
-        })
-      }
+      const prevLength = state.products.length
+      Array(quantity)
+        .fill(0)
+        .forEach((_, i) => state.products.push({ product, uid: uid(), sortIndex: i + prevLength }))
+
       state.productQuantities[product._id] =
-        product.type === allowableCategories.bun ? 1 : state.productQuantities[product._id] ?? 0 + quantity
+        product.type === allowableCategories.bun ? 1 : (state.productQuantities[product._id] ?? 0) + quantity
     },
     removeIngredient: (state, action: PayloadAction<{ id: ProductIdType } | { uid: OrderedItemType["uid"] }>) => {
       const id = "id" in action.payload ? action.payload.id : null
