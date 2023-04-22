@@ -120,7 +120,7 @@ export const api = {
     return api.get<ApiIngredientsResponseType>({ url })
   },
 
-  getOrderId: (ingredientsIds: string[]) => {
+  createOrder: (ingredientsIds: string[]) => {
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.orders}`
     return api.post<ApiOrderIdResponseType>({ url, body: JSON.stringify({ ingredients: ingredientsIds }) })
   },
