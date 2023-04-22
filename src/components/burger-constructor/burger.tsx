@@ -53,6 +53,7 @@ export const Burger = React.memo<BurgerProps>(() => {
       overflowX="hidden"
       className="custom-scroll"
       pr={4}
+      {...(isHover ? {boxShadow:`0 0 0px 2px var(--chakra-colors-active-border-color)`} : {})}
     >
       {bun && (
         <BurgerItem
@@ -64,7 +65,7 @@ export const Burger = React.memo<BurgerProps>(() => {
       {ingredients?.map((element, i) => (
         <BurgerItem
           key={`bi-${element.uid ?? uid()}`}
-          sortIndex={element.sortIndex ?? i}
+          sortIndex={i}
           element={element.product}
           uid={element.uid ?? uid()}
         />
