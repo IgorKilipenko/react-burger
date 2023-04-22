@@ -1,47 +1,20 @@
-export const apiClientConfig = {
-  baseUrl: "https://norma.nomoreparties.space",
-  endpoints: {
-    orders: "api/orders",
-    ingredients: "api/ingredients",
-  },
-}
+import { BurgerIngredientType, IngredientsTableView } from "./data-types"
 
-export type DbIndexType = string
+export { apiConfig as apiClientConfig } from "./api"
 
-export interface DbObjectType {
-  _id: DbIndexType
-  __v?: number
-}
-
-export interface IngredientBase {
-  name: string
-  type: string
-}
-
-export interface CategoryBase {
-  id: string
-  name: string
-}
-
-export interface BurgerIngredientType extends IngredientBase, DbObjectType {
-  proteins: number
-  fat: number
-  carbohydrates: number
-  calories: number
-  price: number
-  image: string
-  image_mobile: string
-  image_large: string
-}
-
-export type IngredientsTableViewKeyType = CategoryBase["id"]
-export interface IngredientsTableView<T extends IngredientBase & DbObjectType = BurgerIngredientType> {
-  [key: IngredientsTableViewKeyType]: T[]
-}
+export type {
+  DbIndexType,
+  DbObjectType,
+  IngredientBase,
+  CategoryBase,
+  BurgerIngredientType,
+  IngredientsTableViewKeyType,
+  IngredientsTableView,
+} from "./data-types"
 
 export const allowableCategories = { bun: "bun", sauce: "sauce", main: "main" }
 
-export const ingredientCategoriesMap:Record<keyof typeof allowableCategories, string> = {
+export const ingredientCategoriesMap: Record<keyof typeof allowableCategories, string> = {
   bun: "булки",
   sauce: "соусы",
   main: "начинки",
