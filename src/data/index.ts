@@ -12,7 +12,7 @@ export type {
   IngredientsTableView,
 } from "./data-types"
 
-export { api } from "./api"
+export { api, type ApiOrderIdResponseType } from "./api"
 
 export const allowableCategories = { bun: "bun", sauce: "sauce", main: "main" }
 
