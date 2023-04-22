@@ -1,6 +1,6 @@
 import React from "react"
-import { DropTargetMonitor, DragSourceMonitor, useDrag, useDrop } from "react-dnd"
-import type { Identifier, XYCoord } from "dnd-core"
+import { DropTargetMonitor, useDrag, useDrop } from "react-dnd"
+import type { XYCoord } from "dnd-core"
 
 export interface WithUidType {
   uid: string
@@ -21,7 +21,7 @@ interface DargHoverArgs<T extends WithUidType> {
   moveItem: ({ dragUid, hoverUid }: { dragUid: WithUidType["uid"]; hoverUid: WithUidType["uid"] }) => void
 }
 
-export const dargHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void = ({
+export const dropHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void = ({
   item,
   monitor,
   ref,
@@ -75,26 +75,28 @@ export interface DndSortContainerProps {
 }
 
 export const DndSortContainer: React.FC<DndSortContainerProps> = ({ target: Target, uid, index, accept, moveItem }) => {
+  type TDragItem = DragItem<WithUidType>
+
   const ref = React.useRef<HTMLDivElement>(null)
 
   const [{ isOver }, drop] = useDrop<DragItem<WithUidType>, void, { isOver: boolean }>({
     accept: accept,
-    collect(monitor: DropTargetMonitor<DragItem<WithUidType>>) {
+    collect(monitor) {
       return {
-        isOver: monitor.isOver({shallow:true}) ?? false,
+        isOver: !!monitor.isOver({ shallow: false }),
       }
     },
-    hover(item: DragItem<WithUidType>, monitor) {
-      return dargHover<WithUidType>({ item, monitor, ref: ref, elementIndex: index, elementUid: `${uid}`, moveItem })
+    hover(item: TDragItem, monitor) {
+      return dropHover<WithUidType>({ item, monitor, ref: ref, elementIndex: index, elementUid: `${uid}`, moveItem })
     },
   })
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag<TDragItem, TDragItem, { isDragging: boolean }>({
     type: accept,
     item: () => {
       return { item: { uid: `${uid}` }, index, type: accept }
     },
-    collect: (monitor: DragSourceMonitor<DragItem<WithUidType>, DragItem<WithUidType>>) => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   })
