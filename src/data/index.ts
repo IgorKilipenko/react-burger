@@ -12,6 +12,8 @@ export type {
   IngredientsTableView,
 } from "./data-types"
 
+export { api } from "./api"
+
 export const allowableCategories = { bun: "bun", sauce: "sauce", main: "main" }
 
 export const ingredientCategoriesMap: Record<keyof typeof allowableCategories, string> = {
