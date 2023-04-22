@@ -15,6 +15,7 @@ export type QuantitiesRecord<T extends ProductIdType> = Record<T, number>
 
 interface BurgerItemBase<T extends ProductBase> extends Partial<OrderedItemType> {
   product: T
+  bun?: T
 }
 
 interface BurgerStateBase<TProduct extends ProductBase> {
@@ -86,8 +87,29 @@ export const burgerSlice = createSlice({
     clearBurgerConstructor: (state) => {
       state = initialState
     },
+    /*sort: (state) => {
+      state.products = state.products.sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
+    },*/
+    swapItemsByIndex: (
+      state,
+      action: PayloadAction<{
+        fromIndex: OrderedItemType["sortIndex"]
+        toIndex: OrderedItemType["sortIndex"]
+      }>
+    ) => {
+      const { fromIndex, toIndex } = action.payload
+      console.assert(fromIndex && fromIndex >= 0 && fromIndex < state.products.length)
+      console.assert(toIndex && toIndex >= 0 && toIndex < state.products.length)
+
+      if (!fromIndex || !toIndex || fromIndex === toIndex) return
+
+      const buff = { ...state.products[fromIndex], sortIndex: toIndex }
+      state.products[fromIndex] = {...state.products[toIndex], sortIndex: fromIndex}
+      state.products[toIndex] = buff
+    },
   },
 })
 
-export const { addIngredient, removeIngredient, clearBurgerConstructor, clearBuns } = burgerSlice.actions
+export const { addIngredient, removeIngredient, clearBurgerConstructor, swapItemsByIndex, clearBuns } =
+  burgerSlice.actions
 export const burgerReducer = burgerSlice.reducer
