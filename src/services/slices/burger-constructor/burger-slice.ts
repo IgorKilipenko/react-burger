@@ -78,6 +78,9 @@ export const burgerSlice = createSlice({
       const uid = "uid" in action.payload ? action.payload.uid : null
 
       console.assert(id || uid)
+      if (!uid) {
+        console.assert(id && (state.productQuantities[id] ?? 0 <= 1))
+      }
 
       const eraseIndex = !uid
         ? state.products.reduce<number>((res, item, i) => {
