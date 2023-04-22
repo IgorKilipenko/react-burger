@@ -7,7 +7,7 @@ import { BurgerIngredientType } from "../../data"
 import { uid as genUid } from "uid"
 import { useDispatch } from "react-redux"
 import { burgerActions } from "../../services/slices/burger-constructor"
-import { DndSortContainer } from "../common/dnd"
+import { DndSortContainer, Identifier } from "../common/dnd"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
@@ -15,13 +15,17 @@ export declare type ElementType = keyof typeof allowableTypes | undefined | null
 export interface BurgerItemProps {
   element: BurgerIngredientType
   uid: string
+  sortIndex?: number
   type?: ElementType
   quantity?: number
 }
 
-export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, quantity = 1, uid }) => {
+export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, sortIndex, quantity = 1, uid }) => {
   const dispatch = useDispatch()
-  const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
+  const isBunElement = React.useMemo(
+    () => (Object.values(allowableTypes).find((v) => v === type) ? true : false),
+    [type]
+  )
 
   const bunProps = React.useMemo(
     () =>
@@ -46,7 +50,7 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
   }, [dispatch, element._id])
 
   const dndSortedConstructorElement = React.useMemo(() => {
-    return React.forwardRef<HTMLDivElement, { dataHandlerId: string }>(({ dataHandlerId }, ref) => (
+    return React.forwardRef<HTMLDivElement, { dataHandlerId?: Identifier | null }>(({ dataHandlerId }, ref) => (
       <Flex
         ref={ref}
         gridColumn={1}
@@ -69,10 +73,16 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
     ))
   }, [bunProps, element.image, element.name, element.price, handleRemove, isBunElement, type])
 
+  const swapItems = React.useCallback(({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
+    dispatch(burgerActions.swapItemsByIndex({ fromIndex: dragIndex, toIndex: hoverIndex }))
+  }, [dispatch])
+
   return (
     <DndSortContainer
-      key={`${uid}` + (type ? `-${type}` : "")}
       uid={`${uid}` + (type ? `-${type}` : "")}
+      index={sortIndex ?? -1}
+      accept="burgerConstructorItems"
+      moveItem={swapItems}
       target={dndSortedConstructorElement}
     />
   )

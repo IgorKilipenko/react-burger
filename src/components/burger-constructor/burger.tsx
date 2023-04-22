@@ -62,8 +62,13 @@ export const Burger = React.memo<BurgerProps>(() => {
           uid={`${bun.uid ?? uid()}-${allowableTypes.top}`}
         />
       )}
-      {ingredients?.map((element) => (
-        <BurgerItem key={`bi-${element.product._id}-${uid()}`} element={element.product} uid={element.uid ?? uid()} />
+      {ingredients?.map((element, i) => (
+        <BurgerItem
+          key={`bi-${element.uid ?? uid()}`}
+          sortIndex={element.sortIndex ?? i}
+          element={element.product}
+          uid={element.uid ?? uid()}
+        />
       ))}
       {bun && (
         <BurgerItem

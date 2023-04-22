@@ -1,22 +1,24 @@
 import React from "react"
-import type { DropTargetMonitor, XYCoord } from "react-dnd"
+import { DropTargetMonitor, useDrag, useDrop } from "react-dnd"
+import type { Identifier, XYCoord } from "dnd-core"
 import { DbObjectType } from "../../../data"
 
-export interface DragItem<T extends DbObjectType> {
+export interface DragItem<T extends any> {
   index: number
   item: { object: T }
   type: string
 }
 
-interface DargHoverArgs<T extends DbObjectType> {
+interface DargHoverArgs<T extends any> {
   item: DragItem<T>
   monitor: DropTargetMonitor<DragItem<T>>
-  ref: React.MutableRefObject<HTMLDivElement>
+  //ref: React.MutableRefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLDivElement>
   elementIndex: number
   moveItem: ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => void
 }
 
-export const dargHover: <T extends DbObjectType>(args: DargHoverArgs<T>) => void = ({
+export const dargHover: <T extends any>(args: DargHoverArgs<T>) => void = ({
   item,
   monitor,
   ref,
@@ -54,24 +56,45 @@ export const dargHover: <T extends DbObjectType>(args: DargHoverArgs<T>) => void
   item.index = hoverIndex
 }
 
-interface TargetProps/*<T extends HTMLElement> */{
-  //ref: React.RefObject<HTMLDivElement>
-  //ref: React.ForwardedRef<T>
-  dataHandlerId: string
+interface TargetProps {
+  dataHandlerId: Identifier | null
 }
 
 export interface DndSortContainerProps {
-  //target: React.FC<TargetProps<HTMLDivElement>>
-  //target: typeof React.forwardRef<HTMLDivElement, TargetProps>
   target: React.ForwardRefExoticComponent<React.PropsWithoutRef<TargetProps> & React.RefAttributes<HTMLDivElement>>
   key?: React.Key | null
   uid: string | number
-  index?: number
-  accept?: string
-  moveItem?: ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => void
+  index: number
+  accept: string
+  moveItem: ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => void
 }
 
-export const DndSortContainer: React.FC<DndSortContainerProps> = ({ target:Target, uid, index, moveItem }) => {
+export const DndSortContainer: React.FC<DndSortContainerProps> = ({ target: Target, uid, index, accept, moveItem }) => {
   const ref = React.useRef<HTMLDivElement>(null)
-  return <Target {...{ref, dataHandlerId: `${uid}`, key:`dnd-${uid}` }}/>
+  
+  const [{ handlerId }, drop] = useDrop<DragItem<DbObjectType>, void, { handlerId: Identifier | null }>({
+    accept: accept,
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      }
+    },
+    hover(item: DragItem<DbObjectType>, monitor) {
+      return dargHover<DbObjectType>({ item, monitor, ref: ref, elementIndex: index, moveItem })
+    },
+  })
+
+  const [{ isDragging }, drag] = useDrag({
+    type: accept,
+    item: () => {
+      return { uid, index }
+    },
+    collect: (monitor: any) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })
+
+  drag(drop(ref))
+  
+  return <Target {...{ ref, dataHandlerId: handlerId, key: `dnd-${uid}` }} />
 }
