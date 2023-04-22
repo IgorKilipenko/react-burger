@@ -52,7 +52,13 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
     return React.forwardRef<HTMLDivElement, { isOver?: boolean; isDragging?: boolean }>(
       ({ isOver, isDragging }, ref) => {
         return (
-          <Flex ref={!type ? ref : null} gridColumn={1} {...bunProps} w="100%" {...(isDragging ? { opacity: 0 } : {})}>
+          <Flex
+            ref={!type ? ref : null}
+            gridColumn={1}
+            {...bunProps}
+            w="100%"
+            {...(isDragging ? { opacity: 0.5 } : {})}
+          >
             <Flex w={8} align="center">
               <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
             </Flex>
