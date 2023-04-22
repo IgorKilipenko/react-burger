@@ -52,7 +52,7 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
   const dndSortedConstructorElement = React.useMemo(() => {
     return React.forwardRef<HTMLDivElement, { dataHandlerId?: Identifier | null }>(({ dataHandlerId }, ref) => (
       <Flex
-        ref={ref}
+        ref={!type ? ref : null}
         gridColumn={1}
         {...bunProps}
         w="100%"
