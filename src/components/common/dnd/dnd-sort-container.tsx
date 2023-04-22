@@ -61,13 +61,9 @@ export const dargHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void 
   moveItem && moveItem({ dragUid, hoverUid })
 
   item.index = hoverIndex
-  //! console.log(item.item.uid)
-  console.log(item.item.uid)
 }
 
-interface TargetProps {
-  dataHandlerId: Identifier | null
-}
+interface TargetProps {}
 
 export interface DndSortContainerProps {
   target: React.ForwardRefExoticComponent<React.PropsWithoutRef<TargetProps> & React.RefAttributes<HTMLDivElement>>
@@ -75,22 +71,17 @@ export interface DndSortContainerProps {
   uid: string | number
   index: number
   accept: string
-  moveItem: DargHoverArgs<WithUidType>['moveItem']
+  moveItem: DargHoverArgs<WithUidType>["moveItem"]
 }
 
 export const DndSortContainer: React.FC<DndSortContainerProps> = ({ target: Target, uid, index, accept, moveItem }) => {
   const ref = React.useRef<HTMLDivElement>(null)
 
-  const [{ handlerId, handlerUid }, drop] = useDrop<
-    DragItem<WithUidType>,
-    void,
-    { handlerId: Identifier | null; handlerUid: string }
-  >({
+  const [{ isOver }, drop] = useDrop<DragItem<WithUidType>, void, { isOver: boolean }>({
     accept: accept,
     collect(monitor: DropTargetMonitor<DragItem<WithUidType>>) {
       return {
-        handlerId: monitor.getHandlerId(),
-        handlerUid: monitor.getItem()?.item?.uid ?? "",
+        isOver: monitor.isOver({shallow:true}) ?? false,
       }
     },
     hover(item: DragItem<WithUidType>, monitor) {
@@ -110,5 +101,5 @@ export const DndSortContainer: React.FC<DndSortContainerProps> = ({ target: Targ
 
   drag(drop(ref))
 
-  return <Target {...{ ref, dataHandlerId: handlerId, key: `dnd-${uid}` }} />
+  return <Target {...{ ref, key: `dnd-${uid}`, isDragging, isOver }} />
 }

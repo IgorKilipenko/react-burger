@@ -4,10 +4,9 @@ import { ConstructorElement } from "./constructor-element"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
-import { uid as genUid } from "uid"
 import { useDispatch } from "react-redux"
 import { burgerActions } from "../../services/slices/burger-constructor"
-import { DndSortContainer, Identifier } from "../common/dnd"
+import { DndSortContainer } from "../common/dnd"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
@@ -20,7 +19,7 @@ export interface BurgerItemProps {
   quantity?: number
 }
 
-export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, sortIndex, quantity = 1, uid }) => {
+export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, sortIndex, uid }) => {
   const dispatch = useDispatch()
   const isBunElement = React.useMemo(
     () => (Object.values(allowableTypes).find((v) => v === type) ? true : false),
@@ -50,27 +49,25 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
   }, [dispatch, element._id])
 
   const dndSortedConstructorElement = React.useMemo(() => {
-    return React.forwardRef<HTMLDivElement, { dataHandlerId?: Identifier | null }>(({ dataHandlerId }, ref) => (
-      <Flex
-        ref={!type ? ref : null}
-        gridColumn={1}
-        {...bunProps}
-        w="100%"
-        {...(dataHandlerId ? { "data-handler-id": dataHandlerId } : {})}
-      >
-        <Flex w={8} align="center">
-          <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
-        </Flex>
-        <ConstructorElement
-          type={type ?? undefined}
-          isLocked={isBunElement || false}
-          text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
-          price={element.price}
-          thumbnail={element.image}
-          handleClose={handleRemove}
-        />
-      </Flex>
-    ))
+    return React.forwardRef<HTMLDivElement, { isOver?: boolean; isDragging?: boolean }>(
+      ({ isOver, isDragging }, ref) => {
+        return (
+          <Flex ref={!type ? ref : null} gridColumn={1} {...bunProps} w="100%" {...(isDragging ? { opacity: 0 } : {})}>
+            <Flex w={8} align="center">
+              <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
+            </Flex>
+            <ConstructorElement
+              type={type ?? undefined}
+              isLocked={isBunElement || false}
+              text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
+              price={element.price}
+              thumbnail={element.image}
+              handleClose={handleRemove}
+            />
+          </Flex>
+        )
+      }
+    )
   }, [bunProps, element.image, element.name, element.price, handleRemove, isBunElement, type])
 
   const swapItems = React.useCallback(

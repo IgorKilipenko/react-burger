@@ -27,7 +27,6 @@ export const Burger = React.memo<BurgerProps>(() => {
 
   const handleDrop = React.useCallback(
     (ingredient: BurgerIngredientType) => {
-      console.log("drop")
       dispatch(addProductToCart({ product: ingredient }))
     },
     [addProductToCart, dispatch]

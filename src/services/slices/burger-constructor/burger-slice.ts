@@ -93,9 +93,6 @@ export const burgerSlice = createSlice({
     clearBurgerConstructor: (state) => {
       state = initialState
     },
-    /*sort: (state) => {
-      state.products = state.products.sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
-    },*/
     swapItemsByIndex: (
       state,
       action: PayloadAction<{
