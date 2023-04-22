@@ -1,10 +1,11 @@
 import React, { useCallback } from "react"
 import { Flex } from "@chakra-ui/react"
-import { allowableCategories, DbIndexType } from "../../data"
+import { allowableCategories, BurgerIngredientType, DbIndexType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 import { uid } from "uid"
 import { useDrop } from "react-dnd"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
+import { burgerActions } from "../../services/slices/burger-constructor"
 import type { BurgerItemType } from "../../services/slices/burger-constructor"
 import { RootState } from "../../services/store"
 
@@ -18,17 +19,24 @@ export const Burger = React.memo<BurgerProps>(() => {
     }, null)
     return { bun, ingredients: innerIngredients }
   }, [])
-  const handleDrop = React.useCallback((id: DbIndexType) => {
-    console.log("drop")
-  }, [])
 
+  const dispatch = useDispatch()
+  const { addProductToCart } = burgerActions
   const selectedIngredients = useSelector((store: RootState) => store.burgerConstructor.products)
   const { bun, ingredients } = extractIngredientsByType(selectedIngredients)
 
+  const handleDrop = React.useCallback(
+    (ingredient: BurgerIngredientType) => {
+      console.log("drop")
+      dispatch(addProductToCart({ product: ingredient }))
+    },
+    [addProductToCart, dispatch]
+  )
+
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
-    drop(itemId) {
-      handleDrop(itemId as DbIndexType)
+    drop(item: { ingredient: BurgerIngredientType }) {
+      handleDrop(item.ingredient)
     },
     collect: (monitor) => ({
       isHover: monitor.isOver(),
@@ -47,11 +55,23 @@ export const Burger = React.memo<BurgerProps>(() => {
       className="custom-scroll"
       pr={4}
     >
-      {bun && <BurgerItem element={bun.product} type={allowableTypes.top as ElementType} />}
+      {bun && (
+        <BurgerItem
+          element={bun.product}
+          type={allowableTypes.top as ElementType}
+          uid={`${bun.uid ?? uid()}-${allowableTypes.top}`}
+        />
+      )}
       {ingredients?.map((element) => (
-        <BurgerItem key={`bi-${element.product._id}-${uid()}`} element={element.product} />
+        <BurgerItem key={`bi-${element.product._id}-${uid()}`} element={element.product} uid={element.uid ?? uid()} />
       ))}
-      {bun && <BurgerItem element={bun.product} type={allowableTypes.bottom as ElementType} />}
+      {bun && (
+        <BurgerItem
+          element={bun.product}
+          type={allowableTypes.bottom as ElementType}
+          uid={`${bun.uid ?? uid()}-${allowableTypes.bottom}`}
+        />
+      )}
     </Flex>
   )
 })
