@@ -37,7 +37,10 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
     dispatch(clearCart())
-    const selectedIngredients = Object.keys(ingredientsTable).length > 0 ? selectIngredients(ingredientsTable) : []
+    const selectedIngredients =
+      Object.keys(ingredientsTable).length > 0
+        ? selectIngredients({ ingredients: ingredientsTable, maxQuantity: 0 })
+        : []
     selectedIngredients.forEach((x) => {
       dispatch(addProductToCart({ product: x.item, quantity: x.quantity }))
     })
