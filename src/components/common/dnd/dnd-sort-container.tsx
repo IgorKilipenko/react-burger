@@ -1,28 +1,32 @@
 import React from "react"
-import { DropTargetMonitor, useDrag, useDrop } from "react-dnd"
+import { DropTargetMonitor, DragSourceMonitor, useDrag, useDrop } from "react-dnd"
 import type { Identifier, XYCoord } from "dnd-core"
-import { DbObjectType } from "../../../data"
 
-export interface DragItem<T extends any> {
+export interface WithUidType {
+  uid: string
+}
+
+export interface DragItem<T extends WithUidType> {
   index: number
-  item: { object: T }
+  item: T
   type: string
 }
 
-interface DargHoverArgs<T extends any> {
+interface DargHoverArgs<T extends WithUidType> {
   item: DragItem<T>
   monitor: DropTargetMonitor<DragItem<T>>
-  //ref: React.MutableRefObject<HTMLDivElement>
   ref: React.RefObject<HTMLDivElement>
   elementIndex: number
-  moveItem: ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => void
+  elementUid: WithUidType["uid"]
+  moveItem: ({ dragUid, hoverUid }: { dragUid: WithUidType["uid"]; hoverUid: WithUidType["uid"] }) => void
 }
 
-export const dargHover: <T extends any>(args: DargHoverArgs<T>) => void = ({
+export const dargHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void = ({
   item,
   monitor,
   ref,
   elementIndex,
+  elementUid,
   moveItem,
 }) => {
   if (!ref.current) {
@@ -30,6 +34,9 @@ export const dargHover: <T extends any>(args: DargHoverArgs<T>) => void = ({
   }
   const dragIndex = item.index
   const hoverIndex = elementIndex
+
+  const dragUid = item.item.uid
+  const hoverUid = elementUid
 
   if (dragIndex === hoverIndex) {
     return
@@ -51,9 +58,11 @@ export const dargHover: <T extends any>(args: DargHoverArgs<T>) => void = ({
     return
   }
 
-  moveItem && moveItem({ dragIndex, hoverIndex })
+  moveItem && moveItem({ dragUid, hoverUid })
 
   item.index = hoverIndex
+  //! console.log(item.item.uid)
+  console.log(item.item.uid)
 }
 
 interface TargetProps {
@@ -66,35 +75,40 @@ export interface DndSortContainerProps {
   uid: string | number
   index: number
   accept: string
-  moveItem: ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => void
+  moveItem: DargHoverArgs<WithUidType>['moveItem']
 }
 
 export const DndSortContainer: React.FC<DndSortContainerProps> = ({ target: Target, uid, index, accept, moveItem }) => {
   const ref = React.useRef<HTMLDivElement>(null)
-  
-  const [{ handlerId }, drop] = useDrop<DragItem<DbObjectType>, void, { handlerId: Identifier | null }>({
+
+  const [{ handlerId, handlerUid }, drop] = useDrop<
+    DragItem<WithUidType>,
+    void,
+    { handlerId: Identifier | null; handlerUid: string }
+  >({
     accept: accept,
-    collect(monitor) {
+    collect(monitor: DropTargetMonitor<DragItem<WithUidType>>) {
       return {
         handlerId: monitor.getHandlerId(),
+        handlerUid: monitor.getItem()?.item?.uid ?? "",
       }
     },
-    hover(item: DragItem<DbObjectType>, monitor) {
-      return dargHover<DbObjectType>({ item, monitor, ref: ref, elementIndex: index, moveItem })
+    hover(item: DragItem<WithUidType>, monitor) {
+      return dargHover<WithUidType>({ item, monitor, ref: ref, elementIndex: index, elementUid: `${uid}`, moveItem })
     },
   })
 
   const [{ isDragging }, drag] = useDrag({
     type: accept,
     item: () => {
-      return { uid, index }
+      return { item: { uid: `${uid}` }, index, type: accept }
     },
-    collect: (monitor: any) => ({
+    collect: (monitor: DragSourceMonitor<DragItem<WithUidType>, DragItem<WithUidType>>) => ({
       isDragging: monitor.isDragging(),
     }),
   })
 
   drag(drop(ref))
-  
+
   return <Target {...{ ref, dataHandlerId: handlerId, key: `dnd-${uid}` }} />
 }

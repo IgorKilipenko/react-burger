@@ -73,9 +73,12 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
     ))
   }, [bunProps, element.image, element.name, element.price, handleRemove, isBunElement, type])
 
-  const swapItems = React.useCallback(({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
-    dispatch(burgerActions.swapItemsByIndex({ fromIndex: dragIndex, toIndex: hoverIndex }))
-  }, [dispatch])
+  const swapItems = React.useCallback(
+    ({ dragUid, hoverUid }: { dragUid: string; hoverUid: string }) => {
+      dispatch(burgerActions.swapItemsByIndex({ fromUid: dragUid, toUid: hoverUid }))
+    },
+    [dispatch]
+  )
 
   return (
     <DndSortContainer

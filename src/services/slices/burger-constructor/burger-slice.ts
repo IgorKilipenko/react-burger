@@ -62,7 +62,13 @@ export const burgerSlice = createSlice({
       const prevLength = state.products.length
       Array(quantity)
         .fill(0)
-        .forEach((_, i) => state.products.push({ product, uid: uid(), sortIndex: i + prevLength }))
+        .forEach((_, i) =>
+          state.products.push({
+            product,
+            uid: uid(),
+            sortIndex: product.type === allowableCategories.bun ? 0 : i + prevLength + 1,
+          })
+        )
 
       state.productQuantities[product._id] =
         product.type === allowableCategories.bun ? 1 : (state.productQuantities[product._id] ?? 0) + quantity
@@ -93,19 +99,22 @@ export const burgerSlice = createSlice({
     swapItemsByIndex: (
       state,
       action: PayloadAction<{
-        fromIndex: OrderedItemType["sortIndex"]
-        toIndex: OrderedItemType["sortIndex"]
+        fromUid: OrderedItemType["uid"]
+        toUid: OrderedItemType["uid"]
       }>
     ) => {
-      const { fromIndex, toIndex } = action.payload
-      console.assert(fromIndex && fromIndex >= 0 && fromIndex < state.products.length)
-      console.assert(toIndex && toIndex >= 0 && toIndex < state.products.length)
+      const { fromUid, toUid } = action.payload
 
-      if (!fromIndex || !toIndex || fromIndex === toIndex) return
+      if (fromUid === toUid) return
 
-      const buff = { ...state.products[fromIndex], sortIndex: toIndex }
-      state.products[fromIndex] = {...state.products[toIndex], sortIndex: fromIndex}
-      state.products[toIndex] = buff
+      const fromIdx = state.products.findIndex((item) => item.uid === fromUid)
+      const toIdx = state.products.findIndex((item) => item.uid === toUid)
+
+      console.assert(fromIdx >= 0 && toIdx >= 0)
+
+      const buff = { ...state.products[fromIdx], sortIndex: toIdx }
+      state.products[fromIdx] = { ...state.products[toIdx], sortIndex: fromIdx }
+      state.products[toIdx] = buff
     },
   },
 })
