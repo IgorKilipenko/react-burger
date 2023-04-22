@@ -38,7 +38,7 @@ const getProductsByType = <T extends ProductBase>(
   return products.filter((item) => item.product.type === type)
 }
 
-export const burgerSlice = createSlice({
+const burgerSlice = createSlice({
   name: "burgerConstructor",
   initialState,
   reducers: {
