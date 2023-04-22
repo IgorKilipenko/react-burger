@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { burgerReducer } from "../slices/burger-constructor/burger-slice"
+import { orderReducer } from "../slices/orders/order-slice"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
-  
+  orderReducer: orderReducer,
 })
 
 interface Options {
