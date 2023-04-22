@@ -1,6 +1,6 @@
 import React, { useCallback } from "react"
 import { Flex } from "@chakra-ui/react"
-import { allowableCategories, BurgerIngredientType, DbIndexType } from "../../data"
+import { allowableCategories, BurgerIngredientType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 import { uid } from "uid"
 import { useDrop } from "react-dnd"
