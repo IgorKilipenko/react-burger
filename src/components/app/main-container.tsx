@@ -3,10 +3,11 @@ import { Text } from "@chakra-ui/react"
 import { Flex, type LayoutProps } from "@chakra-ui/react"
 import { useFetchIngredients, useIsTouchEnabled } from "../../hooks"
 import { ErrorMessage } from "../error-message"
-import { useIngredientsContext } from "../../context/products"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { DndProvider } from "react-dnd"
 import { TouchBackend } from "react-dnd-touch-backend"
+import { useAppDispatch, useAppSelector } from "../../services/store"
+import { getAllIngredients } from "../../services/slices/products/products-slice"
 
 interface MainContainerProps {
   children: React.ReactNode
@@ -22,19 +23,23 @@ const loadingMessage = () => (
 )
 
 export const MainContainer = React.memo<MainContainerProps>(({ children, maxContentWidth, h, height = "100%" }) => {
-  const { categories, setProducts } = useIngredientsContext()
   const currHeight = h ?? height
   const isTouchEnabled = useIsTouchEnabled()
-  const { response, loading, error } = useFetchIngredients()
+  const { categories, loading, error } = useAppSelector((store) => store.products)
+  const dispatch = useAppDispatch()
 
   React.useEffect(() => {
-    setProducts(response.ingredients)
-  }, [response.ingredients, setProducts])
+    dispatch(getAllIngredients())
+  }, [dispatch])
 
   return (
     <Flex as="main" className="custom-scroll" overflow="auto" align="stretch" justify="stretch" h={currHeight}>
       <Flex grow={1} justify="space-around">
-        {categories.length > 0 ? (
+        {error ? (
+          <ErrorMessage message={`Ошибка загрузки данных. ${error.message}`} />
+        ) : loading || !categories || categories.length === 0 ? (
+          loadingMessage()
+        ) : (
           <Flex
             maxW={maxContentWidth}
             justify="space-between"
@@ -53,14 +58,6 @@ export const MainContainer = React.memo<MainContainerProps>(({ children, maxCont
               ))}
             </DndProvider>
           </Flex>
-        ) : error || (!loading && !response.success) ? (
-          <ErrorMessage
-            message={`Ошибка загрузки данных.${error || response.message ? " " : ""}${
-              response.message ? response.message : error ?? ""
-            }`}
-          />
-        ) : (
-          loadingMessage()
         )}
       </Flex>
     </Flex>

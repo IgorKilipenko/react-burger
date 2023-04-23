@@ -1,1 +1,1 @@
-export { createOrder, clearOrder } from "./order-slice"
+export { orderReducer, createOrder, clearOrder } from "./order-slice"

@@ -1,11 +1,13 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
-import { burgerReducer } from "../slices/burger-constructor/burger-slice"
-import { orderReducer } from "../slices/orders/order-slice"
+import { burgerReducer } from "../slices/burger-constructor"
+import { orderReducer } from "../slices/orders"
+import { productsReducer } from "../slices/products"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
   orderReducer: orderReducer,
+  products: productsReducer
 })
 
 interface Options {

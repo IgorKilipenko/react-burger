@@ -5,9 +5,8 @@ import { IngredientCard } from "./ingredient-card"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { useInViewport, BasicTarget } from "../../hooks"
 import { type CategoryBase, type BurgerIngredientType } from "../../data"
-import { useIngredientsContext } from "../../context/products"
 import { useSelector } from "react-redux"
-import { RootState } from "../../services/store"
+import { RootState, useAppSelector } from "../../services/store"
 
 type RootElementType = HTMLDivElement
 
@@ -21,8 +20,8 @@ export interface CategorySectionProps {
 export const CategorySection = React.memo(
   React.forwardRef<RootElementType, CategorySectionProps>(
     ({ category, scrollContainerRef, onCategoryInView, onIngredientClick }, ref) => {
-      const { products: ingredients } = useIngredientsContext()
-      const { productQuantities } = useSelector((store: RootState) => store.burgerConstructor)
+      const ingredients = useAppSelector((store) => store.products.products)
+      const { productQuantities } = useAppSelector((store) => store.burgerConstructor)
       const categoryRef = React.useRef<RootElementType | null>(null)
       const [inViewport, ratio] = useInViewport(
         categoryRef,
@@ -63,7 +62,7 @@ export const CategorySection = React.memo(
         <Flex ref={initRefs} direction="column">
           <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
           <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
-            {ingredients[category.id]?.map((ingredient) => (
+            {(ingredients ?? {})[category.id]?.map((ingredient) => (
               <IngredientCard
                 key={`ingredient-${ingredient._id}`}
                 ingredient={ingredient}

@@ -7,10 +7,10 @@ import { BurgerIngredientType, CategoryBase } from "../../data"
 import { selectIngredients } from "./utils"
 import { Modal } from "../modal"
 import { headerText, IngredientDetail } from "../ingredient-details"
-import { useIngredientsContext } from "../../context/products"
 import { useTabInView } from "../../hooks"
 import { useDispatch } from "react-redux"
 import { burgerActions } from "../../services/slices/burger-constructor"
+import { useAppSelector } from "../../services/store"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -20,26 +20,27 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const dispatch = useDispatch()
   const { addProductToCart, clearCart } = burgerActions
-  const { products: ingredientsTable, categories } = useIngredientsContext()
+  const ingredientsTable = useAppSelector(store => store.products.products)
+  const categories  = useAppSelector(store => store.products.categories)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & (typeof categories)[number])[]>([])
+  const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & NonNullable<typeof categories>[number])[]>([])
 
   const [modalOpen, setModalOpen] = React.useState(false)
 
   /// For show modal window with ingredient details
   const selectedIngredientRef = React.useRef<BurgerIngredientType | null>(null)
 
-  const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories)
+  const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories!)
 
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
     dispatch(clearCart())
     const selectedIngredients =
-      Object.keys(ingredientsTable).length > 0
-        ? selectIngredients({ ingredients: ingredientsTable, maxQuantity: 0 })
+      Object.keys(ingredientsTable ?? {}).length > 0
+        ? selectIngredients({ ingredients: ingredientsTable ?? {}, maxQuantity: 0 })
         : []
     selectedIngredients.forEach((x) => {
       dispatch(addProductToCart({ product: x.item, quantity: x.quantity }))
@@ -49,7 +50,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   /// Initialize refs to categories elements
   React.useEffect(() => {
-    categoriesRefs.current = categories.map((c) => ({ ref: null, ...c }))
+    categoriesRefs.current = (categories ?? []).map((c) => ({ ref: null, ...c }))
   }, [categories])
 
   /// Force scroll to category when tab is clicked
