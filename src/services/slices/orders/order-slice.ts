@@ -2,7 +2,9 @@ import { createSlice, createAsyncThunk, SerializedError, PayloadAction } from "@
 import { api } from "../../../data"
 
 export const createOrder = createAsyncThunk("order/createOrder", async (ingredients: string[]) => {
-  return await api.createOrder(ingredients)
+  const { data, error } = await api.createOrder(ingredients)
+  if (error || !data?.success) throw error ?? Error(data?.message ?? "Error.")
+  return { data, error }
 })
 
 type Response = Awaited<ReturnType<typeof api.createOrder>>
@@ -22,14 +24,14 @@ const initialState: OrderResponseState = {
 const orderSlice = createSlice({
   name: "order",
   initialState,
-  reducers: {},
+  reducers: {
+    clearOrder: (state) => {
+      state = initialState
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(createOrder.fulfilled, (state, { payload }: PayloadAction<Response>) => {
-      if (payload.error || !payload.data?.success || !payload.data?.order) {
-        state.error = payload.error ?? Error(payload.data?.message ?? "Ошибка создания заказа.")
-      } else {
-        state.order = payload.data.order
-      }
+      state.order = payload.data?.order
       state.loading = false
     })
     builder.addCase(createOrder.rejected, (state, { error }) => {
@@ -45,3 +47,4 @@ const orderSlice = createSlice({
 })
 
 export const orderReducer = orderSlice.reducer
+export const { clearOrder } = orderSlice.actions
