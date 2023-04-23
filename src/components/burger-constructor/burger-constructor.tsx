@@ -6,19 +6,24 @@ import { Icon } from "../common/icon"
 import { Burger } from "./burger"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
-import { useSelector } from "react-redux"
 import type { BurgerItemType } from "../../services/slices/burger-constructor"
-import { RootState, useAppDispatch } from "../../services/store"
+import { useAppDispatch, useAppSelector } from "../../services/store"
 import { allowableCategories, DbObjectType } from "../../data"
 import { createOrder } from "../../services/slices/orders"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
-  const selectedIngredients = useSelector((store: RootState) => store.burgerConstructor.products)
+  const selectedIngredients = useAppSelector((store) => store.burgerConstructor.products)
+  const selectedBun = useAppSelector((store) => store.burgerConstructor.bun)
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
   const dispatch = useAppDispatch()
+
+  const allSelectedProductsForOrder = React.useMemo(
+    () => selectedBun ? [selectedBun, ...selectedIngredients] : selectedIngredients,
+    [selectedBun, selectedIngredients]
+  )
 
   const calcTotalPrice = useCallback(
     (ingredients: BurgerItemType[]) =>
@@ -37,13 +42,13 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   }, [])
 
   React.useEffect(() => {
-    setTotalPrice(calcTotalPrice(selectedIngredients ?? []))
-  }, [calcTotalPrice, selectedIngredients])
+    setTotalPrice(calcTotalPrice(allSelectedProductsForOrder))
+  }, [calcTotalPrice, allSelectedProductsForOrder])
 
   const handleOrderButtonClick = React.useCallback(() => {
     setModalOpen(true)
-    dispatch(createOrder(getSelectedIngredientsIds(selectedIngredients)))
-  }, [dispatch, getSelectedIngredientsIds, selectedIngredients])
+    dispatch(createOrder(getSelectedIngredientsIds(allSelectedProductsForOrder)))
+  }, [dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
 
   return (
     <>

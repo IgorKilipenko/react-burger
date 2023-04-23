@@ -45,8 +45,8 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
   )
 
   const handleRemove = React.useCallback(() => {
-    dispatch(burgerActions.removeProductFromCart(uid ? { uid } : { id: element._id }))
-  }, [dispatch, element._id, uid])
+    dispatch(burgerActions.removeProductFromCart({ uid }))
+  }, [dispatch, uid])
 
   const dndSortedConstructorElement = React.useMemo(() => {
     return React.forwardRef<HTMLDivElement, { isOver?: boolean; isDragging?: boolean }>(

@@ -7,7 +7,7 @@ type ProductIdType = ProductBase["_id"]
 
 export interface OrderedItemType {
   uid: string
-} 
+}
 
 interface BurgerItemBase<T extends ProductBase> extends OrderedItemType {
   product: T
@@ -16,7 +16,7 @@ interface BurgerItemBase<T extends ProductBase> extends OrderedItemType {
 export type QuantitiesRecord<T extends ProductIdType> = Record<T, number>
 
 interface BurgerStateBase<TProduct extends ProductBase> {
-  bun?: BurgerItemBase<TProduct>[] | null
+  bun?: BurgerItemBase<TProduct> | null
   products: BurgerItemBase<TProduct>[]
   productQuantities: QuantitiesRecord<ProductIdType>
 }
@@ -30,62 +30,40 @@ const initialState: BurgerState = {
   productQuantities: {},
 }
 
-const getProductsByType = <T extends ProductBase>(
-  type: ProductBase["type"],
-  products: BurgerStateBase<T>["products"]
-) => {
-  return products.filter((item) => item.product.type === type)
-}
-
 const burgerSlice = createSlice({
   name: "burgerConstructor",
   initialState,
   reducers: {
     clearBuns: (state) => {
-      const rmProducts = getProductsByType(allowableCategories.bun, state.products)
-      state.products = rmProducts
-        ? state.products.filter((p) => rmProducts.findIndex((x) => p.product._id === x.product._id))
-        : state.products
-      rmProducts.forEach((p) => {
-        delete state.productQuantities[p.product._id]
-      })
+      if (state.bun) {
+        delete state.productQuantities[state.bun.product._id]
+        state.bun = initialState.bun
+      }
     },
 
     addIngredient: (state, action: PayloadAction<BurgerItemType>) => {
       let { product, uid } = action.payload
+      const isBunType = product.type === allowableCategories.bun
 
-      if (product.type === allowableCategories.bun) {
-        burgerSlice.caseReducers.clearBuns(state)
+      if (isBunType) {
+        state.bun?.product._id !== product._id && burgerSlice.caseReducers.clearBuns(state)
+        state.bun = { uid, product }
+      } else {
+        state.products.push({ uid, product })
       }
 
-      state.products[product.type === allowableCategories.bun ? "unshift" : "push"]({
-        product,
-        uid
-      })
-
-      state.productQuantities[product._id] =
-        product.type === allowableCategories.bun ? 1 : (state.productQuantities[product._id] ?? 0)
+      state.productQuantities[product._id] = isBunType ? 1 : (state.productQuantities[product._id] ?? 0) + 1
     },
 
-    removeIngredient: (state, action: PayloadAction<{ id: ProductIdType } | { uid: OrderedItemType["uid"] }>) => {
-      const id = "id" in action.payload ? action.payload.id : null
-      const uid = "uid" in action.payload ? action.payload.uid : null
+    removeIngredient: (state, action: PayloadAction<{ uid: OrderedItemType["uid"] }>) => {
+      const { uid } = action.payload
 
-      console.assert(id || uid)
-      if (!uid) {
-        console.assert(id && (state.productQuantities[id] ?? 0 <= 1))
-      }
+      const eraseIndex = state.products.findIndex((item) => item.uid === uid)
+      console.assert(eraseIndex >= 0)
 
-      const eraseIndex = !uid
-        ? state.products.reduce<number>((res, item, i) => {
-            return item.product._id === id ? i : res
-          }, -1)
-        : state.products.findIndex((item) => item.uid === uid)
-      if (eraseIndex >= 0) {
-        const product = state.products[eraseIndex].product
-        --state.productQuantities[product._id] <= 0 && delete state.productQuantities[product._id]
-        state.products.splice(eraseIndex, 1)
-      }
+      const product = state.products[eraseIndex].product
+      --state.productQuantities[product._id] <= 0 && delete state.productQuantities[product._id]
+      state.products.splice(eraseIndex, 1)
     },
 
     clearBurgerConstructor: (state) => {
@@ -102,10 +80,7 @@ const burgerSlice = createSlice({
       let { fromIdx, toIdx } = action.payload
 
       if (fromIdx === toIdx) return
-
-      fromIdx++
-      toIdx++
-      console.assert(fromIdx > 0 && toIdx > 0 && fromIdx < state.products.length && toIdx < state.products.length)
+      console.assert(fromIdx >= 0 && toIdx >= 0 && fromIdx < state.products.length && toIdx < state.products.length)
 
       const buff = { ...state.products[fromIdx], sortIndex: toIdx }
       state.products[fromIdx] = { ...state.products[toIdx] }

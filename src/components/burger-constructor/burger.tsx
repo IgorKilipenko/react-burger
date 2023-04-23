@@ -22,8 +22,7 @@ export const Burger = React.memo<BurgerProps>(() => {
 
   const dispatch = useDispatch()
   const { addProductToCart } = burgerActions
-  const selectedIngredients = useSelector((store: RootState) => store.burgerConstructor.products)
-  const { bun, ingredients } = extractIngredientsByType(selectedIngredients)
+  const {bun, products:ingredients} = useSelector((store: RootState) => store.burgerConstructor)
 
   const handleDrop = React.useCallback(
     (ingredient: BurgerIngredientType) => {
