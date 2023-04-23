@@ -22,12 +22,11 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const { addProductToCart, clearCart } = burgerActions
   const ingredientsTable = useAppSelector(store => store.products.products)
   const categories  = useAppSelector(store => store.products.categories)
-  const selectedIngredient = useAppSelector(store => store.activeModalItem.activeIngredient)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & NonNullable<typeof categories>[number])[]>([])
+  const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & NonNullable<typeof categories>[number])[] | null>(null)
 
   const [modalOpen, setModalOpen] = React.useState(false)
 
@@ -48,7 +47,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   /// Initialize refs to categories elements
   React.useEffect(() => {
-    categoriesRefs.current = (categories ?? []).map((c) => ({ ref: null, ...c }))
+    categoriesRefs.current = !categories ? null : categories.map((c) => ({ ref: null, ...c }))
   }, [categories])
 
   /// Force scroll to category when tab is clicked
@@ -89,11 +88,11 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         </Text>
         <IngredientsTabPanel onTabClick={handleTabClick} activeTabId={currentTabId as CategoryIdType} />
         <Flex ref={scrollContainerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
-          {categoriesRefs.current?.map((category, i) => (
+          {categories?.map((category, i) => (
             <CategorySection
               key={`category-${category.id}-${i}`}
               ref={(el) => {
-                categoriesRefs.current[i].ref = el
+                if (categoriesRefs.current) categoriesRefs.current[i].ref = el
               }}
               category={category}
               onCategoryInView={handleCategoryInView}
@@ -103,12 +102,12 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
           ))}
         </Flex>
       </Flex>
-      {modalOpen && selectedIngredient ? (
+      {modalOpen ? (
         <Modal
           headerText={headerText}
           onClose={handleModalClose}
         >
-          <IngredientDetail ingredient={selectedIngredient!} />
+          <IngredientDetail />
         </Modal>
       ) : null}
     </>
