@@ -81,10 +81,10 @@ export const api = {
     return request<TResponse>({
       url,
       options: {
+        cache: "default",
+        mode: "cors",
         ...externalOptions,
         method: "GET",
-        cache: "default",
-        mode: "cors"
       },
       ...other,
     })
@@ -95,26 +95,30 @@ export const api = {
     return request<TResponse>({
       url,
       options: {
+        cache: "default",
+        mode: "cors",
         ...externalOptions,
         method: "POST",
         body,
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
-        mode: "cors"
       },
       ...other,
     })
   },
 
-  getAllIngredients: () => {
+  getAllIngredients: (options?: RequestInit) => {
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.ingredients}`
-    return api.get<ApiIngredientsResponseType>({ url })
+    return api.get<ApiIngredientsResponseType>({ url, options: { ...options, cache: "default" } })
   },
 
-  createOrder: (ingredientsIds: string[]) => {
+  createOrder: (ingredientsIds: string[], options?: RequestInit) => {
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.orders}`
-    return api.post<ApiOrderIdResponseType>({ url, body: JSON.stringify({ ingredients: ingredientsIds }) })
+    return api.post<ApiOrderIdResponseType>({
+      url,
+      body: JSON.stringify({ ingredients: ingredientsIds }),
+      options: { ...options, cache: "no-store" },
+    })
   },
 }
