@@ -83,6 +83,8 @@ export const api = {
       options: {
         ...externalOptions,
         method: "GET",
+        cache: "default",
+        mode: "cors"
       },
       ...other,
     })
@@ -99,6 +101,8 @@ export const api = {
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-store",
+        mode: "cors"
       },
       ...other,
     })
