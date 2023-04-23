@@ -18,7 +18,7 @@ interface DargHoverArgs<T extends WithUidType> {
   ref: React.RefObject<HTMLDivElement>
   elementIndex: number
   elementUid: WithUidType["uid"]
-  moveItem: ({ dragUid, hoverUid }: { dragUid: WithUidType["uid"]; hoverUid: WithUidType["uid"] }) => void
+  moveItem: ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => void
 }
 
 export const dropHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void = ({
@@ -32,11 +32,9 @@ export const dropHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void 
   if (!ref.current) {
     return
   }
+
   const dragIndex = item.index
   const hoverIndex = elementIndex
-
-  const dragUid = item.item.uid
-  const hoverUid = elementUid
 
   if (dragIndex === hoverIndex) {
     return
@@ -58,7 +56,7 @@ export const dropHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void 
     return
   }
 
-  moveItem && moveItem({ dragUid, hoverUid })
+  moveItem && moveItem({ dragIndex, hoverIndex })
 
   item.index = hoverIndex
 }

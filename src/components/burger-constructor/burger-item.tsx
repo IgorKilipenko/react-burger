@@ -4,9 +4,9 @@ import { ConstructorElement } from "./constructor-element"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
-import { useDispatch } from "react-redux"
 import { burgerActions } from "../../services/slices/burger-constructor"
 import { DndSortContainer } from "../common/dnd"
+import { useAppDispatch } from "../../services/store"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
@@ -20,7 +20,7 @@ export interface BurgerItemProps {
 }
 
 export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, sortIndex, uid }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const isBunElement = React.useMemo(
     () => (Object.values(allowableTypes).find((v) => v === type) ? true : false),
     [type]
@@ -77,8 +77,8 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
   }, [bunProps, element.image, element.name, element.price, handleRemove, isBunElement, type])
 
   const swapItems = React.useCallback(
-    ({ dragUid, hoverUid }: { dragUid: string; hoverUid: string }) => {
-      dispatch(burgerActions.swapItemsByIndex({ fromUid: dragUid, toUid: hoverUid }))
+    ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
+      dispatch(burgerActions.swapItemsByIndex({ fromIdx: dragIndex, toIdx: hoverIndex }))
     },
     [dispatch]
   )

@@ -52,17 +52,18 @@ const burgerSlice = createSlice({
     },
 
     addIngredient: (state, action: PayloadAction<BurgerItemType & { quantity?: number }>) => {
-      const { product, quantity = 1 } = action.payload
+      let { product, quantity = 1 } = action.payload
       console.assert(quantity > 0)
 
       if (product.type === allowableCategories.bun) {
         burgerSlice.caseReducers.clearBuns(state)
+        quantity = quantity > 1 ? 1 : quantity
       }
 
       Array(quantity)
         .fill(0)
         .forEach((_, i) =>
-          state.products.push({
+          state.products[product.type === allowableCategories.bun ? "unshift" : "push"]({
             product,
             uid: uid(),
           })
@@ -100,18 +101,17 @@ const burgerSlice = createSlice({
     swapItemsByIndex: (
       state,
       action: PayloadAction<{
-        fromUid: OrderedItemType["uid"]
-        toUid: OrderedItemType["uid"]
+        fromIdx: number
+        toIdx: number
       }>
     ) => {
-      const { fromUid, toUid } = action.payload
+      let { fromIdx, toIdx } = action.payload
 
-      if (fromUid === toUid) return
+      if (fromIdx === toIdx) return
 
-      const fromIdx = state.products.findIndex((item) => item.uid === fromUid)
-      const toIdx = state.products.findIndex((item) => item.uid === toUid)
-
-      console.assert(fromIdx >= 0 && toIdx >= 0)
+      fromIdx++
+      toIdx++
+      console.assert(fromIdx > 0 && toIdx > 0 && fromIdx < state.products.length && toIdx < state.products.length)
 
       const buff = { ...state.products[fromIdx], sortIndex: toIdx }
       state.products[fromIdx] = { ...state.products[toIdx] }
