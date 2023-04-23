@@ -72,7 +72,7 @@ export interface ApiOrderIdResponseType extends ApiResponseBase {
 }
 
 export interface ApiIngredientsResponseType extends ApiResponseBase {
-  ingredients?: BurgerIngredientType[]
+  data?: BurgerIngredientType[]
 }
 
 export const api = {
