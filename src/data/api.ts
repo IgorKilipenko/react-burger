@@ -13,12 +13,9 @@ interface State<T> {
   error?: Error
 }
 
-type ApiDataCache<T> = { [url: string]: { data: T; hasData: boolean } }
-
 export interface RequestArgs<T> {
   url: string
   options?: RequestInit
-  cache?: ApiDataCache<T>
   checkData?: (data: T) => Error | boolean
   onError?: (error: Error) => void
   onLoading?: () => void
@@ -28,7 +25,6 @@ export interface RequestArgs<T> {
 export const request = async <T = unknown>({
   url,
   options,
-  cache = {},
   checkData,
   onError,
   onLoading,
@@ -42,12 +38,6 @@ export const request = async <T = unknown>({
 
   onLoading && onLoading()
 
-  if (cache[url] && cache[url].hasData) {
-    const data = cache[url].data
-    onComplete && onComplete(data)
-    return { data }
-  }
-
   try {
     const response = await fetch(url, options)
     checkResponse(response)
@@ -60,7 +50,6 @@ export const request = async <T = unknown>({
       throw error
     }
 
-    cache[url] = { data, hasData: true }
     onComplete && onComplete(data)
 
     return { data }
