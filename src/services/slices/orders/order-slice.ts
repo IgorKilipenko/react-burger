@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk, SerializedError, PayloadAction } from "@reduxjs/toolkit"
 import { api } from "../../../data"
 
-export const createOrder = createAsyncThunk("order/createOrder", async (ingredients: string[]) => {
+export const createOrder = createAsyncThunk("order/createOrder", async (ingredients: string[], thunkApi) => {
+  thunkApi.dispatch(clearOrder())
   const { data, error } = await api.createOrder(ingredients)
   if (error || !data?.success) throw error ?? Error(data?.message ?? "Error.")
   return { data, error }
