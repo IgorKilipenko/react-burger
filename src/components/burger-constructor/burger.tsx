@@ -1,25 +1,16 @@
-import React, { useCallback } from "react"
+import React from "react"
 import { Flex } from "@chakra-ui/react"
-import { allowableCategories, BurgerIngredientType } from "../../data"
+import { BurgerIngredientType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 import { uid } from "uid"
 import { useDrop } from "react-dnd"
 import { useSelector, useDispatch } from "react-redux"
 import { burgerActions } from "../../services/slices/burger-constructor"
-import type { BurgerItemType } from "../../services/slices/burger-constructor"
 import { RootState } from "../../services/store"
 
 export interface BurgerProps {}
 
 export const Burger = React.memo<BurgerProps>(() => {
-  const extractIngredientsByType = useCallback((ingredientsList: BurgerItemType[]) => {
-    const innerIngredients = ingredientsList.filter((item) => item.product.type !== allowableCategories.bun)
-    const bun = ingredientsList.reduce<BurgerItemType | null>((res, curr) => {
-      return (res = curr.product.type === allowableCategories.bun ? curr : res)
-    }, null)
-    return { bun, ingredients: innerIngredients }
-  }, [])
-
   const dispatch = useDispatch()
   const { addProductToCart } = burgerActions
   const {bun, products:ingredients} = useSelector((store: RootState) => store.burgerConstructor)
