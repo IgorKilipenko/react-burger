@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import { burgerReducer } from "../slices/burger-constructor/burger-slice"
 import { orderReducer } from "../slices/orders/order-slice"
 
@@ -37,3 +38,6 @@ export const store = configureAppStore({ forceDisableLogger: true })
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
