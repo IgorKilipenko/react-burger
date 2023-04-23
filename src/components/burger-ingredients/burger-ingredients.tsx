@@ -8,9 +8,9 @@ import { selectIngredients } from "./utils"
 import { Modal } from "../modal"
 import { headerText, IngredientDetail } from "../ingredient-details"
 import { useTabInView } from "../../hooks"
-import { useDispatch } from "react-redux"
 import { burgerActions } from "../../services/slices/burger-constructor"
-import { useAppSelector } from "../../services/store"
+import { useAppDispatch, useAppSelector } from "../../services/store"
+import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -18,10 +18,11 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   type CategoryRefType = HTMLDivElement
   type CategoryIdType = CategoryBase["id"]
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { addProductToCart, clearCart } = burgerActions
   const ingredientsTable = useAppSelector(store => store.products.products)
   const categories  = useAppSelector(store => store.products.categories)
+  const selectedIngredient = useAppSelector(store => store.activeModalItem.activeIngredient)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
@@ -29,9 +30,6 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & NonNullable<typeof categories>[number])[]>([])
 
   const [modalOpen, setModalOpen] = React.useState(false)
-
-  /// For show modal window with ingredient details
-  const selectedIngredientRef = React.useRef<BurgerIngredientType | null>(null)
 
   const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories!)
 
@@ -74,9 +72,14 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   /// Open modal category details for selected ingredient
   const handleIngredientClick = React.useCallback((ingredient: BurgerIngredientType) => {
-    selectedIngredientRef.current = ingredient
+    dispatch(setActiveIngredient(ingredient))
     setModalOpen(true)
-  }, [])
+  }, [dispatch])
+
+  const handleModalClose = React.useCallback(() => {
+    setModalOpen(false)
+    dispatch(clearActiveIngredient())
+  },[dispatch])
 
   return (
     <>
@@ -100,14 +103,12 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
           ))}
         </Flex>
       </Flex>
-      {modalOpen && selectedIngredientRef.current ? (
+      {modalOpen && selectedIngredient ? (
         <Modal
           headerText={headerText}
-          onClose={() => {
-            setModalOpen(false)
-          }}
+          onClose={handleModalClose}
         >
-          <IngredientDetail ingredient={selectedIngredientRef!.current} />
+          <IngredientDetail ingredient={selectedIngredient!} />
         </Modal>
       ) : null}
     </>
