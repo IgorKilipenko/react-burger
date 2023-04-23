@@ -1,14 +1,14 @@
+import React from "react"
 import { Flex, Image, Text } from "@chakra-ui/react"
-import { BurgerIngredientType } from "../../data"
+import { useAppSelector } from "../../services/store"
 
-export interface IngredientDetailsProps {
-  ingredient: BurgerIngredientType
-}
+export interface IngredientDetailsProps {}
 
 export const headerText = "Детали ингредиента"
 
-export const IngredientDetails = ({ ingredient }: IngredientDetailsProps) => {
-  const makeTextDetails = (name: string, value: string | number) => {
+export const IngredientDetails: React.FC<IngredientDetailsProps> = () => {
+  const ingredient = useAppSelector((store) => store.activeModalItem.activeIngredient)
+  const makeTextDetails = React.useCallback((name: string, value: string | number) => {
     return (
       <Flex direction="column" align="center" justify="center" gap={2} grow={1}>
         <Text variant="mainDefault" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
@@ -17,19 +17,23 @@ export const IngredientDetails = ({ ingredient }: IngredientDetailsProps) => {
         <Text variant="digitsDefault">{value}</Text>
       </Flex>
     )
-  }
+  }, [])
   return (
     <Flex direction="column" align="center" pb={5}>
-      <Image src={ingredient.image_large} h={240} ml={4} mr={4} mt={6} />
-      <Text variant="mainMedium" mt={4} mb={8}>
-        {ingredient.name}
-      </Text>
-      <Flex gap={5} justify="center" color={"link-inactive-color"}>
-        {makeTextDetails("Калории, ккал", ingredient.calories)}
-        {makeTextDetails("Белки, г", ingredient.proteins)}
-        {makeTextDetails("Жиры, г", ingredient.fat)}
-        {makeTextDetails("Углеводы, г", ingredient.carbohydrates)}
-      </Flex>
+      {ingredient ? (
+        <>
+          <Image src={ingredient.image_large} h={240} ml={4} mr={4} mt={6} />
+          <Text variant="mainMedium" mt={4} mb={8}>
+            {ingredient.name}
+          </Text>
+          <Flex gap={5} justify="center" color={"link-inactive-color"}>
+            {makeTextDetails("Калории, ккал", ingredient.calories)}
+            {makeTextDetails("Белки, г", ingredient.proteins)}
+            {makeTextDetails("Жиры, г", ingredient.fat)}
+            {makeTextDetails("Углеводы, г", ingredient.carbohydrates)}
+          </Flex>
+        </>
+      ) : null}
     </Flex>
   )
 }
