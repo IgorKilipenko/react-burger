@@ -44,8 +44,9 @@ export const request = async <T = unknown>({
     const data = (await response.json()) as T
 
     let checkDataResult: Error | boolean = true
-    checkData && (checkDataResult = !checkData(data))
-    const error = checkDataResult === true ? null : (checkDataResult as unknown as Error) ?? Error("Check data failed.")
+    checkData && (checkDataResult = checkData(data))
+    let error: Error | null =
+      checkDataResult === true ? null : !checkDataResult ? Error("Check data failed.") : (checkDataResult as Error)
     if (error) {
       throw error
     }
