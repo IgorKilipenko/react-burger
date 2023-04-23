@@ -11,6 +11,7 @@ import { useTabInView } from "../../hooks"
 import { burgerActions } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
+import { uid } from "uid"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -20,13 +21,15 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const dispatch = useAppDispatch()
   const { addProductToCart, clearCart } = burgerActions
-  const ingredientsTable = useAppSelector(store => store.products.products)
-  const categories  = useAppSelector(store => store.products.categories)
+  const ingredientsTable = useAppSelector((store) => store.products.products)
+  const categories = useAppSelector((store) => store.products.categories)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & NonNullable<typeof categories>[number])[] | null>(null)
+  const categoriesRefs = React.useRef<
+    ({ ref: CategoryRefType | null } & NonNullable<typeof categories>[number])[] | null
+  >(null)
 
   const [modalOpen, setModalOpen] = React.useState(false)
 
@@ -40,7 +43,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         ? selectIngredients({ ingredients: ingredientsTable ?? {}, maxQuantity: 0 })
         : []
     selectedIngredients.forEach((x) => {
-      dispatch(addProductToCart({ product: x.item, quantity: x.quantity }))
+      dispatch(addProductToCart({ product: x.item, uid: uid() }))
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientsTable])
@@ -70,15 +73,18 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   )
 
   /// Open modal category details for selected ingredient
-  const handleIngredientClick = React.useCallback((ingredient: BurgerIngredientType) => {
-    dispatch(setActiveIngredient(ingredient))
-    setModalOpen(true)
-  }, [dispatch])
+  const handleIngredientClick = React.useCallback(
+    (ingredient: BurgerIngredientType) => {
+      dispatch(setActiveIngredient(ingredient))
+      setModalOpen(true)
+    },
+    [dispatch]
+  )
 
   const handleModalClose = React.useCallback(() => {
     setModalOpen(false)
     dispatch(clearActiveIngredient())
-  },[dispatch])
+  }, [dispatch])
 
   return (
     <>
@@ -103,10 +109,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         </Flex>
       </Flex>
       {modalOpen ? (
-        <Modal
-          headerText={headerText}
-          onClose={handleModalClose}
-        >
+        <Modal headerText={headerText} onClose={handleModalClose}>
           <IngredientDetail />
         </Modal>
       ) : null}

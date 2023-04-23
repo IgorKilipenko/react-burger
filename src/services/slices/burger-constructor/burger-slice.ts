@@ -1,23 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { allowableCategories, BurgerIngredientType, DbObjectType, IngredientBase } from "../../../data"
-import { uid } from "uid"
 
 type ProductBase = DbObjectType & IngredientBase
 type ProductIdType = ProductBase["_id"]
 
 export interface OrderedItemType {
   uid: string
+} 
+
+interface BurgerItemBase<T extends ProductBase> extends OrderedItemType {
+  product: T
 }
 
 export type QuantitiesRecord<T extends ProductIdType> = Record<T, number>
 
-interface BurgerItemBase<T extends ProductBase> extends Partial<OrderedItemType> {
-  product: T
-  bun?: T
-}
-
 interface BurgerStateBase<TProduct extends ProductBase> {
+  bun?: BurgerItemBase<TProduct>[] | null
   products: BurgerItemBase<TProduct>[]
   productQuantities: QuantitiesRecord<ProductIdType>
 }
@@ -26,6 +25,7 @@ export type BurgerItemType = BurgerItemBase<BurgerIngredientType>
 export type BurgerState = BurgerStateBase<BurgerIngredientType>
 
 const initialState: BurgerState = {
+  bun: null,
   products: [],
   productQuantities: {},
 }
@@ -51,26 +51,20 @@ const burgerSlice = createSlice({
       })
     },
 
-    addIngredient: (state, action: PayloadAction<BurgerItemType & { quantity?: number }>) => {
-      let { product, quantity = 1 } = action.payload
-      console.assert(quantity > 0)
+    addIngredient: (state, action: PayloadAction<BurgerItemType>) => {
+      let { product, uid } = action.payload
 
       if (product.type === allowableCategories.bun) {
         burgerSlice.caseReducers.clearBuns(state)
-        quantity = quantity > 1 ? 1 : quantity
       }
 
-      Array(quantity)
-        .fill(0)
-        .forEach((_, i) =>
-          state.products[product.type === allowableCategories.bun ? "unshift" : "push"]({
-            product,
-            uid: uid(),
-          })
-        )
+      state.products[product.type === allowableCategories.bun ? "unshift" : "push"]({
+        product,
+        uid
+      })
 
       state.productQuantities[product._id] =
-        product.type === allowableCategories.bun ? 1 : (state.productQuantities[product._id] ?? 0) + quantity
+        product.type === allowableCategories.bun ? 1 : (state.productQuantities[product._id] ?? 0)
     },
 
     removeIngredient: (state, action: PayloadAction<{ id: ProductIdType } | { uid: OrderedItemType["uid"] }>) => {

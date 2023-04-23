@@ -27,7 +27,7 @@ export const Burger = React.memo<BurgerProps>(() => {
 
   const handleDrop = React.useCallback(
     (ingredient: BurgerIngredientType) => {
-      dispatch(addProductToCart({ product: ingredient }))
+      dispatch(addProductToCart({ product: ingredient, uid: uid() }))
     },
     [addProductToCart, dispatch]
   )
@@ -53,7 +53,7 @@ export const Burger = React.memo<BurgerProps>(() => {
       overflowX="hidden"
       className="custom-scroll"
       pr={4}
-      {...(isHover ? {boxShadow:`0 0 0px 2px var(--chakra-colors-active-border-color)`} : {})}
+      {...(isHover ? { boxShadow: `0 0 0px 2px var(--chakra-colors-active-border-color)` } : {})}
     >
       {bun && (
         <BurgerItem
