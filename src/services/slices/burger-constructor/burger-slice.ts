@@ -3,12 +3,11 @@ import type { PayloadAction } from "@reduxjs/toolkit"
 import { allowableCategories, BurgerIngredientType, DbObjectType, IngredientBase } from "../../../data"
 import { uid } from "uid"
 
-export type ProductBase = DbObjectType & IngredientBase
-export type ProductIdType = ProductBase["_id"]
+type ProductBase = DbObjectType & IngredientBase
+type ProductIdType = ProductBase["_id"]
 
 export interface OrderedItemType {
   uid: string
-  sortIndex: number
 }
 
 export type QuantitiesRecord<T extends ProductIdType> = Record<T, number>
@@ -51,6 +50,7 @@ const burgerSlice = createSlice({
         delete state.productQuantities[p.product._id]
       })
     },
+
     addIngredient: (state, action: PayloadAction<BurgerItemType & { quantity?: number }>) => {
       const { product, quantity = 1 } = action.payload
       console.assert(quantity > 0)
@@ -59,20 +59,19 @@ const burgerSlice = createSlice({
         burgerSlice.caseReducers.clearBuns(state)
       }
 
-      const prevLength = state.products.length
       Array(quantity)
         .fill(0)
         .forEach((_, i) =>
           state.products.push({
             product,
             uid: uid(),
-            sortIndex: product.type === allowableCategories.bun ? 0 : i + prevLength + 1,
           })
         )
 
       state.productQuantities[product._id] =
         product.type === allowableCategories.bun ? 1 : (state.productQuantities[product._id] ?? 0) + quantity
     },
+
     removeIngredient: (state, action: PayloadAction<{ id: ProductIdType } | { uid: OrderedItemType["uid"] }>) => {
       const id = "id" in action.payload ? action.payload.id : null
       const uid = "uid" in action.payload ? action.payload.uid : null
@@ -93,9 +92,11 @@ const burgerSlice = createSlice({
         state.products.splice(eraseIndex, 1)
       }
     },
+
     clearBurgerConstructor: (state) => {
       state = initialState
     },
+
     swapItemsByIndex: (
       state,
       action: PayloadAction<{
@@ -113,7 +114,7 @@ const burgerSlice = createSlice({
       console.assert(fromIdx >= 0 && toIdx >= 0)
 
       const buff = { ...state.products[fromIdx], sortIndex: toIdx }
-      state.products[fromIdx] = { ...state.products[toIdx], sortIndex: fromIdx }
+      state.products[fromIdx] = { ...state.products[toIdx] }
       state.products[toIdx] = buff
     },
   },
