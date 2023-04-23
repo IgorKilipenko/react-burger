@@ -6,7 +6,7 @@ import { Icon } from "../common/icon"
 import { Burger } from "./burger"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
-import type { BurgerItemType } from "../../services/slices/burger-constructor"
+import { BurgerItemType, getBurgerStore } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { allowableCategories, DbObjectType } from "../../data"
 import { createOrder } from "../../services/slices/orders"
@@ -14,14 +14,13 @@ import { createOrder } from "../../services/slices/orders"
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
-  const selectedIngredients = useAppSelector((store) => store.burgerConstructor.products)
-  const selectedBun = useAppSelector((store) => store.burgerConstructor.bun)
+  const { products: selectedIngredients, bun: selectedBun } = useAppSelector(getBurgerStore)
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
   const dispatch = useAppDispatch()
 
   const allSelectedProductsForOrder = React.useMemo(
-    () => selectedBun ? [selectedBun, ...selectedIngredients] : selectedIngredients,
+    () => (selectedBun ? [selectedBun, ...selectedIngredients] : selectedIngredients),
     [selectedBun, selectedIngredients]
   )
 

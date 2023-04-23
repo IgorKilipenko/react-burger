@@ -11,6 +11,7 @@ import { useTabInView } from "../../hooks"
 import { burgerActions } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
+import { getProductsStore } from "../../services/slices/products"
 import { uid } from "uid"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
@@ -21,8 +22,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const dispatch = useAppDispatch()
   const { addProductToCart, clearCart } = burgerActions
-  const ingredientsTable = useAppSelector((store) => store.products.products)
-  const categories = useAppSelector((store) => store.products.categories)
+  const { products: ingredientsTable, categories } = useAppSelector(getProductsStore)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)

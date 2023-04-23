@@ -7,7 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend"
 import { DndProvider } from "react-dnd"
 import { TouchBackend } from "react-dnd-touch-backend"
 import { useAppDispatch, useAppSelector } from "../../services/store"
-import { getAllIngredients } from "../../services/slices/products/products-slice"
+import { getProductsStore, getAllIngredients } from "../../services/slices/products"
 
 interface MainContainerProps {
   children: React.ReactNode
@@ -25,7 +25,7 @@ const loadingMessage = () => (
 export const MainContainer = React.memo<MainContainerProps>(({ children, maxContentWidth, h, height = "100%" }) => {
   const currHeight = h ?? height
   const isTouchEnabled = useIsTouchEnabled()
-  const { categories, loading, error } = useAppSelector((store) => store.products)
+  const { categories, loading, error } = useAppSelector(getProductsStore)
   const dispatch = useAppDispatch()
 
   React.useEffect(() => {

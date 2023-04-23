@@ -6,6 +6,8 @@ import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { useInViewport, BasicTarget } from "../../hooks"
 import { type CategoryBase, type BurgerIngredientType } from "../../data"
 import { useAppSelector } from "../../services/store"
+import { getProductsFromProductsStore } from "../../services/slices/products"
+import { getProductQuantitiesBurgerStore } from "../../services/slices/burger-constructor"
 
 type RootElementType = HTMLDivElement
 
@@ -19,8 +21,8 @@ export interface CategorySectionProps {
 export const CategorySection = React.memo(
   React.forwardRef<RootElementType, CategorySectionProps>(
     ({ category, scrollContainerRef, onCategoryInView, onIngredientClick }, ref) => {
-      const ingredients = useAppSelector((store) => store.products.products)
-      const { productQuantities } = useAppSelector((store) => store.burgerConstructor)
+      const ingredients = useAppSelector(getProductsFromProductsStore)
+      const productQuantities = useAppSelector(getProductQuantitiesBurgerStore)
       const categoryRef = React.useRef<RootElementType | null>(null)
       const [inViewport, ratio] = useInViewport(
         categoryRef,

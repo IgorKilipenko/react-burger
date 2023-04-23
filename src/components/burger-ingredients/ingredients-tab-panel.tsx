@@ -4,6 +4,7 @@ import { Flex } from "@chakra-ui/react"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { CategoryBase as CategoryType } from "../../data"
 import { useAppSelector } from "../../services/store"
+import { getCategoriesFromProductsStore } from "../../services/slices/products"
 
 export interface IngredientsTabPanelProps {
   activeTabId?: CategoryType["id"] | null
@@ -12,7 +13,7 @@ export interface IngredientsTabPanelProps {
 
 export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: IngredientsTabPanelProps) => {
   const [current, setCurrent] = React.useState(activeTabId)
-  const items = useAppSelector(store => store.products.categories)
+  const items = useAppSelector(getCategoriesFromProductsStore)
 
   React.useEffect(() => {
     setCurrent(activeTabId)

@@ -3,13 +3,14 @@ import { Flex, Text } from "@chakra-ui/react"
 import { Icon, Icons } from "../common"
 import { ErrorMessage } from "../error-message"
 import { useAppSelector } from "../../services/store"
+import { getOrdersStore } from "../../services/slices/orders"
 
 export interface OrderDetailsProps {}
 
 export const headerText = "Детали ингредиента"
 
 export const OrderDetails: React.FC<OrderDetailsProps> = () => {
-  const { order, loading, error } = useAppSelector((store) => store.orderReducer)
+  const { order, loading, error } = useAppSelector(getOrdersStore)
 
   return (
     <Flex direction="column" align="center" mb={20}>

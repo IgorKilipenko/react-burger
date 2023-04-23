@@ -7,7 +7,7 @@ import { productsReducer } from "../slices/products"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
-  orderReducer: orderReducer,
+  orders: orderReducer,
   products: productsReducer,
   activeModalItem: activeModalItemReducer
 })

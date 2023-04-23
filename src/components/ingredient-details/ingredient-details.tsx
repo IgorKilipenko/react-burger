@@ -1,13 +1,14 @@
 import React from "react"
 import { Flex, Image, Text } from "@chakra-ui/react"
 import { useAppSelector } from "../../services/store"
+import { getActiveIngredientFromModalStore } from "../../services/slices/active-modal-items"
 
 export interface IngredientDetailsProps {}
 
 export const headerText = "Детали ингредиента"
 
 export const IngredientDetails: React.FC<IngredientDetailsProps> = () => {
-  const ingredient = useAppSelector((store) => store.activeModalItem.activeIngredient)
+  const ingredient = useAppSelector(getActiveIngredientFromModalStore)
   const makeTextDetails = React.useCallback((name: string, value: string | number) => {
     return (
       <Flex direction="column" align="center" justify="center" gap={2} grow={1}>
