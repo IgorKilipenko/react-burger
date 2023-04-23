@@ -8,21 +8,33 @@ import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
 import { useSelector } from "react-redux"
 import type { BurgerItemType } from "../../services/slices/burger-constructor"
-import { RootState } from "../../services/store"
-import { allowableCategories } from "../../data"
+import { RootState, useAppDispatch } from "../../services/store"
+import { allowableCategories, DbObjectType } from "../../data"
+import { createOrder } from "../../services/slices/orders"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
-  const calcTotalPrice = useCallback(
-    (ingredients: BurgerItemType[]) =>
-      ingredients.reduce((res, curr) => (res += curr.product.price * (curr.product.type === allowableCategories.bun ? 2 : 1)), 0),
-    []
-  )
-
   const selectedIngredients = useSelector((store: RootState) => store.burgerConstructor.products)
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
+  const dispatch = useAppDispatch()
+
+  const calcTotalPrice = useCallback(
+    (ingredients: BurgerItemType[]) =>
+      ingredients.reduce(
+        (res, curr) => (res += curr.product.price * (curr.product.type === allowableCategories.bun ? 2 : 1)),
+        0
+      ),
+    []
+  )
+
+  const getSelectedIngredientsIds = React.useCallback((ingredients: BurgerItemType[]) => {
+    return ingredients.reduce<DbObjectType["_id"][]>((res, item) => {
+      res.push(item.product._id)
+      return res
+    }, [])
+  }, [])
 
   React.useEffect(() => {
     setTotalPrice(calcTotalPrice(selectedIngredients ?? []))
@@ -30,7 +42,8 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
 
   const handleOrderButtonClick = React.useCallback(() => {
     setModalOpen(true)
-  }, [])
+    dispatch(createOrder(getSelectedIngredientsIds(selectedIngredients)))
+  }, [dispatch, getSelectedIngredientsIds, selectedIngredients])
 
   return (
     <>
