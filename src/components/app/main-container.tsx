@@ -1,7 +1,7 @@
 import React from "react"
 import { Text } from "@chakra-ui/react"
 import { Flex, type LayoutProps } from "@chakra-ui/react"
-import { useFetchIngredients, useIsTouchEnabled } from "../../hooks"
+import { useIsTouchEnabled } from "../../hooks"
 import { ErrorMessage } from "../error-message"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { DndProvider } from "react-dnd"

@@ -5,8 +5,7 @@ import { IngredientCard } from "./ingredient-card"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { useInViewport, BasicTarget } from "../../hooks"
 import { type CategoryBase, type BurgerIngredientType } from "../../data"
-import { useSelector } from "react-redux"
-import { RootState, useAppSelector } from "../../services/store"
+import { useAppSelector } from "../../services/store"
 
 type RootElementType = HTMLDivElement
 
