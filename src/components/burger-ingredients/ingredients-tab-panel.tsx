@@ -5,13 +5,17 @@ import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { CategoryBase as CategoryType } from "../../data"
 import { useAppSelector } from "../../services/store"
 import { getCategoriesFromProductsStore } from "../../services/slices/products"
+import { OmitFlexOptions } from "../../utils/types"
+
+export interface ContainerOptions extends OmitFlexOptions<"direction"> {}
 
 export interface IngredientsTabPanelProps {
   activeTabId?: CategoryType["id"] | null
   onTabClick?: ((tabId: CategoryType["id"]) => boolean) | null
+  options?: { container: ContainerOptions }
 }
 
-export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: IngredientsTabPanelProps) => {
+export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId, options }: IngredientsTabPanelProps) => {
   const [current, setCurrent] = React.useState(activeTabId)
   const items = useAppSelector(getCategoriesFromProductsStore)
 
@@ -28,7 +32,7 @@ export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: Ingr
   }
 
   return (
-    <Flex>
+    <Flex {...options?.container}>
       {items?.map((item) => (
         <Tab
           key={`tab-${item.id}`}

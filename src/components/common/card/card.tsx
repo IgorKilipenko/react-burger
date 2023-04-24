@@ -1,16 +1,17 @@
 import React from "react"
 import { Square, Flex, Image, Text } from "@chakra-ui/react"
-import type { ImageProps, FlexProps, HTMLChakraProps } from "@chakra-ui/react"
+import type { ImageProps } from "@chakra-ui/react"
 import { Link } from "../link"
 import { CurrencyIcon } from "../icons"
 import { Icon } from "../icon"
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components"
+import { OmitFlexOptions } from "../../../utils/types"
 
-export interface CardContainerProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
-export interface CardImageProps extends ImageProps {}
+export interface CardContainerOptions extends OmitFlexOptions<"direction"> {}
+export interface CardImageOptions extends ImageProps {}
 export interface CardOptions {
-  containerProps?: CardContainerProps
-  imageProps?: CardImageProps
+  containerProps?: CardContainerOptions
+  imageProps?: CardImageOptions
 }
 
 export interface CardProps {
