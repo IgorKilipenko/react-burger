@@ -1,12 +1,13 @@
 import React from "react"
 import { Flex, Grid } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
-import { IngredientCard } from "../common"
+import { IngredientCard } from "./ingredient-card"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { useInViewport, BasicTarget } from "../../hooks"
 import { type CategoryBase, type BurgerIngredientType } from "../../data"
-import { useCartContext } from "../../context/cart"
-import { useIngredientsContext } from "../../context/products"
+import { useAppSelector } from "../../services/store"
+import { getProductsFromProductsStore } from "../../services/slices/products"
+import { getProductQuantitiesBurgerStore } from "../../services/slices/burger-constructor"
 
 type RootElementType = HTMLDivElement
 
@@ -20,8 +21,8 @@ export interface CategorySectionProps {
 export const CategorySection = React.memo(
   React.forwardRef<RootElementType, CategorySectionProps>(
     ({ category, scrollContainerRef, onCategoryInView, onIngredientClick }, ref) => {
-      const { products: ingredients } = useIngredientsContext()
-      const { cart } = useCartContext()
+      const ingredients = useAppSelector(getProductsFromProductsStore)
+      const productQuantities = useAppSelector(getProductQuantitiesBurgerStore)
       const categoryRef = React.useRef<RootElementType | null>(null)
       const [inViewport, ratio] = useInViewport(
         categoryRef,
@@ -49,24 +50,25 @@ export const CategorySection = React.memo(
         [onIngredientClick]
       )
 
-      const initRefs = (el: RootElementType | null) => {
-        categoryRef.current = el
-        if (!ref) return
-        typeof ref === "function" ? ref(el) : (ref.current = el)
-      }
+      const initRefs = React.useCallback(
+        (el: RootElementType | null) => {
+          categoryRef.current = el
+          if (!ref) return
+          typeof ref === "function" ? ref(el) : (ref.current = el)
+        },
+        [ref]
+      )
 
       return (
         <Flex ref={initRefs} direction="column">
           <Text variant={"mainMedium"}>{capitalizeFirstLetter(category.name)}</Text>
           <Grid gridTemplateColumns="repeat(2, 1fr)" columnGap={8} rowGap={6} pl={4} pr={4} pt={6}>
-            {ingredients[category.id]?.map((ingredient) => (
+            {(ingredients ?? {})[category.id]?.map((ingredient) => (
               <IngredientCard
                 key={`ingredient-${ingredient._id}`}
                 ingredient={ingredient}
-                selectedCount={cart.find((x) => x.item._id === ingredient._id)?.quantity ?? 0}
-                onItemClick={() => {
-                  handleIngredientClick(ingredient)
-                }}
+                selectedCount={productQuantities[ingredient._id] ?? 0}
+                onClick={handleIngredientClick}
               />
             ))}
           </Grid>

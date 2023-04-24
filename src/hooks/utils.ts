@@ -1,5 +1,5 @@
 import React from "react"
-import isBrowser from "../utils/is-browser"
+import { isBrowser } from "../utils"
 
 type TargetValue<T> = T | undefined | null
 

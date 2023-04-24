@@ -5,11 +5,11 @@ import { ResponsiveLogo } from "../common/logo"
 
 export const buildLinks = () => {
   const initializeLink =
-    (element) =>
-    ({ isActive, onClick }) =>
+    (element:React.ReactElement) =>
+    ({ isActive=false, onClick } : {isActive?: boolean, onClick?: (value: string) => void}) =>
       React.cloneElement(element, {
         isActive,
-        onClick: (value) => {
+        onClick: (value: string) => {
           onClick && onClick(value)
         },
       })
@@ -31,8 +31,8 @@ export const buildLinks = () => {
       tag: "homeLink",
       get element() {
         return initializeLink(
-          <Link>
-            <ResponsiveLogo breakpoint={"md"} value={this.tag} />
+          <Link value={this.tag}>
+            <ResponsiveLogo breakpoint={"md"} />
           </Link>
         )
       },

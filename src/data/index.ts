@@ -1,50 +1,29 @@
-export const apiClientConfig = {
-  baseUrl: "https://norma.nomoreparties.space",
-  endpoints: {
-    orders: "api/orders",
-    ingredients: "api/ingredients",
-  },
-}
+import { BurgerIngredientType, IngredientsTableView } from "./data-types"
 
-export interface DbObjectType {
-  _id: string
-  __v: number
-}
+export { apiConfig as apiClientConfig } from "./api"
 
-export interface IngredientBase {
-  name: string
-  type: string
-}
+export type {
+  DbIndexType,
+  DbObjectType,
+  IngredientBase,
+  CategoryBase,
+  BurgerIngredientType,
+  IngredientsTableViewKeyType,
+  IngredientsTableView,
+} from "./data-types"
 
-export interface CategoryBase {
-  id: string
-  name: string
-}
+export { api, type ApiOrderIdResponseType } from "./api"
 
-export interface BurgerIngredientType extends IngredientBase, DbObjectType {
-  proteins: number
-  fat: number
-  carbohydrates: number
-  calories: number
-  price: number
-  image: string
-  image_mobile: string
-  image_large: string
-}
+export const allowableCategories = { bun: "bun", sauce: "sauce", main: "main" }
 
-export type IngredientsTableViewKeyType = CategoryBase["id"]
-export interface IngredientsTableView<T extends IngredientBase & DbObjectType = BurgerIngredientType> {
-  [key: IngredientsTableViewKeyType]: T[]
+export const ingredientCategoriesMap: Record<keyof typeof allowableCategories, string> = {
+  bun: "булки",
+  sauce: "соусы",
+  main: "начинки",
 }
 
 export const categoryMapper = (categoryRaw: string) => {
-  const ingredientCategories = {
-    bun: "булки",
-    sauce: "соусы",
-    main: "начинки",
-  }
-
-  return ingredientCategories[categoryRaw as keyof typeof ingredientCategories]
+  return ingredientCategoriesMap[categoryRaw as keyof typeof ingredientCategoriesMap]
 }
 
 export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData: T[]) {

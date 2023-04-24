@@ -5,47 +5,52 @@ import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
 import { BurgerIngredientType, CategoryBase } from "../../data"
 import { selectIngredients } from "./utils"
-import { useCartContext } from "../../context/cart"
 import { Modal } from "../modal"
 import { headerText, IngredientDetail } from "../ingredient-details"
-import { useIngredientsContext } from "../../context/products"
 import { useTabInView } from "../../hooks"
+import { burgerActions } from "../../services/slices/burger-constructor"
+import { useAppDispatch, useAppSelector } from "../../services/store"
+import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
+import { getProductsStore } from "../../services/slices/products"
+import { uid } from "uid"
 
-export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | keyof HTMLChakraProps<"div">> {}
+export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions }) => {
   type CategoryRefType = HTMLDivElement
   type CategoryIdType = CategoryBase["id"]
 
-  const { products: ingredientsTable, categories } = useIngredientsContext()
+  const dispatch = useAppDispatch()
+  const { addProductToCart, clearCart } = burgerActions
+  const { products: ingredientsTable, categories } = useAppSelector(getProductsStore)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const { addProductToCart, clearCart } = useCartContext()
-
-  const categoriesRefs = React.useRef<({ ref: CategoryRefType | null } & (typeof categories)[number])[]>([])
+  const categoriesRefs = React.useRef<
+    ({ ref: CategoryRefType | null } & NonNullable<typeof categories>[number])[] | null
+  >(null)
 
   const [modalOpen, setModalOpen] = React.useState(false)
 
-  /// For show modal window with ingredient details
-  const selectedIngredientRef = React.useRef<BurgerIngredientType | null>(null)
-
-  const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories)
+  const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories!)
 
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
-    clearCart()
-    const selectedIngredients = Object.keys(ingredientsTable).length > 0 ? selectIngredients(ingredientsTable) : []
+    dispatch(clearCart())
+    const selectedIngredients =
+      Object.keys(ingredientsTable ?? {}).length > 0
+        ? selectIngredients({ ingredients: ingredientsTable ?? {}, maxQuantity: 0 })
+        : []
     selectedIngredients.forEach((x) => {
-      addProductToCart(x)
+      dispatch(addProductToCart({ product: x.item, uid: uid() }))
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientsTable])
 
   /// Initialize refs to categories elements
   React.useEffect(() => {
-    categoriesRefs.current = categories.map((c) => ({ ref: null, ...c }))
+    categoriesRefs.current = !categories ? null : categories.map((c) => ({ ref: null, ...c }))
   }, [categories])
 
   /// Force scroll to category when tab is clicked
@@ -57,7 +62,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
     },
     [setCurrentTabIdForce]
   )
-  
+
   /// Handle category inVew ratio changes on scroll
   /// then pass info to useTabInView hook for calculate active tab
   const handleCategoryInView = React.useCallback(
@@ -68,10 +73,18 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   )
 
   /// Open modal category details for selected ingredient
-  const handleIngredientClick = React.useCallback((ingredient: BurgerIngredientType) => {
-    selectedIngredientRef.current = ingredient
-    setModalOpen(true)
-  }, [])
+  const handleIngredientClick = React.useCallback(
+    (ingredient: BurgerIngredientType) => {
+      dispatch(setActiveIngredient(ingredient))
+      setModalOpen(true)
+    },
+    [dispatch]
+  )
+
+  const handleModalClose = React.useCallback(() => {
+    setModalOpen(false)
+    dispatch(clearActiveIngredient())
+  }, [dispatch])
 
   return (
     <>
@@ -81,11 +94,11 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         </Text>
         <IngredientsTabPanel onTabClick={handleTabClick} activeTabId={currentTabId as CategoryIdType} />
         <Flex ref={scrollContainerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
-          {categoriesRefs.current?.map((category, i) => (
+          {categories?.map((category, i) => (
             <CategorySection
               key={`category-${category.id}-${i}`}
               ref={(el) => {
-                categoriesRefs.current[i].ref = el
+                if (categoriesRefs.current) categoriesRefs.current[i].ref = el
               }}
               category={category}
               onCategoryInView={handleCategoryInView}
@@ -95,14 +108,9 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
           ))}
         </Flex>
       </Flex>
-      {modalOpen && selectedIngredientRef.current ? (
-        <Modal
-          headerText={headerText}
-          onClose={() => {
-            setModalOpen(false)
-          }}
-        >
-          <IngredientDetail ingredient={selectedIngredientRef!.current} />
+      {modalOpen ? (
+        <Modal headerText={headerText} onClose={handleModalClose}>
+          <IngredientDetail />
         </Modal>
       ) : null}
     </>

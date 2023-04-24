@@ -11,6 +11,7 @@ export const semanticTokens = {
     "error-color": { _light: "#E52B1A", _dark: "#E52B1A" },
     "success-color": { _light: "#00CCCC", _dark: "#00CCCC" },
     "overlay-bg":{ _light: "blackAlpha.600", _dark: "blackAlpha.600" },
+    "active-border-color" : { _light: "#4C4CFF", _dark: "#4C4CFF" },
   },
 }
 
@@ -26,23 +27,6 @@ export const styles: ChakraThemeType["styles"] = {
     },
     "*, *::before, &::after": {
       borderColor: "chakra-border-color",
-    },
-    //~ Override yandex.p components styles
-    ".constructor-element": {
-      ".constructor-element__text": {
-        marginRight: "20px",
-        display: "-webkit-box",
-        alignItems: "center",
-        lineHeight: "24px",
-        textAlign: "left",
-        flexGrow: 1,
-        overflow: "hidden",
-        WebkitLineClamp: "2",
-        WebkitBoxOrient: "vertical",
-        textOverflow: "ellipsis",
-        whiteSpace: "pre-wrap",
-        color: "text-primary-color",
-      },
     },
   }),
 }

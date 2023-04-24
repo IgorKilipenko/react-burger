@@ -3,7 +3,8 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components"
 import { Flex } from "@chakra-ui/react"
 import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { CategoryBase as CategoryType } from "../../data"
-import { useIngredientsContext } from "../../context/products"
+import { useAppSelector } from "../../services/store"
+import { getCategoriesFromProductsStore } from "../../services/slices/products"
 
 export interface IngredientsTabPanelProps {
   activeTabId?: CategoryType["id"] | null
@@ -12,7 +13,7 @@ export interface IngredientsTabPanelProps {
 
 export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: IngredientsTabPanelProps) => {
   const [current, setCurrent] = React.useState(activeTabId)
-  const { categories: items } = useIngredientsContext()
+  const items = useAppSelector(getCategoriesFromProductsStore)
 
   React.useEffect(() => {
     setCurrent(activeTabId)
@@ -28,7 +29,7 @@ export const IngredientsTabPanel = React.memo(({ onTabClick, activeTabId }: Ingr
 
   return (
     <Flex>
-      {items.map((item) => (
+      {items?.map((item) => (
         <Tab
           key={`tab-${item.id}`}
           value={item.id}

@@ -1,49 +1,64 @@
 import React from "react"
 import { Flex, Box } from "@chakra-ui/react"
-import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
+import { ConstructorElement } from "./constructor-element"
 import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
-import { useCartContext } from "../../context/cart"
-import { uid } from "uid"
+import { burgerActions } from "../../services/slices/burger-constructor"
+import { DndSortContainer } from "../common/dnd"
+import { useAppDispatch } from "../../services/store"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
 export declare type ElementType = keyof typeof allowableTypes | undefined | null
 
 export interface BurgerItemProps {
   element: BurgerIngredientType
+  uid: string
+  sortIndex?: number
   type?: ElementType
   quantity?: number
 }
 
-export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, quantity = 1 }) => {
-  const { removeProductFromCart } = useCartContext()
-  const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
+export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, sortIndex, uid }) => {
+  const dispatch = useAppDispatch()
+  const isBunElement = React.useMemo(
+    () => (Object.values(allowableTypes).find((v) => v === type) ? true : false),
+    [type]
+  )
 
-  const bunProps = isBunElement
-    ? {
-        ...{
-          position: "sticky",
-          alignSelf: type === allowableTypes.top ? "flex-start" : "flex-end",
-          top: type === allowableTypes.top ? 0 : null,
-          bottom: type === allowableTypes.bottom ? 0 : null,
-          pb: type === allowableTypes.top ? "1px" : null,
-          pt: type === allowableTypes.bottom ? "1px" : null,
-          bg: "body-bg",
-        },
-      }
-    : {}
+  const bunProps = React.useMemo(
+    () =>
+      isBunElement
+        ? {
+            ...{
+              position: "sticky",
+              alignSelf: type === allowableTypes.top ? "flex-start" : "flex-end",
+              top: type === allowableTypes.top ? 0 : null,
+              bottom: type === allowableTypes.bottom ? 0 : null,
+              pb: type === allowableTypes.top ? "1px" : null,
+              pt: type === allowableTypes.bottom ? "1px" : null,
+              bg: "body-bg",
+            },
+          }
+        : {},
+    [isBunElement, type]
+  )
 
   const handleRemove = React.useCallback(() => {
-    removeProductFromCart(element._id)
-  },[element, removeProductFromCart])
+    dispatch(burgerActions.removeProductFromCart({ uid }))
+  }, [dispatch, uid])
 
-  return (
-    <>
-      {Array(quantity)
-        .fill(0)
-        .map(() => (
-          <Flex key={`bi-${element._id}-${uid()}` + (type ? `-${type}` : "")} gridColumn={1} {...bunProps}>
+  const dndSortedConstructorElement = React.useMemo(() => {
+    return React.forwardRef<HTMLDivElement, { isOver?: boolean; isDragging?: boolean }>(
+      ({ isOver, isDragging }, ref) => {
+        return (
+          <Flex
+            ref={!type ? ref : null}
+            gridColumn={1}
+            {...bunProps}
+            w="100%"
+            {...(isDragging ? { opacity: 0.5 } : {})}
+          >
             <Flex w={8} align="center">
               <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
             </Flex>
@@ -56,7 +71,25 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, qu
               handleClose={handleRemove}
             />
           </Flex>
-        ))}
-    </>
+        )
+      }
+    )
+  }, [bunProps, element.image, element.name, element.price, handleRemove, isBunElement, type])
+
+  const swapItems = React.useCallback(
+    ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
+      dispatch(burgerActions.swapItemsByIndex({ fromIdx: dragIndex, toIdx: hoverIndex }))
+    },
+    [dispatch]
+  )
+
+  return (
+    <DndSortContainer
+      uid={`${uid}` + (type ? `-${type}` : "")}
+      index={sortIndex ?? -1}
+      accept="burgerConstructorItems"
+      moveItem={swapItems}
+      target={dndSortedConstructorElement}
+    />
   )
 }
