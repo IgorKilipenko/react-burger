@@ -1,6 +1,9 @@
 export const apiClientConfig = {
   baseUrl: "https://norma.nomoreparties.space",
-  ingredientsPath: "api/ingredients",
+  endpoints: {
+    orders: "api/orders",
+    ingredients: "api/ingredients",
+  },
 }
 
 export interface DbObjectType {
@@ -29,8 +32,9 @@ export interface BurgerIngredientType extends IngredientBase, DbObjectType {
   image_large: string
 }
 
-export interface IngredientsTableView<T extends BurgerIngredientType = BurgerIngredientType> {
-  [key: CategoryBase["id"]]: T[]
+export type IngredientsTableViewKeyType = CategoryBase["id"]
+export interface IngredientsTableView<T extends IngredientBase & DbObjectType = BurgerIngredientType> {
+  [key: IngredientsTableViewKeyType]: T[]
 }
 
 export const categoryMapper = (categoryRaw: string) => {
@@ -43,7 +47,7 @@ export const categoryMapper = (categoryRaw: string) => {
   return ingredientCategories[categoryRaw as keyof typeof ingredientCategories]
 }
 
-export function parseRawData<T extends BurgerIngredientType>(rawData: T[]) {
+export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData: T[]) {
   const table = rawData.reduce<IngredientsTableView<T>>((res, item) => {
     const category = (res[item.type] ??= [])
     category.push(item)
@@ -52,5 +56,5 @@ export function parseRawData<T extends BurgerIngredientType>(rawData: T[]) {
 
   const categories = Object.keys(table).map((category) => ({ id: category, name: categoryMapper(category) }))
 
-  return {table, categories}
+  return { table, categories }
 }

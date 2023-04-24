@@ -1,66 +1,29 @@
-import React from "react"
-import { Flex, Box } from "@chakra-ui/react"
-import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components"
-import { DragIcon } from "../common/icons"
-import { Icon } from "../common/icon"
-import { type CartItemType } from "../../context/cart/cart-context"
+import React, { useCallback } from "react"
+import { Flex } from "@chakra-ui/react"
+import { useCartContext, type CartItemType } from "../../context/cart/cart-context"
 import { BurgerIngredientType } from "../../data"
+import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
+import { uid } from "uid"
 
-export interface BurgerProps {
-  bun?: CartItemType<BurgerIngredientType> | null
-  ingredients?: CartItemType<BurgerIngredientType>[]
-}
+export interface BurgerProps {}
 
-const allowableTypes = { top: "top", bottom: "bottom" }
-export declare type ElementType = keyof typeof allowableTypes | undefined | null
+export const Burger = React.memo<BurgerProps>(() => {
+  const extractIngredientsByType = useCallback((ingredientsList: CartItemType<BurgerIngredientType>[]) => {
+    const innerIngredients = ingredientsList.filter((item) => item.item.type !== "bun")
+    const bun = ingredientsList.reduce<CartItemType<BurgerIngredientType> | null>((res, curr) => {
+      return (res = curr.item.type === "bun" ? curr : res)
+    }, null)
+    return { bun, ingredients: innerIngredients }
+  }, [])
 
-export const Burger = React.memo(({ bun, ingredients }: BurgerProps) => {
-  const buildItem = ({
-    element,
-    type = null,
-    quantity = 1,
-  }: {
-    element: BurgerIngredientType
-    type?: ElementType
-    quantity?: number
-  }) => {
-    const isBunElement = Object.values(allowableTypes).find((v) => v === type) ? true : false
-
-    const bunProps = isBunElement
-      ? {
-          ...{
-            position: "sticky",
-            alignSelf: type === allowableTypes.top ? "flex-start" : "flex-end",
-            top: type === allowableTypes.top ? 0 : null,
-            bottom: type === allowableTypes.bottom ? 0 : null,
-            pb: type === allowableTypes.top ? "1px" : null,
-            pt: type === allowableTypes.bottom ? "1px" : null,
-            bg: "body-bg",
-          },
-        }
-      : {}
-
-    return (
-      <Flex key={`bc-${element._id ?? element.name}` + (type ? `-${type}` : "")} w="100%" {...bunProps}>
-        <Flex w={8} align="center">
-          <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
-        </Flex>
-        <ConstructorElement
-          type={type ?? undefined}
-          isLocked={isBunElement || false}
-          text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
-          price={element.price * quantity}
-          thumbnail={element.image}
-        />
-      </Flex>
-    )
-  }
+  const { cart: selectedIngredients } = useCartContext()
+  const { bun, ingredients } = extractIngredientsByType(selectedIngredients)
 
   return (
     <Flex
       direction="column"
       justify="start"
-      align="center"
+      align="stretch"
       gap={4}
       maxH="100%"
       overflowY="auto"
@@ -68,9 +31,11 @@ export const Burger = React.memo(({ bun, ingredients }: BurgerProps) => {
       className="custom-scroll"
       pr={4}
     >
-      {bun && buildItem({ element: bun.item, type: allowableTypes.top as ElementType })}
-      {ingredients?.map((element) => buildItem({ element: element.item, quantity: element.quantity }))}
-      {bun && buildItem({ element: bun.item, type: allowableTypes.bottom as ElementType })}
+      {bun && <BurgerItem element={bun.item} type={allowableTypes.top as ElementType} />}
+      {ingredients?.map((element) => (
+        <BurgerItem key={`bi-${element.item._id}-${uid()}`} element={element.item} quantity={element.quantity} />
+      ))}
+      {bun && <BurgerItem element={bun.item} type={allowableTypes.bottom as ElementType} />}
     </Flex>
   )
 })
