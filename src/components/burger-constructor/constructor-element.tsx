@@ -1,12 +1,13 @@
 import React from "react"
-import { Flex, FlexProps, HTMLChakraProps, Image, Text } from "@chakra-ui/react"
+import { Flex, Image, Text } from "@chakra-ui/react"
 import { Icon } from "../common"
 import { LockIcon, DeleteIcon, CurrencyIcon } from "../common/icons"
+import { OmitFlexOptions } from "../../utils/types"
 
-export interface ContainerProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
+export interface ContainerOptions extends OmitFlexOptions<"direction"> {}
 
 export interface ConstructorElementOptions {
-  container?: ContainerProps
+  container?: ContainerOptions
 }
 
 export interface ConstructorElementProps {
