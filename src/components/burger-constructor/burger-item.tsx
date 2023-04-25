@@ -91,7 +91,7 @@ export const BurgerItem = React.memo<BurgerItemProps>(({ element, type = null, s
 
   return (
     <DndSortItem
-      uid={`${uid}` + (type ? `-${type}` : "")}
+      uid={!isBunElement ? uid : `${uid}-${type}`}
       index={sortIndex ?? -1}
       accept="burgerConstructorItems"
       moveItem={swapItems}
