@@ -82,8 +82,8 @@ const burgerSlice = createSlice({
       if (fromIdx === toIdx) return
       console.assert(fromIdx >= 0 && toIdx >= 0 && fromIdx < state.products.length && toIdx < state.products.length)
 
-      const buff = { ...state.products[fromIdx], sortIndex: toIdx }
-      state.products[fromIdx] = { ...state.products[toIdx] }
+      const buff = state.products[fromIdx]
+      state.products[fromIdx] = state.products[toIdx]
       state.products[toIdx] = buff
     },
   },
