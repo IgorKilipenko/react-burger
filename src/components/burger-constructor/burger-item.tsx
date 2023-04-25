@@ -61,6 +61,14 @@ export const BurgerItem = React.memo<BurgerItemProps>(({ element, type = null, s
     )
   }, [element.image, element.name, element.price, handleRemove, isBunElement, type])
 
+  const dragIconElement = React.useMemo(() => {
+    return (
+      <Flex w={8} align="center">
+        <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
+      </Flex>
+    )
+  }, [isBunElement])
+
   const dndSortedConstructorElement = React.useMemo(() => {
     return React.forwardRef<HTMLDivElement, { isOver?: boolean; isDragging?: boolean }>(
       ({ isOver, isDragging }, ref) => {
@@ -72,9 +80,7 @@ export const BurgerItem = React.memo<BurgerItemProps>(({ element, type = null, s
             w="100%"
             {...(isDragging ? { opacity: 0.5 } : {})}
           >
-            <Flex w={8} align="center">
-              <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
-            </Flex>
+            {dragIconElement}
             {constructorElement}
           </Flex>
         )
