@@ -5,7 +5,7 @@ import { DragIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { BurgerIngredientType } from "../../data"
 import { burgerActions } from "../../services/slices/burger-constructor"
-import { DndSortContainer } from "../common/dnd"
+import { DndSortItem } from "../common/dnd"
 import { useAppDispatch } from "../../services/store"
 
 export const allowableTypes = { top: "top", bottom: "bottom" }
@@ -90,7 +90,7 @@ export const BurgerItem = React.memo<BurgerItemProps>(({ element, type = null, s
   )
 
   return (
-    <DndSortContainer
+    <DndSortItem
       uid={`${uid}` + (type ? `-${type}` : "")}
       index={sortIndex ?? -1}
       accept="burgerConstructorItems"
