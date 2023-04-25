@@ -19,7 +19,7 @@ export interface BurgerItemProps {
   quantity?: number
 }
 
-export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, sortIndex, uid }) => {
+export const BurgerItem = React.memo<BurgerItemProps>(({ element, type = null, sortIndex, uid }) => {
   const dispatch = useAppDispatch()
   const isBunElement = React.useMemo(
     () => (Object.values(allowableTypes).find((v) => v === type) ? true : false),
@@ -48,6 +48,19 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
     dispatch(burgerActions.removeProductFromCart({ uid }))
   }, [dispatch, uid])
 
+  const constructorElement = React.useMemo(() => {
+    return (
+      <ConstructorElement
+        type={type ?? undefined}
+        isLocked={isBunElement || false}
+        text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
+        price={element.price}
+        thumbnail={element.image}
+        handleClose={handleRemove}
+      />
+    )
+  }, [element.image, element.name, element.price, handleRemove, isBunElement, type])
+
   const dndSortedConstructorElement = React.useMemo(() => {
     return React.forwardRef<HTMLDivElement, { isOver?: boolean; isDragging?: boolean }>(
       ({ isOver, isDragging }, ref) => {
@@ -62,19 +75,12 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
             <Flex w={8} align="center">
               <Box w={6}>{!isBunElement && <Icon as={DragIcon} />}</Box>
             </Flex>
-            <ConstructorElement
-              type={type ?? undefined}
-              isLocked={isBunElement || false}
-              text={element.name + (isBunElement ? ` (${type === allowableTypes.top ? "верх" : "низ"})` : "")}
-              price={element.price}
-              thumbnail={element.image}
-              handleClose={handleRemove}
-            />
+            {constructorElement}
           </Flex>
         )
       }
     )
-  }, [bunProps, element.image, element.name, element.price, handleRemove, isBunElement, type])
+  }, [bunProps, constructorElement, isBunElement, type])
 
   const swapItems = React.useCallback(
     ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
@@ -92,4 +98,4 @@ export const BurgerItem: React.FC<BurgerItemProps> = ({ element, type = null, so
       target={dndSortedConstructorElement}
     />
   )
-}
+})
