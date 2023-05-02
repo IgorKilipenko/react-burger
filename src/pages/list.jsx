@@ -54,11 +54,11 @@ export const ListPage = () => {
   useEffect(
     () => {
       if (state) {
-        navigate('', { state: [...state, { path: pathname, url, title: 'List of Nobel laureates' }] });
+        navigate('', { state: isContainRoute(state, url) ? state : [...state, { path: pathname, url, title: 'List of Nobel laureates' }] });
       }
     },
     /* eslint-disable-next-line */
-    []
+    [pathname, url, state]
   );
 
   const loadCountryInfo = async () => {
