@@ -70,7 +70,7 @@ export const ListPage = () => {
     (type) => {
       const nextSortingValue = personCountSorting ? (personCountSorting === ASC ? DESC : ASC) : ASC;
 
-      setSearchParams({ [type]: "" });
+      setSearchParams({ [type]: nextSortingValue});
     },
     [personCountSorting]
   );
