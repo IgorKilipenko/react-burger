@@ -8,10 +8,10 @@ import { Button } from "../components/button";
 export function HomePage() {
   const navigate = useNavigate();
 
-  const onClick = React.useCallback((e)=> {
-    e.preventDefault();
+  const onClick = (event) => {
     navigate("/list");
-  },[navigate]);
+    event.preventDefault();
+  };
 
   return (
     <div className={styles.wrapper}>
