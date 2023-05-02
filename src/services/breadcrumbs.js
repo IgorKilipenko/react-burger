@@ -7,5 +7,6 @@ export const isContainRoute = (state, route) =>  state.some(({url}) => url === r
  * state -- history state of app
   * url -- url of current breadcrumb */
 export const removeRemainingCrumbs = (state, url) => {
-  return state;
+  const index = state.findIndex(({ url: route }) => route === url)
+  return state.slice(0, index)
 };
