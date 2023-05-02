@@ -11,8 +11,6 @@ const Crumb = ({ url, title, path }) => {
 
   const routeTo = event => {
     event.preventDefault();
-    console.log({state})
-
     navigate(path, { replace: true, state: removeRemainingCrumbs(state, url) });
   };
 
@@ -28,7 +26,6 @@ const Crumb = ({ url, title, path }) => {
 
 const Breadcrumbs = () => {
   const { state } = useLocation();
-  removeRemainingCrumbs(state, "");
   if (state) {
     return (
       <nav>
