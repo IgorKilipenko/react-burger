@@ -1,7 +1,6 @@
 {
-  "name": "react-burger",
+  "name": "nobel-prizes",
   "version": "0.1.0",
-  "homepage": "https://igorkilipenko.github.io/react-burger",
   "private": true,
   "dependencies": {
     "@chakra-ui/react": "^2.5.5",
