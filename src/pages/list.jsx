@@ -42,7 +42,6 @@ export const ListPage = () => {
   const [personCountSorting, setPersonCountSorting] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("search");
 
   const loadCountryInfo = async () => {
     setLoading(true);
