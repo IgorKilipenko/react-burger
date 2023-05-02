@@ -57,7 +57,8 @@ export const CountryPage = () => {
           const isYearFits = (year) => (selectedYear && selectedYear !== ALL ? year === selectedYear : true);
           const isCategoryFits = (category) =>
             selectedCategory && selectedCategory !== ALL ? category === selectedCategory : true;
-          return prizes.find((x) => isYearFits(x.year)) && prizes.find((x) => isCategoryFits(x.category)) && prizes;
+
+          return prizes.some(({ year, category }) => isYearFits(year) && isCategoryFits(category));
         };
 
         const filteredLaureates = [];
@@ -74,7 +75,10 @@ export const CountryPage = () => {
   );
 
   useEffect(() => {
-    filterLaureates(searchParams.get("year"), searchParams.get("category"));
+    let year = searchParams.get("year");
+    let category = searchParams.get("category");
+
+    filterLaureates(year, category);
   }, [searchParams, filterLaureates]);
 
   const changeParam = (type, value) => {
@@ -83,6 +87,7 @@ export const CountryPage = () => {
     for (let entry of searchParams.entries()) {
       search[entry[0]] = entry[1];
     }
+
     setSearchParams({ ...search, [type]: value });
   };
 
