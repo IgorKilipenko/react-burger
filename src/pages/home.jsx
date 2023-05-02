@@ -1,16 +1,15 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import styles from "./home.module.css";
+import styles from './home.module.css';
 
-import { Button } from "../components/button";
+import { Button } from '../components/button';
 
 export function HomePage() {
   const navigate = useNavigate();
 
-  const onClick = (event) => {
-    navigate("/list");
-    event.preventDefault();
+  const onClick = () => {
+    navigate('/list');
   };
 
   return (
