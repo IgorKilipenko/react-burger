@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage, ListPage, CountryPage, PersonPage, NotFound404, LoginPage } from "./pages";
-import { ProvideAuth } from "./services/auth";
 import { ProtectedRouteElement } from "./components/protected-route";
+import { ProvideAuth } from "./services/auth";
 
 export default function App() {
   return (
