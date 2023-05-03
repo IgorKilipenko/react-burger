@@ -27,11 +27,14 @@ export function useAuth() {
 export function useProvideAuth() {
   const [user, setUser] = useState(null);
 
-  const signIn = (cb) => {
-    return fakeAuth.signIn(() => {
-      setUser({ id: 1337, name: "David" });
-      cb();
-    });
+  const signIn = async (form) => {
+    const data = await loginRequest(form)
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.success) {
+      setUser({ ...data.user, id: data.user._id });
+    }
   };
 
   const signOut = (cb) => {

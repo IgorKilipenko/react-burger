@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import styles from './home.module.css';
 
@@ -9,7 +9,6 @@ import { Input } from '../components/input';
 import { PasswordInput } from '../components/password-input';
 
 export function LoginPage() {
-  let navigate = useNavigate();
   let auth = useAuth();
 
   const [form, setValue] = useState({ email: '', password: '' });
@@ -21,11 +20,9 @@ export function LoginPage() {
   let login = useCallback(
     e => {
       e.preventDefault();
-      auth.signIn(() => {
-        navigate('/', {replace: true});
-      });
+      auth.signIn(form);
     },
-    [auth, navigate]
+    [auth, form]
   );
 
   if (auth.user) {
