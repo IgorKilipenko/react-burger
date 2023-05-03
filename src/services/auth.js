@@ -33,7 +33,7 @@ export function useProvideAuth() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          // Код здесь
+          setUser({ ...data.user, id: data.user._id });
         }
         return data.success;
       });
