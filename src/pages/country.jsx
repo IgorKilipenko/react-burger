@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useParams, useSearchParams, useLocation, useNavigate } from "react-router-dom";
-import styles from "./page.module.css";
-import LaureateList from "../components/laureate-list";
-import Dropdown from "../components/dropdown";
-import { Breadcrumbs } from "../components/breadcrumbs";
-import { loadLaureates, loadCountries, deserializeQuery, serializeQuery } from "../services/api";
-import { isContainRoute } from "../services/breadcrumbs";
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams, useSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import styles from './page.module.css';
+import LaureateList from '../components/laureate-list';
+import Dropdown from '../components/dropdown';
+import { Breadcrumbs } from '../components/breadcrumbs';
+import { loadLaureates, loadCountries, deserializeQuery, serializeQuery } from '../services/api';
+import { isContainRoute } from '../services/breadcrumbs';
 
-const ALL = "all";
+const ALL = 'all';
 
 export const CountryPage = () => {
   const [laureates, setLaureates] = useState([]);
@@ -15,22 +15,25 @@ export const CountryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(ALL);
   const [yearOptions, setYearOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
-  const [countryTitle, setCountryTitle] = useState("");
+  const [countryTitle, setCountryTitle] = useState('');
 
   const { country } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("search") || "";
+  const search = searchParams.get('search') || '';
   const { state, pathname } = useLocation();
   const url = window.location.href;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (countryTitle && state && !isContainRoute(state, url)) {
-      navigate("", { state: [...state, { path: pathname, url, title: countryTitle }], replace: true });
-    }
-  }, [countryTitle, pathname, url, state]);
+  useEffect(
+    () => {
+      if (countryTitle && state && !isContainRoute(state, url)) {
+        navigate('', { state: [...state, { path: pathname, url, title: countryTitle }], replace: true });
+      }
+    },
+    [countryTitle, pathname, url, state]
+  );
 
-  const loadFilters = (filteredLaureates) => {
+  const loadFilters = filteredLaureates => {
     const years = new Set();
     const categories = new Set();
     filteredLaureates.forEach(({ prizes }) => {
@@ -43,38 +46,52 @@ export const CountryPage = () => {
     setCategoryOptions([ALL, ...Array.from(categories)]);
   };
 
-  const loadCountryInfo = useCallback(() => {
-    loadCountries().then((countries) => {
-      const currentCountry = countries.find(({ code }) => code === country);
-      setCountryTitle(currentCountry && currentCountry.name ? currentCountry.name : country);
-    });
-  }, [country]);
+  const loadCountryInfo = useCallback(
+    () => {
+      loadCountries().then(countries => {
+        const currentCountry = countries.find(({ code }) => code === country);
+        setCountryTitle(currentCountry && currentCountry.name ? currentCountry.name : country);
+      });
+    },
+    [country]
+  );
 
-  const loadAllCountryLaureates = useCallback(() => {
-    loadLaureates().then((laureates) => {
-      const countryLaureates = laureates.filter(({ bornCountryCode }) => bornCountryCode === country);
-      setLaureates(countryLaureates);
-      loadFilters(countryLaureates);
-    });
-  }, [country]);
+  const loadAllCountryLaureates = useCallback(
+    () => {
+      loadLaureates().then(laureates => {
+        const countryLaureates = laureates.filter(
+          ({ bornCountryCode }) => bornCountryCode === country
+        );
+        setLaureates(countryLaureates);
+        loadFilters(countryLaureates);
+      });
+    },
+    [country]
+  );
 
-  useEffect(() => {
-    loadCountryInfo();
-    loadAllCountryLaureates();
-  }, [country, loadCountryInfo, loadAllCountryLaureates]);
+  useEffect(
+    () => {
+      loadCountryInfo();
+      loadAllCountryLaureates();
+    },
+    [country, loadCountryInfo, loadAllCountryLaureates]
+  );
 
   const filterLaureates = useCallback(
     (selectedYear, selectedCategory) => {
-      loadLaureates().then((laureates) => {
-        const countryLaureates = laureates.filter(({ bornCountryCode }) => bornCountryCode === country);
-        const isItemFits = (prizes) => {
-          const isYearFits = (year) => (selectedYear ? year === selectedYear : true);
-          const isCategoryFits = (category) => (selectedCategory ? category === selectedCategory : true);
+      loadLaureates().then(laureates => {
+        const countryLaureates = laureates.filter(
+          ({ bornCountryCode }) => bornCountryCode === country
+        );
+        const isItemFits = prizes => {
+          const isYearFits = year => (selectedYear ? year === selectedYear : true);
+          const isCategoryFits = category =>
+            selectedCategory ? category === selectedCategory : true;
           return prizes.some(({ year, category }) => isYearFits(year) && isCategoryFits(category));
         };
 
         const filteredLaureates = [];
-        countryLaureates.forEach((laureate) => {
+        countryLaureates.forEach(laureate => {
           if (isItemFits(laureate.prizes)) {
             filteredLaureates.push(laureate);
           }
@@ -86,13 +103,16 @@ export const CountryPage = () => {
     [country]
   );
 
-  useEffect(() => {
-    const params = deserializeQuery(search);
+  useEffect(
+    () => {
+      const params = deserializeQuery(search);
 
-    setSelectedYear(`${params.year || ALL}`); // to string
-    setSelectedCategory(params.category || ALL);
-    filterLaureates(params.year, params.category);
-  }, [search, filterLaureates]);
+      setSelectedYear(`${params.year || ALL}`); // to string
+      setSelectedCategory(params.category || ALL);
+      filterLaureates(params.year, params.category);
+    },
+    [search, filterLaureates]
+  );
 
   const filterItems = useCallback(
     (value, type) => {
@@ -113,7 +133,7 @@ export const CountryPage = () => {
         query = serializeQuery(params);
       }
       setSearchParams({
-        search: query,
+        search: query
       });
     },
     [search]
@@ -130,7 +150,7 @@ export const CountryPage = () => {
           <Dropdown
             label="Year"
             options={yearOptions}
-            handleOnSelect={(value) => filterItems(value, "year")}
+            handleOnSelect={value => filterItems(value, 'year')}
             selected={selectedYear}
           />
         </div>
@@ -138,7 +158,7 @@ export const CountryPage = () => {
           <Dropdown
             label="Category"
             options={categoryOptions}
-            handleOnSelect={(value) => filterItems(value, "category")}
+            handleOnSelect={value => filterItems(value, 'category')}
             selected={selectedCategory}
           />
         </div>

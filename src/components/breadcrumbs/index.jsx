@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useLocation, useNavigate, useMatch} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 import styles from './breadcrumbs.module.css';
 
@@ -7,8 +7,7 @@ import { removeRemainingCrumbs } from '../../services/breadcrumbs';
 
 const Crumb = ({ url, title, path }) => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const match = useMatch(path); 
+  const { state, pathname } = useLocation();
 
   const routeTo = event => {
     event.preventDefault();
@@ -17,10 +16,16 @@ const Crumb = ({ url, title, path }) => {
 
   return (
     <span className={styles.item}>
-      <a href={url} onClick={routeTo}>
-        {title}
-      </a>
-      {!match ? ` > ` : ""}
+      {path === pathname ? (
+        title
+      ) : (
+        <>
+          <a href={url} onClick={routeTo}>
+            {title}
+          </a>
+          {` > `}
+        </>
+      )}
     </span>
   );
 };
