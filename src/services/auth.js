@@ -1,23 +1,13 @@
 import { useContext, useState, createContext } from "react";
-import { getUserRequest, loginRequest } from "./api";
-import { setCookie } from "./utils";
-
-const fakeAuth = {
-  isAuthenticated: false,
-  signIn(cb) {
-    fakeAuth.isAuthenticated = true;
-    setTimeout(cb, 100); // fake async
-  },
-  signOut(cb) {
-    fakeAuth.isAuthenticated = false;
-    setTimeout(cb, 100);
-  },
-};
+import { deleteCookie, setCookie } from "./utils";
+import React from "react";
+import { loginRequest, getUserRequest, logoutRequest } from "./api";
 
 const AuthContext = createContext(undefined);
 
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
+
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
 
@@ -60,11 +50,10 @@ export function useProvideAuth() {
     }
   };
 
-  const signOut = (cb) => {
-    return fakeAuth.signOut(() => {
-      setUser(null);
-      cb();
-    });
+  const signOut = async () => {
+    await logoutRequest();
+    setUser(null);
+    deleteCookie("token");
   };
 
   return {

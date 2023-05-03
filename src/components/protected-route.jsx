@@ -1,6 +1,6 @@
-import { useAuth } from "../services/auth";
-import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useAuth } from '../services/auth';
+import { Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 export const ProtectedRouteElement = ({ element }) => {
   let { getUser, ...auth } = useAuth();
@@ -19,5 +19,5 @@ export const ProtectedRouteElement = ({ element }) => {
     return null;
   }
 
-  return auth.user ? element : <Navigate to="/login" replace />;
-};
+  return auth.user ? element : <Navigate to="/login" replace/>;
+}
