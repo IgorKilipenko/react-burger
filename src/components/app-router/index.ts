@@ -1,1 +1,2 @@
-export { appRouter, routesInfo } from "./router"
+export { appRouter } from "./router"
+export { routesInfo } from "./routes"
