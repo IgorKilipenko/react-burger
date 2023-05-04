@@ -1,12 +1,12 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import App from "./components/app"
 import theme from "./theme"
 import reportWebVitals from "./reportWebVitals"
 import { ColorModeScript } from "@chakra-ui/react"
 import { Provider } from "react-redux"
 import { store } from "./services/store"
-import { BrowserRouter } from "react-router-dom"
+import { RouterProvider } from "react-router-dom"
+import { AppRouter } from "./components/app-router"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
@@ -14,9 +14,7 @@ root.render(
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <React.StrictMode>
       <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <RouterProvider router={AppRouter}/>
       </Provider>
     </React.StrictMode>
   </>

@@ -2,7 +2,7 @@ import { Flex, Text } from "@chakra-ui/react"
 
 export const NotFoundPage = () => {
   return (
-    <Flex direction="column" align="center" justify="center" w="100%" h="100%" gap={10}>
+    <Flex direction="column" align="center" justify="center" grow={1} gap={10}>
       <Text variant="digitsLarge" color="error-color">
         404
       </Text>
