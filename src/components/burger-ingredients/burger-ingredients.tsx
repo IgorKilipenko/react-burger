@@ -39,7 +39,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const matches = useMatches()
   const navigate = useNavigate()
-  const {state:locationState} = useLocation()
+  const { state: locationState } = useLocation()
 
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
@@ -97,7 +97,9 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
       return
     }
 
-    const routeIngredientMatch = matches.find((m) => m.id === routesInfo.ingredientItem.id && m.params?.id)
+    const routeIngredientMatch = matches.find(
+      (m) => m.id === routesInfo.ingredientItem.id && m.params && m.params[routesInfo.ingredientItem.paramName]
+    )
     if (!routeIngredientMatch) {
       if (modalOpen) {
         closeModal()
@@ -115,8 +117,10 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
     if (ingredient) {
       dispatch(setActiveIngredient(ingredient))
       setModalOpen(true)
+    } else {
+      navigate("*", { replace: true })
     }
-  }, [closeModal, dispatch, ingredientsTable, locationState?.ingredient, matches, modalOpen])
+  }, [closeModal, dispatch, ingredientsTable, locationState?.ingredient, matches, modalOpen, navigate])
 
   return (
     <>

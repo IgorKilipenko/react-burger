@@ -14,9 +14,12 @@ export const routesInfo = {
   profile: { path: "/profile", element: null },
   ingredientItem: {
     id: "ingredientItem",
+    paramName: "id",
     rootPath: "ingredients",
-    get path() {return `${this.rootPath}/:id`;},
+    get path() {
+      return `${this.rootPath}/:${this.paramName}`
+    },
     element: <IngredientDetail />,
   },
-  notfound: { path: "*", element: <NotFoundPage /> },
+  errorPage: { path: "/error-page", element: <NotFoundPage /> },
 } as const
