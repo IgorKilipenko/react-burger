@@ -1,11 +1,20 @@
-import { ChakraProvider } from "@chakra-ui/react"
 import React from "react"
+import { ChakraProvider, Flex } from "@chakra-ui/react"
 import AppHeader from "../app-header"
-import BurgerIngredients from "../burger-ingredients"
-import BurgerConstructor from "../burger-constructor"
 import theme from "../../theme/theme"
-import { Flex } from "@chakra-ui/react"
 import { MainContainer } from "./main-container"
+import { Routes, Route } from "react-router-dom"
+import { HomePage } from "../../pages"
+
+const AppRoutes = {
+  home: "/",
+  login: "/login",
+  register: "/register",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
+  profile: "/profile",
+  ingredientItem: "/ingredients/:id"
+}
 
 const App = () => {
   const [headerHeight, setHeight] = React.useState(0)
@@ -27,10 +36,11 @@ const App = () => {
         overflow="hidden"
       >
         <AppHeader onChangeHeight={handleHeaderChangeHeight} />
-          <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
-            <BurgerIngredients grow={1} />
-            <BurgerConstructor grow={1} />
-          </MainContainer>
+        <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
+          <Routes>
+            <Route path={AppRoutes.home} element={<HomePage />}/>
+          </Routes>
+        </MainContainer>
       </Flex>
     </ChakraProvider>
   )

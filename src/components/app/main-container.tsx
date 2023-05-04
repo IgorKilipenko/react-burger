@@ -1,11 +1,7 @@
 import React from "react"
 import { Text } from "@chakra-ui/react"
 import { Flex, type LayoutProps } from "@chakra-ui/react"
-import { useIsTouchEnabled } from "../../hooks"
 import { ErrorMessage } from "../error-message"
-import { HTML5Backend } from "react-dnd-html5-backend"
-import { DndProvider } from "react-dnd"
-import { TouchBackend } from "react-dnd-touch-backend"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { getProductsStore, getAllIngredients } from "../../services/slices/products"
 
@@ -24,7 +20,7 @@ const loadingMessage = () => (
 
 export const MainContainer = React.memo<MainContainerProps>(({ children, maxContentWidth, h, height = "100%" }) => {
   const currHeight = h ?? height
-  const isTouchEnabled = useIsTouchEnabled()
+
   const { categories, loading, error } = useAppSelector(getProductsStore)
   const dispatch = useAppDispatch()
 
@@ -50,13 +46,11 @@ export const MainContainer = React.memo<MainContainerProps>(({ children, maxCont
             justifySelf="stretch"
             grow={1}
           >
-            <DndProvider backend={!isTouchEnabled ? HTML5Backend : TouchBackend}>
-              {React.Children.map(children, (child) => (
-                <Flex as="section" grow={1} basis={0} justify="stretch">
-                  {child}
-                </Flex>
-              ))}
-            </DndProvider>
+            {React.Children.map(children, (child) => (
+              <Flex as="section" grow={1} basis={0} justify="stretch">
+                {child}
+              </Flex>
+            ))}
           </Flex>
         )}
       </Flex>
