@@ -11,7 +11,7 @@ export interface AppHeaderProps {
 
 const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHeight }) => {
   const links = buildLinks()
-  const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
+  const [currentLink, setCurrentLink] = React.useState<string | number | undefined>(links.burgerConstructor.tag)
   const headerRef = React.useRef<HTMLDivElement | null>(null)
   const height = useHeight(headerRef)
   const styles = useMultiStyleConfig("AppHeader", { variant })

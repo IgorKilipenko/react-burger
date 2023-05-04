@@ -3,8 +3,10 @@ import { Flex, Box } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { Link as ChakraLink } from "@chakra-ui/react"
 import { Icon } from "../icon"
+import { useNavigate } from "react-router-dom"
 
 export interface LinkProps {
+  to?: string,
   icon?: React.ElementType<any>
   text?: string
   children?: React.ReactNode
@@ -14,9 +16,15 @@ export interface LinkProps {
 }
 
 export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
-  ({ icon, text, children, isActive = false, onClick, value }, ref) => {
+  ({ to, icon, text, children, isActive = false, onClick, value }, ref) => {
     const type = isActive ? "primary" : "secondary"
-    const _onClick = () => onClick && onClick(value)
+    const navigate = useNavigate()
+
+    const _onClick = React.useCallback(() => {
+      onClick && onClick(value)
+      to && navigate(to)
+
+    },[navigate, onClick, to, value]);
 
     const containerProps = {
       pt: { base: 1, lg: 4 },
