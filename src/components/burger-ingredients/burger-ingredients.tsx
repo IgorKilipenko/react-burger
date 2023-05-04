@@ -39,7 +39,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const matches = useMatches()
   const navigate = useNavigate()
-  const location = useLocation()
+  const {state:locationState} = useLocation()
 
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
@@ -107,7 +107,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
     const id = routeIngredientMatch!.params!.id!
     const ingredient =
-      (location?.state?.ingredient as BurgerIngredientType) ??
+      (locationState?.ingredient as BurgerIngredientType) ??
       Object.values(ingredientsTable).reduce<BurgerIngredientType | null | undefined>((res, item) => {
         return res ?? item.find((p) => p._id === id)
       }, null)
@@ -116,7 +116,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
       dispatch(setActiveIngredient(ingredient))
       setModalOpen(true)
     }
-  }, [closeModal, dispatch, ingredientsTable, location?.state?.ingredient, matches, modalOpen])
+  }, [closeModal, dispatch, ingredientsTable, locationState?.ingredient, matches, modalOpen])
 
   return (
     <>
