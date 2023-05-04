@@ -13,7 +13,8 @@ import { useAppDispatch, useAppSelector } from "../../services/store"
 import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
 import { getProductsStore } from "../../services/slices/products"
 import { uid } from "uid"
-import { Outlet, useMatches, useNavigate } from "react-router-dom"
+import { Outlet, useMatches, useNavigate, useLocation } from "react-router-dom"
+import { routesInfo } from "../app-router"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -38,6 +39,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const matches = useMatches()
   const navigate = useNavigate()
+  const location = useLocation()
 
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
@@ -79,7 +81,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   /// Open modal category details for selected ingredient
   const handleIngredientClick = React.useCallback(
     (ingredient: BurgerIngredientType) => {
-      navigate(`ingredients/${ingredient._id}`)
+      navigate(`${routesInfo.ingredientItem.rootPath}/${ingredient._id}`, { state: { ingredient } })
     },
     [navigate]
   )
@@ -87,7 +89,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const closeModal = React.useCallback(() => {
     setModalOpen(false)
     dispatch(clearActiveIngredient())
-    navigate("");
+    navigate("", { replace: true })
   }, [dispatch, navigate])
 
   React.useEffect(() => {
@@ -95,27 +97,26 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
       return
     }
 
-    const routeIngredientMatch = matches.find((m) => m.id === "ingredientItem" && m.params?.id)
+    const routeIngredientMatch = matches.find((m) => m.id === routesInfo.ingredientItem.id && m.params?.id)
     if (!routeIngredientMatch) {
       if (modalOpen) {
-        closeModal();
+        closeModal()
       }
       return
     }
 
     const id = routeIngredientMatch!.params!.id!
-    const ingredient = Object.values(ingredientsTable).reduce<BurgerIngredientType | null | undefined>(
-      (res, item) => {
+    const ingredient =
+      (location?.state?.ingredient as BurgerIngredientType) ??
+      Object.values(ingredientsTable).reduce<BurgerIngredientType | null | undefined>((res, item) => {
         return res ?? item.find((p) => p._id === id)
-      },
-      null
-    )
+      }, null)
 
     if (ingredient) {
       dispatch(setActiveIngredient(ingredient))
       setModalOpen(true)
     }
-  }, [closeModal, dispatch, handleIngredientClick, ingredientsTable, matches, modalOpen])
+  }, [closeModal, dispatch, ingredientsTable, location?.state?.ingredient, matches, modalOpen])
 
   return (
     <>
