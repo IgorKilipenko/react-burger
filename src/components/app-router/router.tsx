@@ -20,6 +20,9 @@ export const appRouter = createBrowserRouter([
               },
             ],
           },
+          {
+            ...routesInfo.login
+          }
         ],
       },
       {
