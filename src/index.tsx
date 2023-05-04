@@ -6,7 +6,7 @@ import { ColorModeScript } from "@chakra-ui/react"
 import { Provider } from "react-redux"
 import { store } from "./services/store"
 import { RouterProvider } from "react-router-dom"
-import { AppRouter } from "./components/app-router"
+import { appRouter } from "./components/app-router"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
@@ -14,7 +14,7 @@ root.render(
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <React.StrictMode>
       <Provider store={store}>
-        <RouterProvider router={AppRouter}/>
+        <RouterProvider router={appRouter}/>
       </Provider>
     </React.StrictMode>
   </>

@@ -6,13 +6,14 @@ import { CategorySection } from "./category-section"
 import { BurgerIngredientType, CategoryBase } from "../../data"
 import { selectIngredients } from "./utils"
 import { Modal } from "../modal"
-import { headerText, IngredientDetail } from "../ingredient-details"
+import { headerText } from "../ingredient-details"
 import { useTabInView } from "../../hooks"
 import { burgerActions } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
 import { getProductsStore } from "../../services/slices/products"
 import { uid } from "uid"
+import { Outlet, useMatches, useNavigate } from "react-router-dom"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -34,6 +35,9 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const [modalOpen, setModalOpen] = React.useState(false)
 
   const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories!)
+
+  const matches = useMatches()
+  const navigate = useNavigate()
 
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
@@ -75,16 +79,43 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   /// Open modal category details for selected ingredient
   const handleIngredientClick = React.useCallback(
     (ingredient: BurgerIngredientType) => {
-      dispatch(setActiveIngredient(ingredient))
-      setModalOpen(true)
+      navigate(`ingredients/${ingredient._id}`)
     },
-    [dispatch]
+    [navigate]
   )
 
-  const handleModalClose = React.useCallback(() => {
+  const closeModal = React.useCallback(() => {
     setModalOpen(false)
     dispatch(clearActiveIngredient())
-  }, [dispatch])
+    navigate("");
+  }, [dispatch, navigate])
+
+  React.useEffect(() => {
+    if (!ingredientsTable) {
+      return
+    }
+
+    const routeIngredientMatch = matches.find((m) => m.id === "ingredientItem" && m.params?.id)
+    if (!routeIngredientMatch) {
+      if (modalOpen) {
+        closeModal();
+      }
+      return
+    }
+
+    const id = routeIngredientMatch!.params!.id!
+    const ingredient = Object.values(ingredientsTable).reduce<BurgerIngredientType | null | undefined>(
+      (res, item) => {
+        return res ?? item.find((p) => p._id === id)
+      },
+      null
+    )
+
+    if (ingredient) {
+      dispatch(setActiveIngredient(ingredient))
+      setModalOpen(true)
+    }
+  }, [closeModal, dispatch, handleIngredientClick, ingredientsTable, matches, modalOpen])
 
   return (
     <>
@@ -113,8 +144,8 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         </Flex>
       </Flex>
       {modalOpen ? (
-        <Modal headerText={headerText} onClose={handleModalClose}>
-          <IngredientDetail />
+        <Modal headerText={headerText} onClose={closeModal}>
+          <Outlet />
         </Modal>
       ) : null}
     </>
