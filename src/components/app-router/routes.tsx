@@ -13,7 +13,9 @@ export const routesInfo = {
   resetPassword: { path: "/reset-password", element: null },
   profile: { path: "/profile", element: null },
   ingredientItem: {
-    path: "/ingredients/:id",
+    id: "ingredientItem",
+    rootPath: "ingredients",
+    get path() {return `${this.rootPath}/:id`;},
     element: <IngredientDetail />,
   },
   notfound: { path: "*", element: <NotFoundPage /> },

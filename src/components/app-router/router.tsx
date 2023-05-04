@@ -14,7 +14,7 @@ export const appRouter = createBrowserRouter([
             element: routesInfo.home.element,
             children: [
               {
-                id: "ingredientItem",
+                id: routesInfo.ingredientItem.id,
                 path: routesInfo.ingredientItem.path,
                 element: routesInfo.ingredientItem.element,
               },
