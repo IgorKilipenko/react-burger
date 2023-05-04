@@ -4,16 +4,17 @@ import AppHeader from "../app-header"
 import theme from "../../theme/theme"
 import { MainContainer } from "./main-container"
 import { Routes, Route } from "react-router-dom"
-import { HomePage } from "../../pages"
+import { HomePage, NotFoundPage } from "../../pages"
 
 const AppRoutes = {
-  home: "/",
-  login: "/login",
-  register: "/register",
-  forgotPassword: "/forgot-password",
-  resetPassword: "/reset-password",
-  profile: "/profile",
-  ingredientItem: "/ingredients/:id"
+  home: { path: "/", element: <HomePage /> },
+  login: { path: "/login", element: null },
+  register: { path: "/register", element: null },
+  forgotPassword: { path: "/forgot-password", element: null },
+  resetPassword: { path: "/reset-password", element: null },
+  profile: { path: "/profile", element: null },
+  ingredientItem: { path: "/ingredients/:id", element: null },
+  notfound: { path: "*", element: <NotFoundPage /> },
 }
 
 const App = () => {
@@ -38,7 +39,8 @@ const App = () => {
         <AppHeader onChangeHeight={handleHeaderChangeHeight} />
         <MainContainer maxContentWidth={maxContentWidth} height={`calc(100% - ${headerHeight}px)`}>
           <Routes>
-            <Route path={AppRoutes.home} element={<HomePage />}/>
+            <Route {...AppRoutes.home} />
+            <Route {...AppRoutes.notfound} />
           </Routes>
         </MainContainer>
       </Flex>
