@@ -1,4 +1,4 @@
-export type { IconProps } from "./icon-types"
+export type { IconProps } from "./utils/icon-types"
 export { CloseIcon } from "./close-icon"
 export { ProfileIcon } from "./profile-icon"
 export { BurgerIcon } from "./burger-icon"

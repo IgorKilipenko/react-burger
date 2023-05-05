@@ -1,5 +1,5 @@
 import { Icon, IconProps as ChakraIconProps } from "@chakra-ui/react"
-import { IconProps } from "./icon-types"
+import { IconProps } from "./utils/icon-types"
 
 export const ShowIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" {...(props as ChakraIconProps)}>
