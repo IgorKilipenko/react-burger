@@ -1,6 +1,5 @@
 import React from "react"
-import { Flex, Box } from "@chakra-ui/react"
-import { Text } from "@chakra-ui/react"
+import { Flex, Box, Text, TextProps } from "@chakra-ui/react"
 import { Link as ChakraLink } from "@chakra-ui/react"
 import { Icon } from "../icon"
 import { useNavigate } from "react-router-dom"
@@ -9,6 +8,7 @@ export interface LinkProps {
   to?: string,
   icon?: React.ElementType<any>
   text?: string
+  textColor?: TextProps['color']
   children?: React.ReactNode
   isActive?: boolean
   value?: string | number
@@ -16,7 +16,7 @@ export interface LinkProps {
 }
 
 export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
-  ({ to, icon, text, children, isActive = false, onClick, value }, ref) => {
+  ({ to, icon, text, textColor, children, isActive = false, onClick, value }, ref) => {
     const type = isActive ? "primary" : "secondary"
     const navigate = useNavigate()
 
@@ -42,7 +42,7 @@ export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
         ) : (
           <ChakraLink as={Flex} align="center" onClick={_onClick} gap={icon && text ? 2 : 0} variant={type}>
             {icon && <Icon as={icon} type={type} />}
-            {text && <Text variant={"mainDefault"}>{text}</Text>}
+            {text && <Text color={textColor} variant={"mainDefault"}>{text}</Text>}
           </ChakraLink>
         )}
       </Box>
