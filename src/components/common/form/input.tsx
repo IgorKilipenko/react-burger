@@ -56,6 +56,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       onFocus,
       size = "default",
+      autoComplete="on",
       ...rest
     },
     forwardedRef
@@ -167,6 +168,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onChange={onChange}
             value={value}
             disabled={disabled}
+            autoComplete={autoComplete}
             {...rest}
           />
           {iconToRender}
