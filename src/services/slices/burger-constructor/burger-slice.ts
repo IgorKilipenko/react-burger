@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { allowableCategories, BurgerIngredientType, DbObjectType, IngredientBase } from "../../../data"
+import { uid } from "uid"
 
 type ProductBase = DbObjectType & IngredientBase
 type ProductIdType = ProductBase["_id"]
@@ -41,18 +42,23 @@ const burgerSlice = createSlice({
       }
     },
 
-    addIngredient: (state, action: PayloadAction<BurgerItemType>) => {
-      let { product, uid } = action.payload
-      const isBunType = product.type === allowableCategories.bun
+    addIngredient: {
+      reducer: (state, action: PayloadAction<BurgerItemType>) => {
+        let { product, uid } = action.payload
+        const isBunType = product.type === allowableCategories.bun
 
-      if (isBunType) {
-        state.bun?.product._id !== product._id && burgerSlice.caseReducers.clearBuns(state)
-        state.bun = { uid, product }
-      } else {
-        state.products.push({ uid, product })
-      }
+        if (isBunType) {
+          state.bun?.product._id !== product._id && burgerSlice.caseReducers.clearBuns(state)
+          state.bun = { uid, product }
+        } else {
+          state.products.push({ uid, product })
+        }
 
-      state.productQuantities[product._id] = isBunType ? 1 : (state.productQuantities[product._id] ?? 0) + 1
+        state.productQuantities[product._id] = isBunType ? 1 : (state.productQuantities[product._id] ?? 0) + 1
+      },
+      prepare: (ingredient: Omit<BurgerItemType, "uid">) => {
+        return { payload: { uid: uid(), ...ingredient } }
+      },
     },
 
     removeIngredient: (state, action: PayloadAction<{ uid: OrderedItemType["uid"] }>) => {

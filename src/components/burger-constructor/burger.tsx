@@ -2,7 +2,6 @@ import React from "react"
 import { Flex } from "@chakra-ui/react"
 import { BurgerIngredientType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
-import { uid } from "uid"
 import { useDrop } from "react-dnd"
 import { useSelector, useDispatch } from "react-redux"
 import { burgerActions } from "../../services/slices/burger-constructor"
@@ -17,7 +16,7 @@ export const Burger = React.memo<BurgerProps>(() => {
 
   const handleDrop = React.useCallback(
     (ingredient: BurgerIngredientType) => {
-      dispatch(addProductToCart({ product: ingredient, uid: uid() }))
+      dispatch(addProductToCart({ product: ingredient }))
     },
     [addProductToCart, dispatch]
   )
@@ -49,22 +48,22 @@ export const Burger = React.memo<BurgerProps>(() => {
         <BurgerItem
           element={bun.product}
           type={allowableTypes.top as ElementType}
-          uid={`${bun.uid ?? uid()}-${allowableTypes.top}`}
+          uid={`${bun.uid}-${allowableTypes.top}`}
         />
       )}
       {ingredients?.map((element, i) => (
         <BurgerItem
-          key={`bi-${element.uid ?? uid()}`}
+          key={`bi-${element.uid}`}
           sortIndex={i}
           element={element.product}
-          uid={element.uid ?? uid()}
+          uid={element.uid}
         />
       ))}
       {bun && (
         <BurgerItem
           element={bun.product}
           type={allowableTypes.bottom as ElementType}
-          uid={`${bun.uid ?? uid()}-${allowableTypes.bottom}`}
+          uid={`${bun.uid}-${allowableTypes.bottom}`}
         />
       )}
     </Flex>

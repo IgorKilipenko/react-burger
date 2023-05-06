@@ -12,7 +12,6 @@ import { burgerActions } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
 import { getProductsStore } from "../../services/slices/products"
-import { uid } from "uid"
 import { Outlet, useMatches, useNavigate, useLocation } from "react-router-dom"
 import { routesInfo } from "../app-router"
 
@@ -49,7 +48,7 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         ? selectIngredients({ ingredients: ingredientsTable ?? {}, maxQuantity: 0 })
         : []
     selectedIngredients.forEach((x) => {
-      dispatch(addProductToCart({ product: x.item, uid: uid() }))
+      dispatch(addProductToCart({ product: x.item }))
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientsTable])
