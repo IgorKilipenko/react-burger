@@ -1,23 +1,10 @@
-import { createSlice, createAsyncThunk, SerializedError, PayloadAction } from "@reduxjs/toolkit"
-import { api, UserDataType } from "../../../data"
+import { createSlice, SerializedError, PayloadAction } from "@reduxjs/toolkit"
+import { UserDataType } from "../../../data"
 import { Nullable } from "../../../utils/types"
-import { tokenManager } from "./utils"
-
-export const loginFetch = createAsyncThunk("auth/login", async (userData: UserDataType, thunkApi) => {
-  thunkApi.dispatch(clearUserData())
-  const { data, error } = await api.auth.login(userData)
-  if (error || !data?.success) throw error ?? Error(data?.message ?? "Неизвестная ошибка авторизации")
-  return { data, error }
-})
-
-type LoginResponse = Awaited<ReturnType<typeof api.auth.login>>
+import { login, LoginResponse, registerAsyncThunk, RegisterResponse } from "./auth-async-thunk"
 
 interface AuthResponseState {
   user: Nullable<UserDataType>
-  authInfo: {
-    accessToken: string | null
-    refreshToken: string | null
-  } | null
   isAuthenticatedUser: boolean
   error?: SerializedError | null
   loading: boolean
@@ -28,7 +15,6 @@ const initialState: AuthResponseState = {
     email: null,
     name: null,
   },
-  authInfo: null,
   isAuthenticatedUser: false,
   error: null,
   loading: false,
@@ -41,22 +27,59 @@ const authSlice = createSlice({
     clearUserData: (state) => {
       state = initialState
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(loginFetch.fulfilled, (state, { payload }: PayloadAction<LoginResponse>) => {
-      console.assert(payload.data)
+    _setUserData: (state, { payload }: PayloadAction<LoginResponse> | PayloadAction<RegisterResponse>) => {
+      //!
+      console.log("_setUserData")
 
       state.user = payload.data!.user
-      tokenManager.saveToken(payload.data!.accessToken, "access")
-      state.loading = false
-    })
-    builder.addCase(loginFetch.rejected, (state, { error }) => {
-      state.user = initialState.user
+      state.isAuthenticatedUser = true
+    },
+    _setError: (state, { payload: { error } }: PayloadAction<{ error: SerializedError }>) => {
+      //!
+      console.log("_setError")
+
+      authSlice.caseReducers.clearUserData(state)
       state.error = error
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(login.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
+      //!
+      console.log("loginAsyncThunk.fulfilled")
+
+      const { payload } = action
+      console.assert(payload.data)
+
+      authSlice.caseReducers._setUserData(state, action)
       state.loading = false
     })
-    builder.addCase(loginFetch.pending, (state) => {
-      state.error = initialState.error
+    builder.addCase(login.rejected, (state, { type, error }) => {
+      //!
+      console.log("loginAsyncThunk.rejected")
+
+      authSlice.caseReducers._setError(state, { type, payload: { error } })
+    })
+    builder.addCase(login.pending, (state) => {
+      //!
+      console.log("loginAsyncThunk.pending")
+
+      authSlice.caseReducers.clearUserData(state)
+      state.loading = true
+    })
+
+    builder.addCase(registerAsyncThunk.fulfilled, (state, action: PayloadAction<RegisterResponse>) => {
+      const { payload } = action
+      console.assert(payload.data)
+
+      authSlice.caseReducers._setUserData(state, action)
+      state.loading = false
+    })
+    builder.addCase(registerAsyncThunk.rejected, (state, { error }) => {
+      authSlice.caseReducers.clearUserData(state)
+      state.error = error
+    })
+    builder.addCase(registerAsyncThunk.pending, (state) => {
+      authSlice.caseReducers.clearUserData(state)
       state.loading = true
     })
   },
