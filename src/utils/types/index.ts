@@ -11,3 +11,5 @@ export type OmitFlexOptions<K extends keyof FlexOptions> = Omit<FlexOptions, K>
 
 export type BoxProps = ChakraBoxProps
 export type BoxOptions = Omit<ChakraBoxProps, keyof HTMLChakraProps<"div">>
+
+export type Nullable<T> = { [P in keyof T]: T[P] | null };
