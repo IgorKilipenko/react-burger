@@ -38,19 +38,14 @@ export const MainContainer = React.memo<MainContainerProps>(({ children, maxCont
         ) : (
           <Flex
             maxW={maxContentWidth}
-            justify="space-between"
+            justify="stretch"
             pl={5}
             pr={5}
-            gap={10}
             pb={10}
             justifySelf="stretch"
             grow={1}
           >
-            {React.Children.map(children, (child) => (
-              <Flex as="section" grow={1} basis={0} justify="stretch">
-                {child}
-              </Flex>
-            ))}
+            {children}
           </Flex>
         )}
       </Flex>
