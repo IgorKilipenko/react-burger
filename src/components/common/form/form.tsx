@@ -12,7 +12,7 @@ export type FormControlOptions = Omit<FormControlProps, keyof HTMLChakraProps<"d
 export interface FormProps extends Omit<RoutingFormProps, "children"> {
   children?: RoutingFormProps["children"]
   options?: {
-    container: FlexOptions
+    container?: FlexOptions
     control?: FormControlOptions
   }
 }
