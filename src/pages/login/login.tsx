@@ -4,59 +4,57 @@ import { Form, EmailInput, PasswordInput } from "../../components/common/form"
 import { Flex, Text } from "@chakra-ui/react"
 import { Link } from "../../components/common"
 import { routesInfo } from "../../components/app-router"
-import { PasswordInputProps } from "../../components/common/form"
-import { EmailInputProps } from "../../components/common/form"
 
 export const LoginPage = () => {
-  const [email, setEmail] = React.useState({ content: "", isValid: false })
-  const [password, setPassword] = React.useState({ content: "", isValid: false })
+  const [state, setState] = React.useState<Record<string, string>>({ password: "", email: "" })
+  const [validateState, setValidateState] = React.useState<Record<string, boolean>>({
+    passwordValid: false,
+    emailValid: false,
+  })
 
-  const handleEmailChange: EmailInputProps["onChange"] = React.useCallback(({ email, isValid }) => {
-    setEmail({
-      content: email,
-      isValid: isValid,
-    })
-  }, [])
-
-  const handlePasswordChange: PasswordInputProps["onChange"] = React.useCallback(({ password, isValid }) => {
-    setPassword({
-      content: password,
-      isValid: isValid,
-    })
-  }, [])
-
-  const handleInputBlur = React.useCallback((e?: React.FocusEvent<HTMLInputElement, Element>) => {
-    if (!e) {
+  const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.name.length === 0) {
       return
     }
-    if (e.target.name === "email") {
-      setEmail((prevState) => ({
-        ...prevState,
-        isValid: e.target.validity.valid,
-      }))
-    } else if (e.target.name === "password") {
-      setPassword((prevState) => ({
-        ...prevState,
-        isValid: e.target.validity.valid,
-      }))
-    } else {
-      console.assert(false)
+    setValidateState((prevState) => ({
+      ...prevState,
+      [`${e.target.name}Valid`]: false,
+    }))
+    setState((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
+  }, [])
+
+  const handleValidate = React.useCallback(({ name, isValid }: { name?: string; value: string; isValid: boolean }) => {
+    if (!name || name.length === 0) {
+      return
     }
+    setValidateState((prevState) => ({
+      ...prevState,
+      [`${name}Valid`]: isValid,
+    }))
   }, [])
 
   return (
     <Flex align="center" justify="center" grow={1}>
       <Form method="post" action="/login">
         <Flex direction="column" gap={6} pb={20}>
-          <EmailInput value={email.content} name="email" onChange={handleEmailChange} onBlur={handleInputBlur} />
-          <PasswordInput
-            value={password.content}
-            name="password"
-            onChange={handlePasswordChange}
-            onBlur={handleInputBlur}
-          />
+          <EmailInput value={state.email} name="email" onChange={handleChange} onValidated={handleValidate} />
+          <PasswordInput value={state.password} name="password" onChange={handleChange} onValidated={handleValidate} />
           <Flex alignSelf="center" grow={0}>
-            <Button htmlType="submit" size="medium" disabled={!(email.isValid && password.isValid)}>
+            <Button
+              htmlType="submit"
+              size="medium"
+              disabled={
+                !(
+                  state.email.length > 0 &&
+                  validateState.emailValid &&
+                  state.password.length > 0 &&
+                  validateState.passwordValid
+                )
+              }
+            >
               Войти
             </Button>
           </Flex>

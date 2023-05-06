@@ -12,10 +12,12 @@ export interface EmailInputProps extends Omit<InputProps, Omitted> {
   value: string
   placeholder?: string
   isIcon?: boolean
-  onChange(args: { email: string; isValid: boolean; event: React.ChangeEvent<HTMLInputElement> }): void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onValidated?: (args: { name?: string; value: string; isValid: boolean }) => void
 }
 
 export const EmailInput: React.FC<EmailInputProps> = ({
+  name,
   value,
   onChange,
   size = "default",
@@ -24,6 +26,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({
   onBlur,
   onFocus,
   onIconClick,
+  onValidated,
   ...rest
 }) => {
   const [fieldDisabled, setDisabled] = useState(isIcon)
@@ -41,8 +44,10 @@ export const EmailInput: React.FC<EmailInputProps> = ({
   )
 
   const validateField = React.useCallback((value: string) => {
-    setError(!validateEmail(value))
-  }, [])
+    const isValid = validateEmail(value)
+    setError(!isValid)
+    onValidated && onValidated({name, value, isValid})
+  }, [name, onValidated])
 
   const handleFocus = React.useCallback(() => {
     setError(false)
@@ -65,14 +70,20 @@ export const EmailInput: React.FC<EmailInputProps> = ({
 
   const handleEmailChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange && onChange({ email: e.target.value, isValid: !error, event: e })
+      onChange && onChange(e)
     },
-    [error, onChange]
+    [onChange]
   )
+
+  React.useEffect(() => {
+    const timeOutId = setTimeout(() => value && value.length > 4 && validateField(value), 500)
+    return () => clearTimeout(timeOutId)
+  }, [validateField, value])
 
   return (
     <Input
       type="email"
+      name={name}
       autoComplete="email"
       placeholder={placeholder}
       onChange={handleEmailChange}
@@ -84,7 +95,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({
       error={error}
       disabled={fieldDisabled}
       onIconClick={handleIconClick}
-      errorText={"Ой, произошла ошибка!"}
+      errorText={"Невалидный формат"}
       size={size}
       {...rest}
     />
