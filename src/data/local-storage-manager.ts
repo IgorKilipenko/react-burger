@@ -3,6 +3,7 @@ export interface LocalStorageManager {
   ssr?: boolean
   get: () => string | null
   set: (value: string) => void
+  erase: () => void
 }
 
 export const createLocalStorageManager = (key: string): LocalStorageManager => {
@@ -25,6 +26,9 @@ export const createLocalStorageManager = (key: string): LocalStorageManager => {
         console.assert(false, e)
       }
     },
+    erase: () => {
+      localStorage.removeItem(key)
+    },
   }
 }
 
@@ -33,11 +37,21 @@ const parseCookie = (cookie: string, key: string): string | null => {
   return match?.groups?.["value"] ?? null
 }
 
+const prepareExpires = (maxAgeSec: number): string => {
+  const date = new Date()
+  date.setTime(date.getTime() + maxAgeSec * 1000)
+  return date.toUTCString()
+}
+
 export const createCookieStorageManager = (
   key: string,
   options?: { maxAgeSec?: number; cookie?: string }
 ): LocalStorageManager => {
   const { maxAgeSec = 20 * 60, cookie = null } = options ?? {}
+  const setWithMaxAge = (value: string | null, maxAgeSec: number) => {
+    document.cookie = `${key}=${encodeURIComponent(value ?? "")}; expires=${prepareExpires(maxAgeSec)}; path=/`
+  }
+
   return {
     ssr: !!cookie,
     type: "cookie",
@@ -46,8 +60,9 @@ export const createCookieStorageManager = (
       if (!globalThis?.document) return null
       return parseCookie(document.cookie, key)
     },
-    set(value) {
-      document.cookie = `${key}=${value}; max-age=${maxAgeSec}; path=/`
+    set: (value) => setWithMaxAge(value, maxAgeSec),
+    erase: () => {
+      setWithMaxAge(null, -1)
     },
   }
 }
