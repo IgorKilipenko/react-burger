@@ -46,11 +46,14 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
     [currentIcon, onIconClick]
   )
 
-  const validateField = React.useCallback((value: string) => {
-    const isValid = value.length >= 6
-    setError(!isValid)
-    onValidated && onValidated({name, value, isValid})
-  }, [name, onValidated])
+  const validateField = React.useCallback(
+    (value: string) => {
+      const isValid = value.length >= 6
+      setError(!isValid)
+      onValidated && onValidated({ name, value, isValid })
+    },
+    [name, onValidated]
+  )
 
   const handleFocus = React.useCallback(() => {
     setError(false)
@@ -79,20 +82,17 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
 
   const handlePasswordChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      validateField(e.target.value)
       onChange && onChange(e)
     },
-    [onChange, validateField]
+    [onChange]
   )
 
   React.useEffect(() => {
     const timeOutId = setTimeout(() => {
-      console.log(value)
       value.length > 3 && validateField(value)
     }, 500)
     return () => clearTimeout(timeOutId)
   }, [validateField, value])
-
 
   return (
     <Input
