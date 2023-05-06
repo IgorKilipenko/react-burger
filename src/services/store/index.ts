@@ -4,12 +4,14 @@ import { activeModalItemReducer } from "../slices/active-modal-items"
 import { burgerReducer } from "../slices/burger-constructor"
 import { orderReducer } from "../slices/orders"
 import { productsReducer } from "../slices/products"
+import { authReducer } from "../slices/auth"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
   orders: orderReducer,
   products: productsReducer,
-  activeModalItem: activeModalItemReducer
+  activeModalItem: activeModalItemReducer,
+  auth: authReducer
 })
 
 interface Options {
