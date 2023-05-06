@@ -1,5 +1,6 @@
 import { HomePage, NotFoundPage } from "../../pages"
 import { LoginPage } from "../../pages/login"
+import { RegisterPage } from "../../pages/register"
 import App from "../app"
 import { IngredientDetail } from "../ingredient-details"
 import { Layout } from "../layouts"
@@ -9,7 +10,7 @@ export const routesInfo = {
   layout: { element: <Layout /> },
   home: { path: "/", element: <HomePage /> },
   login: { path: "/login", element: <LoginPage/> },
-  register: { path: "/register", element: null },
+  register: { path: "/register", element: <RegisterPage/> },
   forgotPassword: { path: "/forgot-password", element: null },
   resetPassword: { path: "/reset-password", element: null },
   profile: { path: "/profile", element: null },

@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom"
+import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom"
 import { routesInfo } from "./routes"
 
 export const appRouter = createBrowserRouter([
@@ -20,9 +20,8 @@ export const appRouter = createBrowserRouter([
               },
             ],
           },
-          {
-            ...routesInfo.login
-          }
+          routesInfo.login as RouteObject,
+          routesInfo.register as RouteObject,
         ],
       },
       {
@@ -30,7 +29,7 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "*",
-        element: <Navigate replace to={routesInfo.errorPage.path}/>,
+        element: <Navigate replace to={routesInfo.errorPage.path} />,
       },
     ],
   },
