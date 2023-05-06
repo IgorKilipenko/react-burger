@@ -11,7 +11,13 @@ export type {
 } from "./data-types"
 
 export { api } from "./api"
-export type { ApiOrderIdResponseType, ApiLoginResponseType, UserDataType, WithPassword } from "./api-response"
+export type {
+  ApiOrderIdResponseType,
+  ApiLoginResponseType,
+  UserDataType,
+  WithPassword,
+  WithoutTokens,
+} from "./api-response"
 
 export * from "./common-data"
 

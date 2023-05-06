@@ -16,6 +16,7 @@ export interface ApiIngredientsResponseType extends ApiResponseBase {
   data?: BurgerIngredientType[]
 }
 
+export type WithoutTokens<T> = Omit<T, "accessToken" | "refreshToken" >
 export type WithPassword<T> = Omit<T, "password"> & {password: string}
 
 export interface UserDataType {
