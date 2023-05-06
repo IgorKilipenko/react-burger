@@ -16,16 +16,23 @@ export interface ApiIngredientsResponseType extends ApiResponseBase {
   data?: BurgerIngredientType[]
 }
 
+export type WithPassword<T> = Omit<T, "password"> & {password: string}
+
 export interface UserDataType {
   email: string
   name: string
 }
 
 /**
- * Login api response type
+ * User sign-in api response type
  */
 export interface ApiLoginResponseType extends ApiResponseBase {
   accessToken: string
   refreshToken: string
   user: UserDataType
 }
+
+/**
+ * User sign-up api response type
+ */
+export interface ApiRegisterResponseType extends ApiLoginResponseType {}
