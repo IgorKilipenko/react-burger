@@ -7,6 +7,7 @@ import { routesInfo } from "../../components/app-router"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { authActions, getAuthStore } from "../../services/slices/auth"
 import { useNavigate } from "react-router-dom"
+import { useToastStatus } from "../../hooks"
 
 export const LoginPage = () => {
   const [state, setState] = React.useState<Record<string, { value: string; isValid: boolean }>>({
@@ -17,6 +18,7 @@ export const LoginPage = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const authState = useAppSelector(getAuthStore)
+  const toast = useToastStatus()
 
   const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name.length === 0) {
@@ -64,8 +66,12 @@ export const LoginPage = () => {
   )
 
   React.useEffect(() => {
-    authState.isAuthenticatedUser && navigate(routesInfo.home.path, { replace: true })
-  },[authState.isAuthenticatedUser, navigate])
+    if (authState.isAuthenticatedUser) {
+      toast({ status: "success", message: "- выполнен вход" })
+      const timeoutId = setTimeout(() => navigate(routesInfo.home.path, { replace: true }), 5000)
+      return () => clearTimeout(timeoutId)
+    }
+  }, [authState.isAuthenticatedUser, navigate, toast])
 
   return (
     <Flex align="center" justify="center" grow={1}>
@@ -84,8 +90,10 @@ export const LoginPage = () => {
             onValidated={handleValidate}
           />
           <FormErrorMessage>
-            <Text color="error-color">Ошибка входа. Проверьте учетные данные и повторите попытку</Text>
-            {authState.error?.message ? <Text color="error-color">{authState.error?.message}</Text> : null}
+            <Flex direction={"column"} color="error-color">
+              <Text>Ошибка входа. Проверьте учетные данные и повторите попытку</Text>
+              {authState.error?.message ? <Text>{`Сообщение сервера: "${authState.error?.message}"`}</Text> : null}
+            </Flex>
           </FormErrorMessage>
           <Flex alignSelf="center" grow={0}>
             <Button htmlType="submit" size="medium" disabled={!isValid}>
