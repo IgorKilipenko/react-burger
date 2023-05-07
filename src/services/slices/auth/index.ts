@@ -9,3 +9,5 @@ export const authActions = {
 }
 
 export const getAuthStore = (state: RootState) => state.auth
+export const getCurrentUserFromStore = (state: RootState) => state.auth.user
+export const getIsAuthUserFromStore = (state: RootState) => state.auth.isAuthenticatedUser
