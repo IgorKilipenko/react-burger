@@ -9,6 +9,7 @@ import { useIsTouchEnabled } from "../../hooks"
 
 export const HomePage = React.memo(() => {
   const isTouchEnabled = useIsTouchEnabled()
+
   return (
     <Flex justify="space-between" gap={10} grow={1}>
       <DndProvider backend={!isTouchEnabled ? HTML5Backend : TouchBackend}>
