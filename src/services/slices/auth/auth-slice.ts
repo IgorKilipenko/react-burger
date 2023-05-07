@@ -1,7 +1,16 @@
 import { createSlice, SerializedError, PayloadAction } from "@reduxjs/toolkit"
 import { UserDataType } from "../../../data"
 import { Nullable } from "../../../utils/types"
-import { login, LoginResponse, register, RegisterResponse } from "./auth-async-thunk"
+import {
+  getUser,
+  GetUserResponse,
+  login,
+  LoginResponse,
+  logout,
+  LogoutResponse,
+  register,
+  RegisterResponse,
+} from "./auth-async-thunk"
 
 interface AuthResponseState {
   user: Nullable<UserDataType>
@@ -28,8 +37,12 @@ const authSlice = createSlice({
       state.error = initialState.error
       state.loading = initialState.loading
       state.user = initialState.user
+      state.isAuthenticatedUser = initialState.isAuthenticatedUser
     },
-    _setUserData: (state, { payload }: PayloadAction<LoginResponse> | PayloadAction<RegisterResponse>) => {
+    _setUserData: (
+      state,
+      { payload }: PayloadAction<LoginResponse> | PayloadAction<RegisterResponse> | PayloadAction<GetUserResponse>
+    ) => {
       state.user = payload.data!.user
       state.isAuthenticatedUser = true
     },
@@ -66,6 +79,34 @@ const authSlice = createSlice({
     })
     builder.addCase(register.pending, (state) => {
       authSlice.caseReducers.clearUserData(state)
+      state.loading = true
+    })
+
+    builder.addCase(getUser.fulfilled, (state, { type, payload }: PayloadAction<GetUserResponse>) => {
+      console.assert(payload.data)
+
+      !payload.error && payload.data && payload.data.success
+        ? authSlice.caseReducers._setUserData(state, { type, payload })
+        : authSlice.caseReducers.clearUserData(state)
+      state.loading = false
+    })
+    builder.addCase(getUser.rejected, (state, { type, error }) => {
+      authSlice.caseReducers._setError(state, { type, payload: { error } })
+    })
+    builder.addCase(getUser.pending, (state) => {
+      authSlice.caseReducers.clearUserData(state)
+      state.loading = true
+    })
+
+    builder.addCase(logout.fulfilled, (state, { payload }: PayloadAction<LogoutResponse>) => {
+      console.assert(payload.data)
+
+      authSlice.caseReducers.clearUserData(state)
+    })
+    builder.addCase(logout.rejected, (state, { type, error }) => {
+      authSlice.caseReducers._setError(state, { type, payload: { error } })
+    })
+    builder.addCase(logout.pending, (state) => {
       state.loading = true
     })
   },

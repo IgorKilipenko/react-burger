@@ -1,11 +1,13 @@
 import { RootState } from "../../store"
-import { login, register } from "./auth-async-thunk"
+import { login, register, getUser, logout } from "./auth-async-thunk"
 
 export { authReducer } from "./auth-slice"
 
 export const authActions = {
   login,
-  register
+  register,
+  getUser,
+  logout,
 }
 
 export const getAuthStore = (state: RootState) => state.auth
