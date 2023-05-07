@@ -24,16 +24,19 @@ export const request = async <T = unknown>({
 }: RequestArgs<T>): Promise<State<T>> => {
   const checkResponse = (response: Response) => {
     if (!response.ok) {
-      throw new Error(response.statusText)
+      return new Error(response.statusText)
     }
+    return null
   }
 
   onLoading && onLoading()
 
+  let data: T | null = null
   try {
     const response = await fetch(url, options)
-    checkResponse(response)
-    const data = (await response.json()) as T
+    const requestError = checkResponse(response)
+    data = (await response.json()) as T
+    if (requestError) throw requestError
 
     let checkDataResult: Error | boolean = true
     checkData && (checkDataResult = checkData(data))
@@ -48,7 +51,7 @@ export const request = async <T = unknown>({
     return { data }
   } catch (error) {
     onError && onError(error as Error)
-    return { error: error as Error }
+    return { data: data ?? undefined, error: error as Error }
   }
 }
 
