@@ -1,12 +1,11 @@
 import React from "react"
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
-import { Form, EmailInput, PasswordInput, Input, AdvancedInput } from "../common/form"
+import { Form, EmailInput, PasswordInput, AdvancedInput } from "../common/form"
 import { Flex, FormErrorMessage, Text } from "@chakra-ui/react"
 import { useAppSelector } from "../../services/store"
 import { getAuthStore } from "../../services/slices/auth"
 import { FlexOptions } from "../../utils/types"
 import { FormProps } from "../common/form/form"
-import { EditIcon } from "../common/icons"
 
 export interface UserFormDataState {
   name: { value: string; isValid: false }
