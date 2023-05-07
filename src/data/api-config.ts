@@ -17,6 +17,9 @@ export const apiConfig = {
       get token() {
         return `${this.path}/token`
       },
+      get user() {
+        return `${this.path}/user`
+      },
     },
   },
 }

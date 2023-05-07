@@ -70,17 +70,19 @@ export const apiRequest = {
     })
   },
 
-  post: <TResponse extends ApiResponseBase>({ url, body, ...rest }: RequestArgs<TResponse> & { body: string }) => {
-    const { options: externalOptions, ...other } = rest
+  post: <TResponse extends ApiResponseBase>({ url, body, method="POST", ...rest }: RequestArgs<TResponse> & { body: string, method?: "POST" | "PATH" }) => {
+    const {options: externalOptions, ...other } = rest
+    const {headers, ...restOpts} =  externalOptions ?? {}
     return request<TResponse>({
       url,
       options: {
         cache: "default",
         mode: "cors",
-        ...externalOptions,
-        method: "POST",
+        ...restOpts,
+        method: method,
         body,
         headers: {
+          ...headers,
           "Content-Type": "application/json",
         },
       },
