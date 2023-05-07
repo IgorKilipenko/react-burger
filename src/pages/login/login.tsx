@@ -6,6 +6,7 @@ import { Link } from "../../components/common"
 import { routesInfo } from "../../components/app-router"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { authActions, getAuthStore } from "../../services/slices/auth"
+import { useNavigate } from "react-router-dom"
 
 export const LoginPage = () => {
   const [state, setState] = React.useState<Record<string, { value: string; isValid: boolean }>>({
@@ -13,6 +14,7 @@ export const LoginPage = () => {
     email: { value: "", isValid: false },
   })
   const [hasChanged, setHasChanged] = React.useState(false)
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const authState = useAppSelector(getAuthStore)
 
@@ -60,6 +62,10 @@ export const LoginPage = () => {
     },
     [dispatch, state.email.value, state.password.value]
   )
+
+  React.useEffect(() => {
+    authState.isAuthenticatedUser && navigate(routesInfo.home.path, { replace: true })
+  },[authState.isAuthenticatedUser, navigate])
 
   return (
     <Flex align="center" justify="center" grow={1}>
