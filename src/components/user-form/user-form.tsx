@@ -1,6 +1,6 @@
 import React from "react"
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
-import { Form, EmailInput, PasswordInput, Input } from "../common/form"
+import { Form, EmailInput, PasswordInput, Input, AdvancedInput } from "../common/form"
 import { Flex, FormErrorMessage, Text } from "@chakra-ui/react"
 import { useAppSelector } from "../../services/store"
 import { getAuthStore } from "../../services/slices/auth"
@@ -9,9 +9,9 @@ import { FormProps } from "../common/form/form"
 import { EditIcon } from "../common/icons"
 
 export interface UserFormDataState {
-  name: { value: ""; isValid: false }
-  password: { value: ""; isValid: false }
-  email: { value: ""; isValid: false }
+  name: { value: string; isValid: false }
+  password: { value: string; isValid: false }
+  email: { value: string; isValid: false }
 }
 
 export interface UserFormProps
@@ -22,14 +22,16 @@ export interface UserFormProps
   withEditIcons?: boolean
   children?: React.ReactElement
   onSubmit?: (dataState: UserFormDataState) => void | null
+  values?: Partial<Record<keyof UserFormDataState, string | null>> | null
+  isReadOnly?: boolean | null
 }
 
 export const UserForm = React.memo<UserFormProps>(
-  ({ header = null, submitAction = null, withEditIcons = false, onSubmit = null, children, ...props }) => {
+  ({ header = null, submitAction = null, withEditIcons = false, onSubmit = null, children, values, ...props }) => {
     const [state, setState] = React.useState<UserFormDataState>({
-      name: { value: "", isValid: false },
-      password: { value: "", isValid: false },
-      email: { value: "", isValid: false },
+      name: { value: values?.name ?? "", isValid: false },
+      password: { value: values?.password ?? "", isValid: false },
+      email: { value: values?.email ?? "", isValid: false },
     })
     const [hasChanged, setHasChanged] = React.useState(false)
     const authState = useAppSelector(getAuthStore)
@@ -94,22 +96,24 @@ export const UserForm = React.memo<UserFormProps>(
       >
         <Flex direction="column" align="center" gap={6} pb={20} {...(props as FlexOptions)}>
           {header ? <Text variant="mainMedium">{header}</Text> : null}
-          <Input
+          <AdvancedInput
             value={state.name.value}
-            icon={withEditIcons ? EditIcon : undefined}
             name="name"
             placeholder="Имя"
             onChange={handleChange}
+            onValidated={handleValidate}
+            isIcon={withEditIcons}
           />
           <EmailInput
             value={state.email.value}
-            icon={withEditIcons ? EditIcon : undefined}
             name="email"
             onChange={handleChange}
             onValidated={handleValidate}
+            isIcon={withEditIcons}
           />
           <PasswordInput
             value={state.password.value}
+            icon={withEditIcons ? "EditIcon" : undefined}
             name="password"
             onChange={handleChange}
             onValidated={handleValidate}
