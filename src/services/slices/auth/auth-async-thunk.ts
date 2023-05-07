@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { api, ApiLoginResponseType, UserDataType, WithoutTokens, WithPassword } from "../../../data"
+import { ApiRegisterResponseType } from "../../../data/api-response"
 import { tokenManager } from "./utils"
 
 export interface LoginResponse extends Omit<Awaited<ReturnType<typeof api.auth.login>>, "data"> {
@@ -17,13 +18,15 @@ export const login = createAsyncThunk("auth/login", async (userData: WithPasswor
   return { data: data as WithoutTokens<ApiLoginResponseType>, error } as LoginResponse
 })
 
-export type RegisterResponse = Awaited<ReturnType<typeof api.auth.register>>
+export interface RegisterResponse extends Omit<Awaited<ReturnType<typeof api.auth.register>>, "data"> {
+  data: WithoutTokens<ApiRegisterResponseType>
+}
 
-export const registerAsyncThunk = createAsyncThunk(
+export const register = createAsyncThunk(
   "auth/register",
-  async (userData: WithPassword<UserDataType>, thunkApi) => {
+  async (userData: WithPassword<UserDataType>) => {
     const { data, error } = await api.auth.register(userData)
-    if (error || !data?.success) throw error ?? Error(data?.message ?? "Неизвестная ошибка авторизации")
-    return { data, error }
+    if (error || !data?.success) throw error ?? Error(data?.message ?? "Неизвестная ошибка регистрации")
+    return { data: data as WithoutTokens<ApiLoginResponseType>, error } as LoginResponse
   }
 )
