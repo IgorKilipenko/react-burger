@@ -22,10 +22,9 @@ const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHei
     onChangeHeight && onChangeHeight(height)
   }, [onChangeHeight, height])
 
-  React.useEffect(() =>{
+  React.useEffect(() => {
     setCurrentLink(location.pathname)
-    console.log(location.pathname)
-  },[location.pathname])
+  }, [location.pathname])
 
   const headerItems = [
     (props: FlexProps) => (
@@ -50,7 +49,10 @@ const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHei
     ),
     (props: FlexProps) => (
       <Flex justify="end" {...props}>
-        {links.userProfile.element({ isActive: links.userProfile.validTags.some(tag => tag === currentLink), onClick: setCurrentLink })}
+        {links.userProfile.element({
+          isActive: links.userProfile.validTags.some((tag) => tag === currentLink),
+          onClick: setCurrentLink,
+        })}
       </Flex>
     ),
   ]

@@ -34,7 +34,7 @@ export const buildLinks = () => {
       },
     },
     userProfile: {
-      tag: routesInfo.login.path,
+      tag: routesInfo.profile.path,
       validTags: [routesInfo.login.path, routesInfo.profile.path, routesInfo.register.path],
       get element() {
         return (props: LinkBuilderProps) => (
