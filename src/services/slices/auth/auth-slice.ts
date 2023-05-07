@@ -25,7 +25,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearUserData: (state) => {
-      state = initialState
+      state.error = initialState.error
+      state.loading = initialState.loading
+      state.user = initialState.user
     },
     _setUserData: (state, { payload }: PayloadAction<LoginResponse> | PayloadAction<RegisterResponse>) => {
       state.user = payload.data!.user
@@ -38,7 +40,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action: PayloadAction<LoginResponse>) => {
-       const { payload } = action
+      const { payload } = action
       console.assert(payload.data)
 
       authSlice.caseReducers._setUserData(state, action)
