@@ -14,13 +14,17 @@ export const buildLinks = () => {
     burgerConstructor: {
       tag: routesInfo.home.path,
       get element() {
-        return (props: LinkBuilderProps) => <Link to={this.tag} icon={BurgerIcon} text="Конструктор" value={this.tag} {...props} />
+        return (props: LinkBuilderProps) => (
+          <Link to={this.tag} icon={BurgerIcon} text="Конструктор" value={this.tag} {...props} />
+        )
       },
     },
     orderList: {
       tag: "orderList",
       get element() {
-        return (props: LinkBuilderProps) => <Link to={this.tag} icon={ListIcon} text="Лента заказов" value={this.tag} {...props} />
+        return (props: LinkBuilderProps) => (
+          <Link to={this.tag} icon={ListIcon} text="Лента заказов" value={this.tag} {...props} />
+        )
       },
     },
     homeLink: {
@@ -35,7 +39,13 @@ export const buildLinks = () => {
     },
     userProfile: {
       tag: routesInfo.profile.path,
-      validTags: [routesInfo.login.path, routesInfo.profile.path, routesInfo.register.path],
+      validTags: [
+        routesInfo.login.path,
+        routesInfo.profile.path,
+        routesInfo.register.path,
+        routesInfo.forgotPassword.path,
+        routesInfo.resetPassword.path,
+      ],
       get element() {
         return (props: LinkBuilderProps) => (
           <Link to={this.tag} icon={ProfileIcon} text="Личный кабинет" value={this.tag} {...props} />
