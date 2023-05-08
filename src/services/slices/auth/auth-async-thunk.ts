@@ -45,12 +45,12 @@ export interface GetUserResponse extends Awaited<ReturnType<typeof api.auth.getU
 export const getUser = createAsyncThunk("auth/getUser", async () => {
   const { data, error } = await api.auth.getUser()
 
-  /*if (error || !data || !data.success) {
+  if ((error || !data || !data.success) && data?.message !== "Token not found") {
     throw Error(
       data?.message ??
         (error?.message && error.message.length > 0 ? error.message : "Неизвестная ошибка запроса данных пользователя")
     )
-  }*/
+  }
 
   return { data, error } as GetUserResponse
 })
@@ -62,9 +62,44 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   if (error || !data || !data.success) {
     throw Error(
       data?.message ??
-        (error?.message && error.message.length > 0 ? error.message : "Неизвестная ошибка запроса данных пользователя")
+        (error?.message && error.message.length > 0
+          ? error.message
+          : "Неизвестная ошибка запроса на выход пользователя")
     )
   }
 
   return { data, error } as LogoutResponse
 })
+
+export interface PasswordResetResponse extends Awaited<ReturnType<typeof api.auth.passwordReset>> {}
+export const passwordReset = createAsyncThunk("auth/passwordReset", async (email: string) => {
+  const { data, error } = await api.auth.passwordReset({ email })
+
+  if (error || !data || !data.success) {
+    throw Error(
+      data?.message ??
+        (error?.message && error.message.length > 0 ? error.message : "Неизвестная ошибка запроса на сброс пароля")
+    )
+  }
+
+  return { data, error } as PasswordResetResponse
+})
+
+export interface PasswordResetConfirmResponse extends Awaited<ReturnType<typeof api.auth.passwordResetConfirm>> {}
+export const passwordResetConfirm = createAsyncThunk(
+  "auth/passwordResetConfirm",
+  async ({ password, token }: { password: string; token: string }) => {
+    const { data, error } = await api.auth.passwordResetConfirm({ password, token })
+
+    if (error || !data || !data.success) {
+      throw Error(
+        data?.message ??
+          (error?.message && error.message.length > 0
+            ? error.message
+            : "Неизвестная ошибка подтверждения на сброс пароля")
+      )
+    }
+
+    return { data, error } as PasswordResetConfirmResponse
+  }
+)

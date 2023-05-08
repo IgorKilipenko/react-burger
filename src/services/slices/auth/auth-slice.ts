@@ -10,6 +10,10 @@ import {
   LogoutResponse,
   register,
   RegisterResponse,
+  passwordReset,
+  passwordResetConfirm,
+  PasswordResetResponse,
+  PasswordResetConfirmResponse,
 } from "./auth-async-thunk"
 
 interface AuthResponseState {
@@ -17,6 +21,10 @@ interface AuthResponseState {
   isAuthenticatedUser: boolean
   error?: SerializedError | null
   loading: boolean
+  passwordResetInfo: {
+    resetEmailSent: boolean
+    resetConfirmed: boolean
+  }
 }
 
 const initialState: AuthResponseState = {
@@ -27,17 +35,30 @@ const initialState: AuthResponseState = {
   isAuthenticatedUser: false,
   error: null,
   loading: false,
+  passwordResetInfo: {
+    resetEmailSent: false,
+    resetConfirmed: false,
+  },
 } as const
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    clearUserData: (state) => {
+    clearState: (state) => {
       state.error = initialState.error
       state.loading = initialState.loading
       state.user = initialState.user
       state.isAuthenticatedUser = initialState.isAuthenticatedUser
+      state.passwordResetInfo.resetConfirmed = initialState.passwordResetInfo.resetConfirmed
+      state.passwordResetInfo.resetEmailSent = initialState.passwordResetInfo.resetEmailSent
+    },
+    clearPasswordResetState: (state) => {
+      state.passwordResetInfo.resetConfirmed = initialState.passwordResetInfo.resetConfirmed
+      state.passwordResetInfo.resetEmailSent = initialState.passwordResetInfo.resetEmailSent
+    },
+    clearErrors: (state) => {
+      state.passwordResetInfo = initialState.passwordResetInfo
     },
     _setUserData: (
       state,
@@ -47,7 +68,7 @@ const authSlice = createSlice({
       state.isAuthenticatedUser = true
     },
     _setError: (state, { payload: { error } }: PayloadAction<{ error: SerializedError }>) => {
-      authSlice.caseReducers.clearUserData(state)
+      authSlice.caseReducers.clearState(state)
       state.error = error
     },
   },
@@ -63,7 +84,7 @@ const authSlice = createSlice({
       authSlice.caseReducers._setError(state, { type, payload: { error } })
     })
     builder.addCase(login.pending, (state) => {
-      authSlice.caseReducers.clearUserData(state)
+      authSlice.caseReducers.clearState(state)
       state.loading = true
     })
 
@@ -78,7 +99,7 @@ const authSlice = createSlice({
       authSlice.caseReducers._setError(state, { type, payload: { error } })
     })
     builder.addCase(register.pending, (state) => {
-      authSlice.caseReducers.clearUserData(state)
+      authSlice.caseReducers.clearState(state)
       state.loading = true
     })
 
@@ -87,21 +108,21 @@ const authSlice = createSlice({
 
       !payload.error && payload.data && payload.data.success
         ? authSlice.caseReducers._setUserData(state, { type, payload })
-        : authSlice.caseReducers.clearUserData(state)
+        : authSlice.caseReducers.clearState(state)
       state.loading = false
     })
     builder.addCase(getUser.rejected, (state, { type, error }) => {
       authSlice.caseReducers._setError(state, { type, payload: { error } })
     })
     builder.addCase(getUser.pending, (state) => {
-      authSlice.caseReducers.clearUserData(state)
+      authSlice.caseReducers.clearState(state)
       state.loading = true
     })
 
     builder.addCase(logout.fulfilled, (state, { payload }: PayloadAction<LogoutResponse>) => {
       console.assert(payload.data)
 
-      authSlice.caseReducers.clearUserData(state)
+      authSlice.caseReducers.clearState(state)
     })
     builder.addCase(logout.rejected, (state, { type, error }) => {
       authSlice.caseReducers._setError(state, { type, payload: { error } })
@@ -109,8 +130,43 @@ const authSlice = createSlice({
     builder.addCase(logout.pending, (state) => {
       state.loading = true
     })
+
+    builder.addCase(passwordReset.fulfilled, (state, { payload }: PayloadAction<PasswordResetResponse>) => {
+      console.assert(payload.data)
+
+      state.passwordResetInfo.resetConfirmed = false
+      state.passwordResetInfo.resetEmailSent = true
+
+      state.loading = false
+    })
+    builder.addCase(passwordReset.rejected, (state, { type, error }) => {
+      authSlice.caseReducers._setError(state, { type, payload: { error } })
+    })
+    builder.addCase(passwordReset.pending, (state) => {
+      authSlice.caseReducers.clearState(state)
+      state.loading = true
+    })
+
+    builder.addCase(
+      passwordResetConfirm.fulfilled,
+      (state, { payload }: PayloadAction<PasswordResetConfirmResponse>) => {
+        console.assert(payload.data)
+
+        state.passwordResetInfo.resetConfirmed = true
+        state.passwordResetInfo.resetEmailSent = false
+
+        state.loading = false
+      }
+    )
+    builder.addCase(passwordResetConfirm.rejected, (state, { type, error }) => {
+      authSlice.caseReducers._setError(state, { type, payload: { error } })
+    })
+    builder.addCase(passwordResetConfirm.pending, (state) => {
+      authSlice.caseReducers.clearState(state)
+      state.loading = true
+    })
   },
 })
 
 export const authReducer = authSlice.reducer
-export const { clearUserData } = authSlice.actions
+export const { clearState, clearPasswordResetState, clearErrors } = authSlice.actions
