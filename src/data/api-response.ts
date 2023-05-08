@@ -54,6 +54,16 @@ export interface ApiUserResponseType extends ApiResponseBase {
 export interface ApiLoginResponseType extends ApiUserResponseType, ApiRefreshTokenResponseType {}
 
 /**
+ * Reset password api response type
+ */
+export interface ApiPasswordResetResponseType extends Required<ApiResponseBase> {}
+
+/**
+ * Reset password confirm api response type
+ */
+export type ApiPasswordResetConfirmResponseType = ApiPasswordResetResponseType
+
+/**
  * User sign-up (register) api response type
  */
 export type ApiRegisterResponseType = ApiLoginResponseType

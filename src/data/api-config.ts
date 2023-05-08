@@ -20,6 +20,12 @@ export const apiConfig = {
       get user() {
         return `${this.path}/user`
       },
+      get passwordReset() {
+        return `${this.path.replace(/(.+)\/auth$/, "$1")}/password-reset`
+      },
+      get passwordResetConfirm() {
+        return `${this.passwordReset}/reset`
+      },
     },
   },
 }

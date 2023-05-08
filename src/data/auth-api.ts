@@ -3,6 +3,8 @@ import { apiRequest } from "./api-request"
 import {
   ApiLoginResponseType,
   ApiLogoutResponseType,
+  ApiPasswordResetConfirmResponseType,
+  ApiPasswordResetResponseType,
   ApiRefreshTokenResponseType,
   ApiRegisterResponseType,
   ApiUserResponseType,
@@ -67,10 +69,10 @@ export const authApi = {
     if (tokenManager.access.get()) {
       return tokenManager.access.get()
     }
-    if (!tokenManager.refresh.get()){
+    if (!tokenManager.refresh.get()) {
       return null
     }
-    
+
     const resp = await authApi.refreshToken({ token: tokenManager.refresh.get() ?? "" })
 
     if (!resp.error && resp.data?.success && resp.data) {
@@ -102,7 +104,12 @@ export const authApi = {
     const { headers, ...restOpts } = options ?? {}
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.user}`
     const token = await authApi.getToken()
-    console.assert(token)
+
+    if (!token) {
+      return Promise.resolve({ data: { success: false, message: "Token not found" } }) as ReturnType<
+        typeof apiRequest.get<ApiUserResponseType>
+      >
+    }
 
     console.assert(Object.values(userData).some((val) => val))
 
@@ -111,6 +118,37 @@ export const authApi = {
       method: "PATH",
       body: JSON.stringify(userData),
       options: { ...restOpts, cache: "no-store", headers: { ...headers, Authorization: `Bearer ${token ?? ""}` } },
+    })
+  },
+
+  passwordReset: (emailData: Omit<UserDataType, "name">, options?: RequestInit) => {
+    const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.passwordReset}`
+    return apiRequest.post<ApiPasswordResetResponseType>({
+      url,
+      body: JSON.stringify(emailData),
+      options: { ...options, cache: "no-store" },
+      checkData: (data: ApiPasswordResetConfirmResponseType) => {
+        if (data.success && data.message !== "Reset email sent") {
+          return new Error("Password reset confirm failed")
+        }
+        return true
+      },
+    })
+  },
+
+  passwordResetConfirm: async (confirmData: WithPassword<TokenDataType>, options?: RequestInit) => {
+    const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.passwordResetConfirm}`
+
+    return apiRequest.post<ApiPasswordResetConfirmResponseType>({
+      url,
+      body: JSON.stringify(confirmData),
+      options: { ...options, cache: "no-store" },
+      checkData: (data: ApiPasswordResetConfirmResponseType) => {
+        if (data.success && data.message !== "Password successfully reset") {
+          return new Error("Password reset confirm failed")
+        }
+        return true
+      },
     })
   },
 }
