@@ -122,7 +122,7 @@ export const authApi = {
     if (
       !eraseToken &&
       !result.data?.success &&
-      result.data?.message === "jwt expired" &&
+      (result.data?.message === "jwt expired" || result.data?.message === "jwt malformed") &&
       accessTokenStorageManager.get()
     ) {
       accessTokenStorageManager.erase()
