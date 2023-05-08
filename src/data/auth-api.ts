@@ -114,7 +114,7 @@ export const authApi = {
       >
     }
 
-    const result = await apiRequest.get<ApiUserResponseType>({
+    let result = await apiRequest.get<ApiUserResponseType>({
       url,
       options: { ...restOpts, cache: "no-store", headers: { ...headers, Authorization: `Bearer ${token ?? ""}` } },
     })
@@ -123,7 +123,7 @@ export const authApi = {
       !eraseToken &&
       !result.data?.success &&
       (result.data?.message === "jwt expired" || result.data?.message === "jwt malformed") &&
-      accessTokenStorageManager.get()
+      accessTokenStorageManager.get() && refreshTokenStorageManager.get()
     ) {
       accessTokenStorageManager.erase()
       return authApi.getUser(options, true)

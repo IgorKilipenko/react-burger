@@ -112,7 +112,11 @@ const authSlice = createSlice({
       state.loading = false
     })
     builder.addCase(getUser.rejected, (state, { type, error }) => {
-      authSlice.caseReducers._setError(state, { type, payload: { error } })
+      if (error.message !== "jwt malformed") {
+        authSlice.caseReducers._setError(state, { type, payload: { error } })
+      } else {
+        state.loading = false
+      }
     })
     builder.addCase(getUser.pending, (state) => {
       authSlice.caseReducers.clearState(state)
