@@ -54,7 +54,7 @@ export const ProfilePage = () => {
             <Text variant="mainDefault">В этом разделе вы можете изменить свои персональные данные</Text>
           </Flex>
         </Flex>
-        <UserForm withEditIcons={true} values={placeholders}></UserForm>
+        <UserForm withEditIcons={true} values={placeholders} />
       </Flex>
     </Flex>
   )

@@ -1,7 +1,9 @@
 import { HomePage, NotFoundPage } from "../../pages"
+import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
 import { ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
+import { ResetPasswordPage } from "../../pages/reset-password"
 import App from "../app"
 import { IngredientDetail } from "../ingredient-details"
 import { Layout } from "../layouts"
@@ -21,8 +23,14 @@ export const routesInfo = {
     path: "/register",
     element: <ProtectedRoute accessType="withoutAuth" element={<RegisterPage />} redirectPath={rootPath} />,
   },
-  forgotPassword: { path: "/forgot-password", element: null },
-  resetPassword: { path: "/reset-password", element: null },
+  forgotPassword: {
+    path: "/forgot-password",
+    element: <ProtectedRoute accessType="withoutAuth" element={<ForgotPasswordPage />} redirectPath={rootPath} />,
+  },
+  resetPassword: {
+    path: "/reset-password",
+    element: <ProtectedRoute accessType="withoutAuth" element={<ResetPasswordPage />} redirectPath={rootPath} />,
+  },
   get profile() {
     return {
       path: "/profile",
