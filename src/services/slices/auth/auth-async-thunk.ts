@@ -4,7 +4,6 @@ import { api, ApiLoginResponseType, UserDataType, WithoutTokens, WithPassword } 
 export interface LoginResponse extends Omit<Awaited<ReturnType<typeof api.auth.login>>, "data"> {
   data: WithoutTokens<ApiLoginResponseType>
 }
-
 export const login = createAsyncThunk("auth/login", async (userData: WithPassword<Omit<UserDataType, "name">>) => {
   const { data, error } = await api.auth.login(userData)
 
@@ -19,7 +18,6 @@ export const login = createAsyncThunk("auth/login", async (userData: WithPasswor
 })
 
 export type RegisterResponse = LoginResponse
-
 export const register = createAsyncThunk("auth/register", async (userData: WithPassword<UserDataType>) => {
   const { data, error } = await api.auth.register(userData)
 
@@ -34,7 +32,6 @@ export const register = createAsyncThunk("auth/register", async (userData: WithP
 })
 
 export interface GetUserResponse extends Awaited<ReturnType<typeof api.auth.getUser>> {}
-
 export const getUser = createAsyncThunk("auth/getUser", async () => {
   const { data, error } = await api.auth.getUser()
 
@@ -46,6 +43,20 @@ export const getUser = createAsyncThunk("auth/getUser", async () => {
   }
 
   return { data, error } as GetUserResponse
+})
+
+export interface UpdateUserResponse extends Awaited<ReturnType<typeof api.auth.updateUser>> {}
+export const updateUser = createAsyncThunk("auth/updateUser", async (userData: Partial<WithPassword<UserDataType>>) => {
+  const { data, error } = await api.auth.updateUser(userData)
+
+  if ((error || !data || !data.success) && data?.message !== "Token not found") {
+    throw Error(
+      data?.message ??
+        (error?.message && error.message.length > 0 ? error.message : "Неизвестная ошибка запроса данных пользователя")
+    )
+  }
+
+  return { data, error } as UpdateUserResponse
 })
 
 export interface LogoutResponse extends Awaited<ReturnType<typeof api.auth.logout>> {}
