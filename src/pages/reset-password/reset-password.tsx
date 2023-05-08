@@ -7,6 +7,7 @@ import { PasswordInput, AdvancedInput, Form } from "../../components/common/form
 import { UserFormDataState } from "../../components/user-form"
 import { authActions, getAuthStore } from "../../services/slices/auth"
 import { useAppDispatch, useAppSelector } from "../../services/store"
+import { ProfileContainer } from "../profile"
 
 export interface ResetPasswordPageProps {}
 
@@ -84,7 +85,7 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
   }, [authState.isAuthenticatedUser, authState.passwordResetInfo.resetConfirmed, navigate])
 
   return (
-    <Flex align="center" justify="center" grow={1}>
+    <ProfileContainer>
       <Form
         method="post"
         onSubmit={handleSubmit}
@@ -115,6 +116,6 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
           </Flex>
         </Flex>
       </Form>
-    </Flex>
+    </ProfileContainer>
   )
 }

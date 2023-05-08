@@ -6,6 +6,7 @@ import { authActions, getAuthStore } from "../../services/slices/auth"
 import { Link } from "../../components/common"
 import { routesInfo } from "../../components/app-router"
 import { useLocation } from "react-router-dom"
+import { ProfileContainer } from "./profile-container"
 
 export const ProfilePage = () => {
   const authState = useAppSelector(getAuthStore)
@@ -37,7 +38,7 @@ export const ProfilePage = () => {
   )
 
   return (
-    <Flex align="start" justify="center" grow={1}>
+    <ProfileContainer align="start">
       <Flex gap={15} mt="28">
         <Flex direction="column" w="min-content">
           <Flex direction="column" pb={30} w="320px">
@@ -56,6 +57,6 @@ export const ProfilePage = () => {
         </Flex>
         <UserForm withEditIcons={true} values={placeholders} />
       </Flex>
-    </Flex>
+    </ProfileContainer>
   )
 }

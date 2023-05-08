@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../services/store"
 import { authActions, getAuthStore } from "../../services/slices/auth"
 import { useNavigate } from "react-router-dom"
 import { useToastStatus } from "../../hooks"
+import { ProfileContainer } from "../profile"
 
 export const LoginPage = () => {
   const [state, setState] = React.useState<Record<string, { value: string; isValid: boolean }>>({
@@ -74,7 +75,7 @@ export const LoginPage = () => {
   }, [authState.isAuthenticatedUser, navigate, toast])
 
   return (
-    <Flex align="center" justify="center" grow={1}>
+    <ProfileContainer>
       <Form
         method="post"
         onSubmit={handleSubmit}
@@ -120,6 +121,6 @@ export const LoginPage = () => {
           </Flex>
         </Flex>
       </Form>
-    </Flex>
+    </ProfileContainer>
   )
 }

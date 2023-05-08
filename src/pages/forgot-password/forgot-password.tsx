@@ -6,6 +6,7 @@ import { UserForm, UserFormDataState } from "../../components/user-form"
 import { authActions, getPasswordStateFromStore } from "../../services/slices/auth"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { useNavigate } from "react-router-dom"
+import { ProfileContainer } from "../profile"
 
 export interface ForgotPasswordPageProps {}
 
@@ -26,7 +27,7 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = () => {
   },[navigate, passwordState?.resetEmailSent])
 
   return (
-    <Flex align="center" justify="center" grow={1}>
+    <ProfileContainer>
       <UserForm
         header="Восстановление пароля"
         submitAction={"Восстановить"}
@@ -46,6 +47,6 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = () => {
           </Flex>
         </Flex>
       </UserForm>
-    </Flex>
+    </ProfileContainer>
   )
 }
