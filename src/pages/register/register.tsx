@@ -8,11 +8,15 @@ import { authActions } from "../../services/slices/auth"
 
 export const RegisterPage = () => {
   const dispatch = useAppDispatch()
-  
+
   const handleSubmit = React.useCallback(
-    (dataState : UserFormDataState) => {
+    (dataState: UserFormDataState) => {
       dispatch(
-        authActions.register({ name: dataState.name.value, email: dataState.email.value, password: dataState.password.value })
+        authActions.register({
+          name: dataState.name.value,
+          email: dataState.email.value,
+          password: dataState.password.value,
+        })
       )
     },
     [dispatch]
@@ -20,7 +24,12 @@ export const RegisterPage = () => {
 
   return (
     <Flex align="center" justify="center" grow={1}>
-      <UserForm header="Регистрация" submitAction="Зарегистрироваться" onSubmit={handleSubmit}>
+      <UserForm
+        header="Регистрация"
+        submitAction="Зарегистрироваться"
+        onSubmit={handleSubmit}
+        errorMessage="Ошибка регистрации. Проверьте попытку позже"
+      >
         <Flex direction="column" align="center" gap={4}>
           <Flex gap={2}>
             <Text variant="mainDefault">Уже зарегистрированы?</Text>
