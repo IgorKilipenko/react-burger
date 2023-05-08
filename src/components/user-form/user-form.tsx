@@ -7,11 +7,12 @@ import { getAuthStore } from "../../services/slices/auth"
 import { FlexOptions } from "../../utils/types"
 import { FormProps } from "../common/form/form"
 
-export interface UserFormDataState {
-  name: { value: string; isValid: false }
-  password: { value: string; isValid: false }
-  email: { value: string; isValid: false }
+interface UserFormDataStateValue {
+  value: string
+  isValid: false
 }
+
+export type UserFormDataState = Record<"name" | "password" | "email", UserFormDataStateValue>
 
 export interface UserFormProps
   extends Omit<FlexOptions, "direction" | "dir">,
@@ -42,9 +43,9 @@ export const UserForm = React.memo<UserFormProps>(
     ...props
   }) => {
     const [state, setState] = React.useState<UserFormDataState>({
-      name: { value: values?.name ?? "", isValid: false },
-      password: { value: values?.password ?? "", isValid: false },
-      email: { value: values?.email ?? "", isValid: false },
+      name: { value: "", isValid: false },
+      password: { value: "", isValid: false },
+      email: { value: "", isValid: false },
     })
     const [hasChanged, setHasChanged] = React.useState(false)
     const authState = useAppSelector(getAuthStore)
@@ -101,6 +102,14 @@ export const UserForm = React.memo<UserFormProps>(
       },
       [onSubmit, state]
     )
+
+    React.useEffect(() => {
+      setState({
+        name: { value: values?.name ?? "", isValid: false },
+        password: { value: values?.password ?? "", isValid: false },
+        email: { value: values?.email ?? "", isValid: false },
+      })
+    }, [values])
 
     return (
       <Form

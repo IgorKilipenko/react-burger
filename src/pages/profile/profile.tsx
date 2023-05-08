@@ -1,6 +1,6 @@
 import React from "react"
 import { Flex, Text } from "@chakra-ui/react"
-import { UserForm } from "../../components/user-form"
+import { UserForm, UserFormDataState } from "../../components/user-form"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { authActions, getAuthStore } from "../../services/slices/auth"
 import { Link } from "../../components/common"
@@ -12,17 +12,6 @@ export const ProfilePage = () => {
   const authState = useAppSelector(getAuthStore)
   const location = useLocation()
   const dispatch = useAppDispatch()
-  const placeholders = React.useMemo(() => {
-    if (!authState.isAuthenticatedUser) return undefined
-
-    return {
-      name: authState.user.name,
-      email: authState.user.email,
-      password: Array(6)
-        .fill("*")
-        .reduce((acc, val) => acc + val),
-    }
-  }, [authState.isAuthenticatedUser, authState.user.email, authState.user.name])
 
   const buildLink = React.useCallback(
     ({ text, path, onClick }: { text: string; onClick?: () => void; path?: string }) => {
@@ -36,6 +25,32 @@ export const ProfilePage = () => {
     },
     [location.pathname]
   )
+
+  const handleSubmit = React.useCallback(
+    (userData: UserFormDataState) => {
+      const data = Object.entries(userData).reduce<Partial<Record<keyof UserFormDataState, string>>>(
+        (res, [key, val]) => {
+          const currVal = val.isValid ? val.value : undefined
+          if (currVal) {
+            res[key as keyof UserFormDataState] = currVal
+          }
+          return res
+        },
+        {}
+      )
+      dispatch(authActions.updateUser(data))
+    },
+    [dispatch]
+  )
+
+  const loadedUserData = React.useMemo(() => {
+    if (!authState.isAuthenticatedUser) return undefined
+    return {
+      name: authState.user.name,
+      email: authState.user.email,
+      password: "",
+    }
+  }, [authState.isAuthenticatedUser, authState.user.email, authState.user.name])
 
   return (
     <ProfileContainer align="start">
@@ -55,7 +70,12 @@ export const ProfilePage = () => {
             <Text variant="mainDefault">В этом разделе вы можете изменить свои персональные данные</Text>
           </Flex>
         </Flex>
-        <UserForm withEditIcons={true} values={placeholders} />
+        <UserForm
+          withEditIcons={true}
+          values={loadedUserData}
+          submitAction="Сохранить"
+          onSubmit={handleSubmit}
+        ></UserForm>
       </Flex>
     </ProfileContainer>
   )
