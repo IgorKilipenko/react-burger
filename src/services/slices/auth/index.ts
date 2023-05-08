@@ -1,5 +1,5 @@
 import { RootState } from "../../store"
-import { login, register, getUser, logout, passwordReset, passwordResetConfirm } from "./auth-async-thunk"
+import { login, register, getUser, logout, passwordReset, passwordResetConfirm, updateUser } from "./auth-async-thunk"
 import { clearErrors, clearPasswordResetState, clearState } from "./auth-slice"
 
 export { authReducer } from "./auth-slice"
@@ -8,6 +8,7 @@ export const authActions = {
   login,
   register,
   getUser,
+  updateUser,
   logout,
   passwordReset,
   passwordResetConfirm,

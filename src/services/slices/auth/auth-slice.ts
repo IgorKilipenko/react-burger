@@ -14,6 +14,7 @@ import {
   passwordResetConfirm,
   PasswordResetResponse,
   PasswordResetConfirmResponse,
+  updateUser,
 } from "./auth-async-thunk"
 
 interface AuthResponseState {
@@ -106,9 +107,7 @@ const authSlice = createSlice({
     builder.addCase(getUser.fulfilled, (state, { type, payload }: PayloadAction<GetUserResponse>) => {
       console.assert(payload.data)
 
-      !payload.error && payload.data && payload.data.success
-        ? authSlice.caseReducers._setUserData(state, { type, payload })
-        : authSlice.caseReducers.clearState(state)
+      authSlice.caseReducers._setUserData(state, { type, payload })
       state.loading = false
     })
     builder.addCase(getUser.rejected, (state, { type, error }) => {
@@ -119,6 +118,20 @@ const authSlice = createSlice({
       }
     })
     builder.addCase(getUser.pending, (state) => {
+      authSlice.caseReducers.clearState(state)
+      state.loading = true
+    })
+
+    builder.addCase(updateUser.fulfilled, (state, { type, payload }: PayloadAction<GetUserResponse>) => {
+      console.assert(payload.data)
+
+      authSlice.caseReducers._setUserData(state, { type, payload })
+      state.loading = false
+    })
+    builder.addCase(updateUser.rejected, (state, { type, error }) => {
+      authSlice.caseReducers._setError(state, { type, payload: { error } })
+    })
+    builder.addCase(updateUser.pending, (state) => {
       authSlice.caseReducers.clearState(state)
       state.loading = true
     })
