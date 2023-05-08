@@ -107,7 +107,9 @@ const authSlice = createSlice({
     builder.addCase(getUser.fulfilled, (state, { type, payload }: PayloadAction<GetUserResponse>) => {
       console.assert(payload.data)
 
-      authSlice.caseReducers._setUserData(state, { type, payload })
+      !payload.error && payload.data && payload.data.success
+        ? authSlice.caseReducers._setUserData(state, { type, payload })
+        : authSlice.caseReducers.clearState(state)
       state.loading = false
     })
     builder.addCase(getUser.rejected, (state, { type, error }) => {
