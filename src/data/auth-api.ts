@@ -18,22 +18,37 @@ import { accessTokenStorageManager, refreshTokenStorageManager } from "./local-s
 const tokenManager = { access: accessTokenStorageManager, refresh: refreshTokenStorageManager }
 
 export const authApi = {
-  login: (userData: WithPassword<Omit<UserDataType, "name">>, options?: RequestInit) => {
+  login: async (userData: WithPassword<Omit<UserDataType, "name">>, options?: RequestInit) => {
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.login}`
-    return apiRequest.post<ApiLoginResponseType>({
+
+    const result = await apiRequest.post<ApiLoginResponseType>({
       url,
       body: JSON.stringify(userData),
       options: { ...options, cache: "no-store" },
     })
+
+    if (!result.error && result.data?.success) {
+      accessTokenStorageManager.set(result.data.accessToken)
+      refreshTokenStorageManager.set(result.data.refreshToken)
+    }
+
+    return result
   },
 
-  register: (userData: WithPassword<UserDataType>, options?: RequestInit) => {
+  register: async (userData: WithPassword<UserDataType>, options?: RequestInit) => {
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.register}`
-    return apiRequest.post<ApiRegisterResponseType>({
+    const result = await apiRequest.post<ApiRegisterResponseType>({
       url,
       body: JSON.stringify(userData),
       options: { ...options, cache: "no-store" },
     })
+
+    if (!result.error && result.data?.success) {
+      accessTokenStorageManager.set(result.data.accessToken)
+      refreshTokenStorageManager.set(result.data.refreshToken)
+    }
+
+    return result
   },
 
   refreshToken: (tokenData: TokenDataType, options?: RequestInit) => {
@@ -83,9 +98,14 @@ export const authApi = {
     return resp.data?.accessToken
   },
 
-  getUser: async (options?: RequestInit) => {
+  getUser: async (
+    options?: RequestInit,
+    eraseToken = false
+  ): Promise<ReturnType<typeof apiRequest.get<ApiUserResponseType>>> => {
     const { headers, ...restOpts } = options ?? {}
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.user}`
+
+    eraseToken && accessTokenStorageManager.erase()
     const token = await authApi.getToken()
 
     if (!token) {
@@ -94,10 +114,22 @@ export const authApi = {
       >
     }
 
-    return apiRequest.get<ApiUserResponseType>({
+    const result = await apiRequest.get<ApiUserResponseType>({
       url,
       options: { ...restOpts, cache: "no-store", headers: { ...headers, Authorization: `Bearer ${token ?? ""}` } },
     })
+
+    if (
+      !eraseToken &&
+      !result.data?.success &&
+      result.data?.message === "jwt expired" &&
+      accessTokenStorageManager.get()
+    ) {
+      accessTokenStorageManager.erase()
+      return authApi.getUser(options, true)
+    }
+
+    return result
   },
 
   updateUser: async (userData: Partial<WithPassword<UserDataType>>, options?: RequestInit) => {

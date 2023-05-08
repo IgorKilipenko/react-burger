@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { api, ApiLoginResponseType, UserDataType, WithoutTokens, WithPassword } from "../../../data"
-import { tokenManager } from "./utils"
 
 export interface LoginResponse extends Omit<Awaited<ReturnType<typeof api.auth.login>>, "data"> {
   data: WithoutTokens<ApiLoginResponseType>
@@ -16,9 +15,6 @@ export const login = createAsyncThunk("auth/login", async (userData: WithPasswor
   }
   console.assert(data!.accessToken.length > 0 && data!.refreshToken.length > 0)
 
-  tokenManager.saveToken(data!.accessToken, "access")
-  tokenManager.saveToken(data!.refreshToken, "refresh")
-
   return { data: data as WithoutTokens<ApiLoginResponseType>, error } as LoginResponse
 })
 
@@ -33,9 +29,6 @@ export const register = createAsyncThunk("auth/register", async (userData: WithP
     )
   }
   console.assert(data!.accessToken.length > 0 && data!.refreshToken.length > 0)
-
-  tokenManager.saveToken(data!.accessToken, "access")
-  tokenManager.saveToken(data!.refreshToken, "refresh")
 
   return { data: data as WithoutTokens<ApiLoginResponseType>, error } as RegisterResponse
 })
