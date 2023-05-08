@@ -10,6 +10,9 @@ import { BurgerItemType, getBurgerStore } from "../../services/slices/burger-con
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { allowableCategories, DbObjectType } from "../../data"
 import { createOrder } from "../../services/slices/orders"
+import { getIsAuthUserFromStore } from "../../services/slices/auth"
+import { useNavigate } from "react-router-dom"
+import { routesInfo } from "../app-router"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -18,6 +21,8 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
   const dispatch = useAppDispatch()
+  const isAuthenticatedUser = useAppSelector(getIsAuthUserFromStore)
+  const navigate = useNavigate()
 
   const allSelectedProductsForOrder = React.useMemo(
     () => (selectedBun ? [selectedBun, ...selectedIngredients] : selectedIngredients),
@@ -45,9 +50,13 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   }, [calcTotalPrice, allSelectedProductsForOrder])
 
   const handleOrderButtonClick = React.useCallback(() => {
-    setModalOpen(true)
-    dispatch(createOrder(getSelectedIngredientsIds(allSelectedProductsForOrder)))
-  }, [dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
+    if (!isAuthenticatedUser) {
+      navigate(routesInfo.login.path, { replace: true })
+    } else {
+      setModalOpen(true)
+      dispatch(createOrder(getSelectedIngredientsIds(allSelectedProductsForOrder)))
+    }
+  }, [isAuthenticatedUser, navigate, dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
 
   return (
     <>
