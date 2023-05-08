@@ -12,10 +12,7 @@ import {
   UserDataType,
   WithPassword,
 } from "./api-response"
-
-import { accessTokenStorageManager, refreshTokenStorageManager } from "./local-storage-manager"
-
-const tokenManager = { access: accessTokenStorageManager, refresh: refreshTokenStorageManager }
+import { tokenManager } from "./utils"
 
 export const authApi = {
   login: async (userData: WithPassword<Omit<UserDataType, "name">>, options?: RequestInit) => {
@@ -28,8 +25,8 @@ export const authApi = {
     })
 
     if (!result.error && result.data?.success) {
-      accessTokenStorageManager.set(result.data.accessToken)
-      refreshTokenStorageManager.set(result.data.refreshToken)
+      tokenManager.setAccess(result.data.accessToken)
+      tokenManager.setRefresh(result.data.refreshToken)
     }
 
     return result
@@ -44,8 +41,8 @@ export const authApi = {
     })
 
     if (!result.error && result.data?.success) {
-      accessTokenStorageManager.set(result.data.accessToken)
-      refreshTokenStorageManager.set(result.data.refreshToken)
+      tokenManager.setAccess(result.data.accessToken)
+      tokenManager.setRefresh(result.data.refreshToken)
     }
 
     return result
@@ -61,11 +58,11 @@ export const authApi = {
   },
 
   logout: (tokenData?: TokenDataType, options?: RequestInit) => {
-    tokenData ??= { token: tokenManager.refresh.get() ?? "" }
+    tokenData ??= { token: tokenManager.getRefresh() ?? "" }
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.logout}`
 
-    tokenManager.access.erase()
-    tokenManager.refresh.erase()
+    tokenManager.eraseAccess()
+    tokenManager.eraseRefresh()
 
     if (tokenData.token.length === 0) {
       return Promise.resolve({ data: { success: false, message: "Token not found" } }) as ReturnType<
@@ -80,19 +77,19 @@ export const authApi = {
     })
   },
 
-  getToken: async () => {
-    if (tokenManager.access.get()) {
-      return tokenManager.access.get()
+  getToken: async (withoutAccessToken = false) => {
+    if (!withoutAccessToken && tokenManager.getAccess()) {
+      return tokenManager.getAccess()
     }
-    if (!tokenManager.refresh.get()) {
+    if (!tokenManager.getRefresh()) {
       return null
     }
 
-    const resp = await authApi.refreshToken({ token: tokenManager.refresh.get() ?? "" })
+    const resp = await authApi.refreshToken({ token: tokenManager.getRefresh() ?? "" })
 
-    if (!resp.error && resp.data?.success && resp.data) {
-      tokenManager.access.set(resp.data!.accessToken)
-      tokenManager.refresh.set(resp.data!.refreshToken)
+    if (!resp.error && resp.data?.success) {
+      tokenManager.setAccess(resp.data!.accessToken)
+      tokenManager.setRefresh(resp.data!.refreshToken)
     }
 
     return resp.data?.accessToken
@@ -105,8 +102,8 @@ export const authApi = {
     const { headers, ...restOpts } = options ?? {}
     const url = `${apiConfig.baseUrl}/${apiConfig.endpoints.auth.user}`
 
-    eraseToken && accessTokenStorageManager.erase()
-    const token = await authApi.getToken()
+    eraseToken && tokenManager.eraseAccess()
+    const token = await authApi.getToken(eraseToken)
 
     if (!token) {
       return Promise.resolve({ data: { success: false, message: "Token not found" } }) as ReturnType<
@@ -123,9 +120,10 @@ export const authApi = {
       !eraseToken &&
       !result.data?.success &&
       (result.data?.message === "jwt expired" || result.data?.message === "jwt malformed") &&
-      accessTokenStorageManager.get() && refreshTokenStorageManager.get()
+      tokenManager.getAccess() &&
+      tokenManager.getRefresh()
     ) {
-      accessTokenStorageManager.erase()
+      tokenManager.eraseAccess()
       return authApi.getUser(options, true)
     }
 
@@ -147,7 +145,7 @@ export const authApi = {
 
     return apiRequest.post<ApiUserResponseType>({
       url,
-      method: "PATH",
+      method: "PATCH",
       body: JSON.stringify(userData),
       options: { ...restOpts, cache: "no-store", headers: { ...headers, Authorization: `Bearer ${token ?? ""}` } },
     })
