@@ -23,10 +23,24 @@ export interface UserFormProps
   onSubmit?: (dataState: UserFormDataState) => void | null
   values?: Partial<Record<keyof UserFormDataState, string | null>> | null
   isReadOnly?: boolean | null
+  inputs?: Partial<Record<keyof UserFormDataState, boolean | null | undefined>>
+  inputPlaceholders?: Partial<Record<keyof UserFormDataState, string | undefined>>
+  errorMessage?: string
 }
 
 export const UserForm = React.memo<UserFormProps>(
-  ({ header = null, submitAction = null, withEditIcons = false, onSubmit = null, children, values, ...props }) => {
+  ({
+    header = null,
+    submitAction = null,
+    withEditIcons = false,
+    onSubmit = null,
+    children,
+    values,
+    inputs = { email: true, name: true, password: true },
+    inputPlaceholders = { name: "Имя" },
+    errorMessage,
+    ...props
+  }) => {
     const [state, setState] = React.useState<UserFormDataState>({
       name: { value: values?.name ?? "", isValid: false },
       password: { value: values?.password ?? "", isValid: false },
@@ -74,8 +88,10 @@ export const UserForm = React.memo<UserFormProps>(
     )
 
     const isValid = React.useMemo(() => {
-      return !Object.values(state).some((item) => item.value.length === 0 || !item.isValid)
-    }, [state])
+      return !Object.entries(state).some(
+        ([key, item]) => inputs?.[key as keyof UserFormDataState] && (item.value.length === 0 || !item.isValid)
+      )
+    }, [inputs, state])
 
     const handleSubmit = React.useCallback(
       (e: React.FormEvent<HTMLFormElement>) => {
@@ -95,32 +111,44 @@ export const UserForm = React.memo<UserFormProps>(
       >
         <Flex direction="column" align="center" gap={6} pb={20} {...(props as FlexOptions)}>
           {header ? <Text variant="mainMedium">{header}</Text> : null}
-          <AdvancedInput
-            value={state.name.value}
-            name="name"
-            placeholder="Имя"
-            onChange={handleChange}
-            onValidated={handleValidate}
-            isIcon={withEditIcons}
-          />
-          <EmailInput
-            value={state.email.value}
-            name="email"
-            onChange={handleChange}
-            onValidated={handleValidate}
-            isIcon={withEditIcons}
-          />
-          <PasswordInput
-            value={state.password.value}
-            icon={withEditIcons ? "EditIcon" : undefined}
-            name="password"
-            onChange={handleChange}
-            onValidated={handleValidate}
-          />
-          <FormErrorMessage>
-            <Text color="error-color">Ошибка регистрации. Проверьте попытку позже</Text>
-            {authState.error?.message ? <Text color="error-color">{authState.error?.message}</Text> : null}
-          </FormErrorMessage>
+          {inputs.name ? (
+            <AdvancedInput
+              value={state.name.value}
+              name="name"
+              placeholder={inputPlaceholders.name}
+              onChange={handleChange}
+              onValidated={handleValidate}
+              isIcon={withEditIcons}
+            />
+          ) : null}
+          {inputs.email ? (
+            <EmailInput
+              value={state.email.value}
+              name="email"
+              placeholder={inputPlaceholders.email}
+              onChange={handleChange}
+              onValidated={handleValidate}
+              isIcon={withEditIcons}
+            />
+          ) : null}
+          {inputs.password ? (
+            <PasswordInput
+              placeholder={inputPlaceholders.password}
+              value={state.password.value}
+              icon={withEditIcons ? "EditIcon" : undefined}
+              name="password"
+              onChange={handleChange}
+              onValidated={handleValidate}
+            />
+          ) : null}
+          {errorMessage ? (
+            <FormErrorMessage>
+              <Flex direction={"column"} color="error-color">
+                <Text>{errorMessage}</Text>
+                {authState.error?.message ? <Text>{`Сообщение сервера: "${authState.error?.message}"`}</Text> : null}
+              </Flex>
+            </FormErrorMessage>
+          ) : null}
           {submitAction ? (
             <Flex alignSelf="center" grow={0}>
               <Button htmlType="submit" size="medium" disabled={!isValid}>
