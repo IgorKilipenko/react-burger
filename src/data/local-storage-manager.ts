@@ -67,5 +67,5 @@ export const createCookieStorageManager = (
   }
 }
 
-export const accessTokenStorageManager = createLocalStorageManager("accessToken")
-export const refreshTokenStorageManager = createCookieStorageManager("refreshToken", { maxAgeSec: 20 * 60 })
+export const accessTokenStorageManager = createCookieStorageManager("accessToken", { maxAgeSec: 20 * 60 })
+export const refreshTokenStorageManager = createLocalStorageManager("refreshToken")
