@@ -92,7 +92,7 @@ export const authApi = {
       tokenManager.setRefresh(resp.data!.refreshToken)
     }
 
-    return resp.data?.accessToken
+    return tokenManager.getAccess()
   },
 
   getUser: async (
@@ -111,7 +111,8 @@ export const authApi = {
       >
     }
 
-    let result = await apiRequest.get<ApiUserResponseType>({
+    console.assert(!token.match(/^Bearer\s+/g))
+    const result = await apiRequest.get<ApiUserResponseType>({
       url,
       options: { ...restOpts, cache: "no-store", headers: { ...headers, Authorization: `Bearer ${token ?? ""}` } },
     })
@@ -142,7 +143,8 @@ export const authApi = {
     }
 
     console.assert(Object.values(userData).some((val) => val))
-
+    console.assert(!token.match(/^Bearer\s+/g))
+    
     return apiRequest.post<ApiUserResponseType>({
       url,
       method: "PATCH",
