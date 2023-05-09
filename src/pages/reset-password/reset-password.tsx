@@ -1,13 +1,17 @@
+import React from "react"
 import { Flex, Text } from "@chakra-ui/react"
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
-import React from "react"
 import { useNavigate } from "react-router-dom"
 import { routesInfo } from "../../components/app-router"
 import { PasswordInput, AdvancedInput, Form } from "../../components/common/form"
 import { UserFormDataState } from "../../components/user-form"
-import { authActions, getAuthStore } from "../../services/slices/auth"
+import {
+  authActions,
+  getIsAuthUserFromStore,
+  getPasswordStateFromStore,
+} from "../../services/slices/auth"
 import { useAppDispatch, useAppSelector } from "../../services/store"
-import { ProfileContainer } from "../profile"
+import { appColors } from "../../theme/styles"
 
 export interface ResetPasswordPageProps {}
 
@@ -22,9 +26,21 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
     code: { value: "", isValid: false },
   })
   const [hasChanged, setHasChanged] = React.useState(false)
-  const authState = useAppSelector(getAuthStore)
+  const isAuthenticatedUser = useAppSelector(getIsAuthUserFromStore)
+  const passwordResetState = useAppSelector(getPasswordStateFromStore)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const submittedEmailRef = React.useRef<string>(passwordResetState.confirmingEmail)
+
+  /// Redirect when success confirmed or if it wrong path (aka directional set url)
+  React.useEffect(() => {
+    if (!passwordResetState.resetEmailSent) {
+      navigate(routesInfo.home.path, { replace: true })
+    } else if (!isAuthenticatedUser && passwordResetState.resetConfirmed) {
+      navigate(routesInfo.login.path, { replace: true })
+      dispatch(authActions.clearPasswordState())
+    }
+  }, [dispatch, isAuthenticatedUser, navigate, passwordResetState.resetConfirmed, passwordResetState.resetEmailSent])
 
   const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name.length === 0) {
@@ -72,59 +88,46 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       setHasChanged(false)
-      !authState.passwordResetInfo.resetConfirmed &&
+      !passwordResetState.resetConfirmed &&
         dispatch(authActions.passwordResetConfirm({ password: state.password.value, token: state.code.value }))
     },
-    [authState.passwordResetInfo.resetConfirmed, dispatch, state.code.value, state.password.value]
+    [passwordResetState.resetConfirmed, dispatch, state.code.value, state.password.value]
   )
 
-  React.useEffect(() => {
-    if (!authState.passwordResetInfo.resetEmailSent) {
-      navigate(routesInfo.home.path, { replace: true })
-    }
-    !authState.isAuthenticatedUser &&
-      authState.passwordResetInfo.resetConfirmed &&
-      navigate(routesInfo.login.path, { replace: true })
-  }, [
-    authState.isAuthenticatedUser,
-    authState.loading,
-    authState.passwordResetInfo.resetConfirmed,
-    authState.passwordResetInfo.resetEmailSent,
-    navigate,
-  ])
-
   return (
-    <ProfileContainer>
-      <Form
-        method="post"
-        onSubmit={handleSubmit}
-        options={{ control: { isInvalid: !!authState.error && !hasChanged } }}
-      >
-        <Flex direction="column" align="center" gap={6} pb={20}>
-          <Text variant="mainMedium">Восстановление пароля</Text>
-          <PasswordInput
-            value={state.password.value}
-            name="password"
-            placeholder="Введите новый пароль"
-            onChange={handleChange}
-            onValidated={handleValidate}
-            autoComplete="new-password"
-          />
-          <AdvancedInput
-            value={state.code.value}
-            name="code"
-            placeholder="Введите код из письма"
-            onChange={handleChange}
-            onValidated={handleValidate}
-            autoComplete="one-time-code"
-          />
-          <Flex alignSelf="center" grow={0}>
-            <Button htmlType="submit" size="medium" disabled={!isValid}>
-              Сохранить
-            </Button>
-          </Flex>
+    <Form
+      method="post"
+      onSubmit={handleSubmit}
+      options={{ control: { isInvalid: !!passwordResetState.error && !hasChanged } }}
+    >
+      <Flex direction="column" align="center" gap={6} pb={20}>
+        <Text variant="mainMedium">Восстановление пароля</Text>
+        <PasswordInput
+          value={state.password.value}
+          name="password"
+          placeholder="Введите новый пароль"
+          onChange={handleChange}
+          onValidated={handleValidate}
+          autoComplete="new-password"
+        />
+        <AdvancedInput
+          value={state.code.value}
+          name="code"
+          placeholder="Введите код из письма"
+          onChange={handleChange}
+          onValidated={handleValidate}
+          autoComplete="one-time-code"
+        />
+        <Flex direction="column" align="center" color={appColors.inactive}>
+          <Text>Сообщение с кодом для сброса пароля отправлено</Text>
+          <Text>{`на почтовый ящик - ${submittedEmailRef.current}`}</Text>
         </Flex>
-      </Form>
-    </ProfileContainer>
+        <Flex alignSelf="center" grow={0}>
+          <Button htmlType="submit" size="medium" disabled={!isValid}>
+            Сохранить
+          </Button>
+        </Flex>
+      </Flex>
+    </Form>
   )
 }
