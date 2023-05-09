@@ -4,7 +4,7 @@ import theme from "../../theme/theme"
 import { MainContainer } from "../app/main-container"
 import { Outlet } from "react-router-dom"
 
-export const Layout: React.FC = () => {
+export const Layout = React.memo(() => {
   const [headerHeight, setHeight] = React.useState(0)
   const maxContentWidth = theme.sizes.container.maxContentWidth
 
@@ -20,4 +20,4 @@ export const Layout: React.FC = () => {
       </MainContainer>
     </>
   )
-}
+})

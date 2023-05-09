@@ -10,7 +10,7 @@ export interface OrderDetailsProps {}
 
 export const headerText = "Детали ингредиента"
 
-export const OrderDetails: React.FC<OrderDetailsProps> = () => {
+export const OrderDetails = React.memo<OrderDetailsProps>(() => {
   const { order, loading, error } = useAppSelector(getOrdersStore)
 
   return (
@@ -46,4 +46,4 @@ export const OrderDetails: React.FC<OrderDetailsProps> = () => {
       )}
     </Flex>
   )
-}
+})
