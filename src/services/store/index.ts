@@ -5,13 +5,15 @@ import { burgerReducer } from "../slices/burger-constructor"
 import { orderReducer } from "../slices/orders"
 import { productsReducer } from "../slices/products"
 import { authReducer } from "../slices/auth"
+import { userPasswordReducer } from "../slices/auth"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
   orders: orderReducer,
   products: productsReducer,
   activeModalItem: activeModalItemReducer,
-  auth: authReducer
+  auth: authReducer,
+  userPassword: userPasswordReducer
 })
 
 interface Options {
