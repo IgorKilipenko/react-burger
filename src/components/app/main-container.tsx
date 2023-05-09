@@ -19,13 +19,17 @@ const loadingMessage = () => (
 )
 
 export const MainContainer = React.memo<MainContainerProps>(({ children, maxContentWidth, h, height = "100%" }) => {
+  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const currHeight = h ?? height
-
   const { categories, loading, error } = useAppSelector(getProductsStore)
   const dispatch = useAppDispatch()
 
   React.useEffect(() => {
-    dispatch(getAllIngredients())
+    if (lockRef.current === false) {
+      lockRef.current = true
+
+      dispatch(getAllIngredients())
+    }
   }, [dispatch])
 
   return (
@@ -36,15 +40,7 @@ export const MainContainer = React.memo<MainContainerProps>(({ children, maxCont
         ) : loading || !categories || categories.length === 0 ? (
           loadingMessage()
         ) : (
-          <Flex
-            maxW={maxContentWidth}
-            justify="stretch"
-            pl={5}
-            pr={5}
-            pb={10}
-            justifySelf="stretch"
-            grow={1}
-          >
+          <Flex maxW={maxContentWidth} justify="stretch" pl={5} pr={5} pb={10} justifySelf="stretch" grow={1}>
             {children}
           </Flex>
         )}

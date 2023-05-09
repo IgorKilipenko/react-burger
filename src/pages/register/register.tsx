@@ -8,16 +8,20 @@ import { authActions } from "../../services/slices/auth"
 
 export const RegisterPage = () => {
   const dispatch = useAppDispatch()
+  const isSubmittedRef = React.useRef(false)
 
   const handleSubmit = React.useCallback(
     (dataState: UserFormDataState) => {
-      dispatch(
-        authActions.register({
-          name: dataState.name.value,
-          email: dataState.email.value,
-          password: dataState.password.value,
-        })
-      )
+      if (!isSubmittedRef.current) {
+        dispatch(
+          authActions.register({
+            name: dataState.name.value,
+            email: dataState.email.value,
+            password: dataState.password.value,
+          })
+        )
+        isSubmittedRef.current = true
+      }
     },
     [dispatch]
   )

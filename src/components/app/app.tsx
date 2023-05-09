@@ -6,11 +6,16 @@ import { useAppDispatch, useAppSelector } from "../../services/store"
 import { authActions, getIsAuthUserFromStore } from "../../services/slices/auth"
 
 const App = () => {
+  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const dispatch = useAppDispatch()
   const isAuthenticatedUser = useAppSelector(getIsAuthUserFromStore)
 
   React.useEffect(() => {
-    !isAuthenticatedUser && dispatch(authActions.getUser())
+    if (lockRef.current === false) {
+      lockRef.current = true
+      
+      !isAuthenticatedUser && dispatch(authActions.getUser())
+    }
   }, [dispatch, isAuthenticatedUser])
 
   return (

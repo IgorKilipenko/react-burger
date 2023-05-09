@@ -17,6 +17,7 @@ import { routesInfo } from "../app-router"
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
+  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const { products: selectedIngredients, bun: selectedBun } = useAppSelector(getBurgerStore)
   const [totalPrice, setTotalPrice] = React.useState(0)
   const [modalOpen, setModalOpen] = React.useState(false)
@@ -53,10 +54,18 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
     if (!isAuthenticatedUser) {
       navigate(routesInfo.login.path, { replace: true })
     } else {
-      setModalOpen(true)
-      dispatch(createOrder(getSelectedIngredientsIds(allSelectedProductsForOrder)))
+      if (lockRef.current === false) {
+        lockRef.current = true
+        setModalOpen(true)
+        dispatch(createOrder(getSelectedIngredientsIds(allSelectedProductsForOrder)))
+      }
     }
   }, [isAuthenticatedUser, navigate, dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
+
+  const handleModalClose = React.useCallback(() => {
+    lockRef.current = false
+    setModalOpen(false)
+  },[])
 
   return (
     <>
@@ -75,9 +84,7 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
       {modalOpen ? (
         <Modal
           headerText=""
-          onClose={() => {
-            setModalOpen(false)
-          }}
+          onClose={handleModalClose}
         >
           <OrderDetails />
         </Modal>
