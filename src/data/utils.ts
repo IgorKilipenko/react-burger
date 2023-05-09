@@ -1,6 +1,6 @@
 import { LocalStorageManager, accessTokenStorageManager, refreshTokenStorageManager } from "."
 
-export const validateToken = (token: string, type: "access" | "refresh") => {
+export const prepareToken = (token: string, type: "access" | "refresh") => {
   const pattern = type === "access" ? /^Bearer\s+(?<token>[^\s]+)$/ : /^(?<token>[^\s]+)$/
   const match = token.match(pattern)
   return match?.groups ? match.groups["token"] : null
@@ -8,7 +8,7 @@ export const validateToken = (token: string, type: "access" | "refresh") => {
 
 export const tokenManager = {
   set: (accessToken: string, type: "access" | "refresh") => {
-    const token = validateToken(accessToken, type)
+    const token = prepareToken(accessToken, type)
     console.assert(token)
     if (!token) {
       return
