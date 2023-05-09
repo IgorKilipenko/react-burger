@@ -6,7 +6,7 @@ import { authActions, getAuthStore } from "../../services/slices/auth"
 import { Link } from "../../components/common"
 import { routesInfo } from "../../components/app-router"
 import { useLocation } from "react-router-dom"
-import { ProfileContainer } from "./profile-container"
+import { appColors } from "../../theme/styles"
 
 export const ProfilePage = () => {
   const authState = useAppSelector(getAuthStore)
@@ -53,30 +53,28 @@ export const ProfilePage = () => {
   }, [authState.isAuthenticatedUser, authState.user.email, authState.user.name])
 
   return (
-    <ProfileContainer align="start">
-      <Flex gap={15} mt="28">
-        <Flex direction="column" w="min-content">
-          <Flex direction="column" pb={30} w="320px">
-            {buildLink({ text: "Профиль", path: routesInfo.profile.path })}
-            {buildLink({ text: "История заказов", path: "#" })}
-            {buildLink({
-              text: "Выход",
-              onClick: () => {
-                dispatch(authActions.logout())
-              },
-            })}
-          </Flex>
-          <Flex color="link-inactive-color">
-            <Text variant="mainDefault">В этом разделе вы можете изменить свои персональные данные</Text>
-          </Flex>
+    <Flex gap={15} mt="28">
+      <Flex direction="column" w="min-content">
+        <Flex direction="column" pb={30} w="320px">
+          {buildLink({ text: "Профиль", path: routesInfo.profile.path })}
+          {buildLink({ text: "История заказов", path: "#" })}
+          {buildLink({
+            text: "Выход",
+            onClick: () => {
+              dispatch(authActions.logout())
+            },
+          })}
         </Flex>
-        <UserForm
-          withEditIcons={true}
-          values={loadedUserData}
-          submitAction="Сохранить"
-          onSubmit={handleSubmit}
-        ></UserForm>
+        <Flex color={appColors.inactive}>
+          <Text variant="mainDefault">В этом разделе вы можете изменить свои персональные данные</Text>
+        </Flex>
       </Flex>
-    </ProfileContainer>
+      <UserForm
+        withEditIcons={true}
+        values={loadedUserData}
+        submitAction="Сохранить"
+        onSubmit={handleSubmit}
+      ></UserForm>
+    </Flex>
   )
 }
