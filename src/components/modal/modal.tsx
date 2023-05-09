@@ -3,6 +3,7 @@ import { ModalHeader } from "./modal-header"
 import { ModalContainer } from "./modal-container"
 import { ModalCloseButton } from "./modal-close-button"
 import { ModalOverlay } from "./modal-overlay"
+import { appColors } from "../../theme/styles"
 
 export interface ModalProps {
   children?: React.ReactNode
@@ -17,7 +18,7 @@ export const Modal = ({ children, headerText, onClose }: ModalProps) => {
       <ModalOverlay onClick={onClose}>
         <Flex
           direction="column"
-          bg="alt-body-bg"
+          bg={appColors.bodyAltBackground}
           m="auto"
           w={{ base: "lg", md: "720px" }}
           h="fit-content"

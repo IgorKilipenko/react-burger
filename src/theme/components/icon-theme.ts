@@ -1,8 +1,9 @@
 import { defineStyle, defineStyleConfig } from "@chakra-ui/react"
+import { appColors } from "../styles"
 
 const variants = {
   secondary: defineStyle(() => ({
-    color: "link-inactive-color",
+    color: appColors.inactive,
   })),
   error: defineStyle(() => ({
     color: 'error-color',

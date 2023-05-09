@@ -2,6 +2,7 @@ import React from "react"
 import { Flex, Image, Text } from "@chakra-ui/react"
 import { useAppSelector } from "../../services/store"
 import { getActiveIngredientFromModalStore } from "../../services/slices/active-modal-items"
+import { appColors } from "../../theme/styles"
 
 export interface IngredientDetailsProps {}
 
@@ -27,7 +28,7 @@ export const IngredientDetails: React.FC<IngredientDetailsProps> = () => {
           <Text variant="mainMedium" mt={4} mb={8}>
             {ingredient.name}
           </Text>
-          <Flex gap={5} justify="center" color={"link-inactive-color"}>
+          <Flex gap={5} justify="center" color={appColors.inactive}>
             {makeTextDetails("Калории, ккал", ingredient.calories)}
             {makeTextDetails("Белки, г", ingredient.proteins)}
             {makeTextDetails("Жиры, г", ingredient.fat)}
