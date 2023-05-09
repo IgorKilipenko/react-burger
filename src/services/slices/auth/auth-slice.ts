@@ -51,15 +51,13 @@ const authSlice = createSlice({
       state.loading = initialState.loading
       state.user = initialState.user
       state.isAuthenticatedUser = initialState.isAuthenticatedUser
-      state.passwordResetInfo.resetConfirmed = initialState.passwordResetInfo.resetConfirmed
-      state.passwordResetInfo.resetEmailSent = initialState.passwordResetInfo.resetEmailSent
     },
     clearPasswordResetState: (state) => {
       state.passwordResetInfo.resetConfirmed = initialState.passwordResetInfo.resetConfirmed
       state.passwordResetInfo.resetEmailSent = initialState.passwordResetInfo.resetEmailSent
     },
     clearErrors: (state) => {
-      state.passwordResetInfo = initialState.passwordResetInfo
+      state.error = initialState.error
     },
     _setUserData: (
       state,
@@ -162,7 +160,9 @@ const authSlice = createSlice({
       authSlice.caseReducers._setError(state, { type, payload: { error } })
     })
     builder.addCase(passwordReset.pending, (state) => {
-      authSlice.caseReducers.clearState(state)
+      authSlice.caseReducers.clearErrors(state)
+      state.passwordResetInfo.resetConfirmed = false
+      state.passwordResetInfo.resetEmailSent = false
       state.loading = true
     })
 
@@ -181,7 +181,8 @@ const authSlice = createSlice({
       authSlice.caseReducers._setError(state, { type, payload: { error } })
     })
     builder.addCase(passwordResetConfirm.pending, (state) => {
-      authSlice.caseReducers.clearState(state)
+      authSlice.caseReducers.clearErrors(state)
+      state.passwordResetInfo.resetConfirmed = false
       state.loading = true
     })
   },
