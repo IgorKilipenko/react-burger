@@ -1,6 +1,7 @@
 import type { BoxProps as ChakraBoxProps, FlexProps, HTMLChakraProps } from "@chakra-ui/react"
 
 export type WithoutIntersect<T, V> = { [K in keyof T]: T[K] extends V ? never : K }[keyof T]
+export type WithRequired<T extends {}, K extends keyof T> = Omit<T,K> & Required<SelectProps<T, K>>
 
 export type SelectProps<T extends {}, K extends keyof T> = Omit<T, keyof Omit<T, K>>
 export type SelectFlexProps<K extends keyof FlexProps> = SelectProps<FlexProps, K>
