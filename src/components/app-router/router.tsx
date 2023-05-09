@@ -20,11 +20,16 @@ export const appRouter = createBrowserRouter([
               },
             ],
           },
-          routesInfo.login as RouteObject,
-          routesInfo.register as RouteObject,
-          routesInfo.profile as RouteObject,
-          routesInfo.forgotPassword as RouteObject,
-          routesInfo.resetPassword as RouteObject,
+          {
+            element: routesInfo.profileLayout.element,
+            children: [
+              routesInfo.login as RouteObject,
+              routesInfo.register as RouteObject,
+              routesInfo.profile as RouteObject,
+              routesInfo.forgotPassword as RouteObject,
+              routesInfo.resetPassword as RouteObject,
+            ],
+          },
         ],
       },
       {
