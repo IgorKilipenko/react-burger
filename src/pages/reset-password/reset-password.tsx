@@ -1,15 +1,11 @@
 import React from "react"
-import { Flex, Text } from "@chakra-ui/react"
+import { Flex, FormErrorMessage, Text } from "@chakra-ui/react"
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
 import { useNavigate } from "react-router-dom"
 import { routesInfo } from "../../components/app-router"
 import { PasswordInput, AdvancedInput, Form } from "../../components/common/form"
 import { UserFormDataState } from "../../components/user-form"
-import {
-  authActions,
-  getIsAuthUserFromStore,
-  getPasswordStateFromStore,
-} from "../../services/slices/auth"
+import { authActions, getIsAuthUserFromStore, getPasswordStateFromStore } from "../../services/slices/auth"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { appColors } from "../../theme/styles"
 
@@ -21,6 +17,7 @@ interface InputsState {
 }
 
 export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
+  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const [state, setState] = React.useState<InputsState>({
     password: { value: "", isValid: false },
     code: { value: "", isValid: false },
@@ -34,13 +31,22 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
 
   /// Redirect when success confirmed or if it wrong path (aka directional set url)
   React.useEffect(() => {
-    if (!passwordResetState.resetEmailSent) {
+    if (passwordResetState.error) {
+      lockRef.current = false
+    } else if (!passwordResetState.resetEmailSent) {
       navigate(routesInfo.home.path, { replace: true })
     } else if (!isAuthenticatedUser && passwordResetState.resetConfirmed) {
       navigate(routesInfo.login.path, { replace: true })
       dispatch(authActions.clearPasswordState())
     }
-  }, [dispatch, isAuthenticatedUser, navigate, passwordResetState.resetConfirmed, passwordResetState.resetEmailSent])
+  }, [
+    dispatch,
+    isAuthenticatedUser,
+    navigate,
+    passwordResetState.error,
+    passwordResetState.resetConfirmed,
+    passwordResetState.resetEmailSent,
+  ])
 
   const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name.length === 0) {
@@ -88,8 +94,12 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       setHasChanged(false)
-      !passwordResetState.resetConfirmed &&
-        dispatch(authActions.passwordResetConfirm({ password: state.password.value, token: state.code.value }))
+      if (lockRef.current === false) {
+        lockRef.current = true
+
+        !passwordResetState.resetConfirmed &&
+          dispatch(authActions.passwordResetConfirm({ password: state.password.value, token: state.code.value }))
+      }
     },
     [passwordResetState.resetConfirmed, dispatch, state.code.value, state.password.value]
   )
@@ -118,10 +128,20 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
           onValidated={handleValidate}
           autoComplete="one-time-code"
         />
-        <Flex direction="column" align="center" color={appColors.inactive}>
-          <Text>Сообщение с кодом для сброса пароля отправлено</Text>
-          <Text>{`на почтовый ящик - ${submittedEmailRef.current}`}</Text>
-        </Flex>
+        <FormErrorMessage>
+          <Flex direction={"column"} color="error-color" align="center">
+            <Text>Ошибка подтверждения сброса пароля</Text>
+            {passwordResetState.error?.message ? (
+              <Text>{`Сообщение сервера: "${passwordResetState.error?.message}"`}</Text>
+            ) : null}
+          </Flex>
+        </FormErrorMessage>
+        {!passwordResetState.error || hasChanged ? (
+          <Flex direction="column" align="center" color={appColors.inactive}>
+            <Text>Сообщение с кодом для сброса пароля отправлено</Text>
+            <Text>{`на почтовый ящик - ${submittedEmailRef.current}`}</Text>
+          </Flex>
+        ) : null}
         <Flex alignSelf="center" grow={0}>
           <Button htmlType="submit" size="medium" disabled={!isValid}>
             Сохранить
