@@ -1,6 +1,8 @@
 import { HomePage, NotFoundPage } from "../../pages"
 import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
+import { OrderPage } from "../../pages/order"
+import { OrdersPage } from "../../pages/orders"
 import { ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
 import { ResetPasswordPage } from "../../pages/reset-password"
@@ -21,6 +23,8 @@ export const RESET_PASSWORD = preparePath(`${ROOT_PATH}/reset-password`)
 export const PROFILE = preparePath(`${ROOT_PATH}/profile`)
 export const ERROR_PAGE = preparePath(`${ROOT_PATH}/error-page`)
 export const INGREDIENTS = preparePath(`${ROOT_PATH}/ingredients`)
+export const ORDERS = preparePath(`${PROFILE}/orders`)
+export const ORDER = preparePath(`${ORDERS}/:id`)
 
 export const routesInfo = {
   root: { path: ROOT_PATH, element: <App /> },
@@ -43,11 +47,9 @@ export const routesInfo = {
     path: RESET_PASSWORD,
     element: <ProtectedRoute accessType="withoutAuth" element={<ResetPasswordPage />} redirectPath={ROOT_PATH} />,
   },
-  get profile() {
-    return {
+  profile: {
       path: PROFILE,
-      element: <ProtectedRoute accessType="withAuth" element={<ProfilePage />} redirectPath={this.login.path} />,
-    }
+      element: <ProtectedRoute accessType="withAuth" element={<ProfilePage />} redirectPath={LOGIN} />,
   },
   ingredientItem: {
     id: "ingredientItem",
@@ -57,6 +59,14 @@ export const routesInfo = {
       return `${this.rootPath}/:${this.paramName}`
     },
     element: <IngredientDetail />,
+  },
+  orders: {
+    path: ORDERS,
+    element: <ProtectedRoute accessType="withAuth" element={<OrdersPage />} redirectPath={LOGIN} />,
+  },
+  order: {
+    path: ORDER,
+    element: <ProtectedRoute accessType="withAuth" element={<OrderPage />} redirectPath={LOGIN} />,
   },
   errorPage: { path: ERROR_PAGE, element: <NotFoundPage /> },
 } as const

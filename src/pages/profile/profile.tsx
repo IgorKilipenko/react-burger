@@ -57,7 +57,7 @@ export const ProfilePage = () => {
       <Flex direction="column" w="min-content">
         <Flex direction="column" pb={30} w="320px">
           {buildLink({ text: "Профиль", path: routesInfo.profile.path })}
-          {buildLink({ text: "История заказов", path: "#" })}
+          {buildLink({ text: "История заказов", path: routesInfo.orders.path })}
           {buildLink({
             text: "Выход",
             onClick: () => {

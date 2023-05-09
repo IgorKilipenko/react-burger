@@ -28,13 +28,13 @@ export const appRouter = createBrowserRouter([
               routesInfo.profile as RouteObject,
               routesInfo.forgotPassword as RouteObject,
               routesInfo.resetPassword as RouteObject,
+              routesInfo.orders as RouteObject,
+              routesInfo.order as RouteObject,
             ],
           },
         ],
       },
-      {
-        ...routesInfo.errorPage,
-      },
+      routesInfo.errorPage as RouteObject,
       {
         path: "*",
         element: <Navigate replace to={routesInfo.errorPage.path} />,
