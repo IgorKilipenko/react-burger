@@ -9,14 +9,18 @@ import { IngredientDetail } from "../ingredient-details"
 import { Layout, ProfileContainer } from "../layouts"
 import { ProtectedRoute } from "./protected-route"
 
-export const ROOT_PATH = "/"
-export const LOGIN = `${ROOT_PATH}login`
-export const REGISTER = `${ROOT_PATH}register`
-export const FORGOT_PASSWORD = `${ROOT_PATH}forgot-password`
-export const RESET_PASSWORD = `${ROOT_PATH}reset-password`
-export const PROFILE = `${ROOT_PATH}profile`
-export const ERROR_PAGE = `${ROOT_PATH}error-page`
-export const INGREDIENTS = `${ROOT_PATH}ingredients`
+const preparePath = (path: string) => {
+  return path.replace(/\/{2,}/, "/")
+}
+
+export const ROOT_PATH = process.env.NODE_ENV === "development" ? "/" : "/react-burger/"
+export const LOGIN = preparePath(`${ROOT_PATH}/login`)
+export const REGISTER = preparePath(`${ROOT_PATH}/register`)
+export const FORGOT_PASSWORD = preparePath(`${ROOT_PATH}/forgot-password`)
+export const RESET_PASSWORD = preparePath(`${ROOT_PATH}/reset-password`)
+export const PROFILE = preparePath(`${ROOT_PATH}/profile`)
+export const ERROR_PAGE = preparePath(`${ROOT_PATH}/error-page`)
+export const INGREDIENTS = preparePath(`${ROOT_PATH}/ingredients`)
 
 export const routesInfo = {
   root: { path: ROOT_PATH, element: <App /> },
