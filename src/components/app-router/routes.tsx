@@ -6,45 +6,53 @@ import { RegisterPage } from "../../pages/register"
 import { ResetPasswordPage } from "../../pages/reset-password"
 import App from "../app"
 import { IngredientDetail } from "../ingredient-details"
-import { Layout } from "../layouts"
+import { Layout, ProfileContainer } from "../layouts"
 import { ProtectedRoute } from "./protected-route"
 
-const rootPath = "/"
+export const ROOT_PATH = "/"
+export const LOGIN = `${ROOT_PATH}login`
+export const REGISTER = `${ROOT_PATH}register`
+export const FORGOT_PASSWORD = `${ROOT_PATH}forgot-password`
+export const RESET_PASSWORD = `${ROOT_PATH}reset-password`
+export const PROFILE = `${ROOT_PATH}profile`
+export const ERROR_PAGE = `${ROOT_PATH}error-page`
+export const INGREDIENTS = `${ROOT_PATH}ingredients`
 
 export const routesInfo = {
-  root: { path: rootPath, element: <App /> },
+  root: { path: ROOT_PATH, element: <App /> },
   layout: { element: <Layout /> },
-  home: { path: rootPath, element: <HomePage /> },
+  profileLayout: { path: PROFILE, element: <ProfileContainer /> },
+  home: { path: ROOT_PATH, element: <HomePage /> },
   login: {
-    path: "/login",
-    element: <ProtectedRoute accessType="withoutAuth" element={<LoginPage />} redirectPath={rootPath} />,
+    path: LOGIN,
+    element: <ProtectedRoute accessType="withoutAuth" element={<LoginPage />} redirectPath={ROOT_PATH} />,
   },
   register: {
-    path: "/register",
-    element: <ProtectedRoute accessType="withoutAuth" element={<RegisterPage />} redirectPath={rootPath} />,
+    path: REGISTER,
+    element: <ProtectedRoute accessType="withoutAuth" element={<RegisterPage />} redirectPath={ROOT_PATH} />,
   },
   forgotPassword: {
-    path: "/forgot-password",
-    element: <ProtectedRoute accessType="withoutAuth" element={<ForgotPasswordPage />} redirectPath={rootPath} />,
+    path: FORGOT_PASSWORD,
+    element: <ProtectedRoute accessType="withoutAuth" element={<ForgotPasswordPage />} redirectPath={ROOT_PATH} />,
   },
   resetPassword: {
-    path: "/reset-password",
-    element: <ProtectedRoute accessType="withoutAuth" element={<ResetPasswordPage />} redirectPath={rootPath} />,
+    path: RESET_PASSWORD,
+    element: <ProtectedRoute accessType="withoutAuth" element={<ResetPasswordPage />} redirectPath={ROOT_PATH} />,
   },
   get profile() {
     return {
-      path: "/profile",
+      path: PROFILE,
       element: <ProtectedRoute accessType="withAuth" element={<ProfilePage />} redirectPath={this.login.path} />,
     }
   },
   ingredientItem: {
     id: "ingredientItem",
     paramName: "id",
-    rootPath: "ingredients",
+    rootPath: INGREDIENTS,
     get path() {
       return `${this.rootPath}/:${this.paramName}`
     },
     element: <IngredientDetail />,
   },
-  errorPage: { path: "/error-page", element: <NotFoundPage /> },
+  errorPage: { path: ERROR_PAGE, element: <NotFoundPage /> },
 } as const
