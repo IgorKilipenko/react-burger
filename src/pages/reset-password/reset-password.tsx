@@ -79,10 +79,19 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
   )
 
   React.useEffect(() => {
+    if (!authState.passwordResetInfo.resetEmailSent) {
+      navigate(routesInfo.home.path, { replace: true })
+    }
     !authState.isAuthenticatedUser &&
       authState.passwordResetInfo.resetConfirmed &&
       navigate(routesInfo.login.path, { replace: true })
-  }, [authState.isAuthenticatedUser, authState.passwordResetInfo.resetConfirmed, navigate])
+  }, [
+    authState.isAuthenticatedUser,
+    authState.loading,
+    authState.passwordResetInfo.resetConfirmed,
+    authState.passwordResetInfo.resetEmailSent,
+    navigate,
+  ])
 
   return (
     <ProfileContainer>
