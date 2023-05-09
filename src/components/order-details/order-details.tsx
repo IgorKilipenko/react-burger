@@ -4,6 +4,7 @@ import { Icon, Icons } from "../common"
 import { ErrorMessage } from "../error-message"
 import { useAppSelector } from "../../services/store"
 import { getOrdersStore } from "../../services/slices/orders"
+import { appColors } from "../../theme/styles"
 
 export interface OrderDetailsProps {}
 
@@ -33,7 +34,7 @@ export const OrderDetails: React.FC<OrderDetailsProps> = () => {
             overflow="hidden"
             textOverflow="ellipsis"
             whiteSpace="nowrap"
-            color={"link-inactive-color"}
+            color={appColors.inactive}
           >
             Дождитесь готовности на орбитальной станции
           </Text>
