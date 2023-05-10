@@ -3,12 +3,12 @@ import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
 import { OrderPage } from "../../pages/order"
 import { OrdersPage } from "../../pages/orders"
-import { ProfilePage } from "../../pages/profile"
+import { ProfileContainer, ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
 import { ResetPasswordPage } from "../../pages/reset-password"
 import App from "../app"
 import { IngredientDetail } from "../ingredient-details"
-import { Layout, ProfileContainer } from "../layouts"
+import { Layout, ProfileLayout } from "../layouts"
 import { ProtectedRoute } from "./protected-route"
 
 const preparePath = (path: string) => {
@@ -29,7 +29,8 @@ export const ORDER = preparePath(`${ORDERS}/:id`)
 export const routesInfo = {
   root: { path: ROOT_PATH, element: <App /> },
   layout: { element: <Layout /> },
-  profileLayout: { path: PROFILE, element: <ProfileContainer /> },
+  profileContainer: { path: PROFILE, element: <ProfileContainer /> },
+  profileLayout: { path: PROFILE, element: <ProfileLayout /> },
   home: { path: ROOT_PATH, element: <HomePage /> },
   login: {
     path: LOGIN,

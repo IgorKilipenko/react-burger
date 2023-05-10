@@ -27,7 +27,7 @@ export const RegisterPage = () => {
   )
 
   return (
-    <Flex align="center" justify="center" grow={1}>
+    <>
       <UserForm
         header="Регистрация"
         submitAction="Зарегистрироваться"
@@ -45,6 +45,6 @@ export const RegisterPage = () => {
           </Flex>
         </Flex>
       </UserForm>
-    </Flex>
+    </>
   )
 }
