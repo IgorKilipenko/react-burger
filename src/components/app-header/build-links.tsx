@@ -45,6 +45,8 @@ export const buildLinks = () => {
         routesInfo.register.path,
         routesInfo.forgotPassword.path,
         routesInfo.resetPassword.path,
+        routesInfo.orders.path,
+        routesInfo.order.path,
       ],
       get element() {
         return (props: LinkBuilderProps) => (
