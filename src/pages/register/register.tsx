@@ -6,7 +6,7 @@ import { UserForm, UserFormDataState } from "../../components/user-form"
 import { useAppDispatch } from "../../services/store"
 import { authActions } from "../../services/slices/auth"
 
-export const RegisterPage = () => {
+export const RegisterPage = React.memo(() => {
   const dispatch = useAppDispatch()
   const isSubmittedRef = React.useRef(false)
 
@@ -27,24 +27,22 @@ export const RegisterPage = () => {
   )
 
   return (
-    <>
-      <UserForm
-        header="Регистрация"
-        submitAction="Зарегистрироваться"
-        onSubmit={handleSubmit}
-        errorMessage="Ошибка регистрации. Проверьте попытку позже"
-      >
-        <Flex direction="column" align="center" gap={4}>
-          <Flex gap={2}>
-            <Text variant="mainDefault">Уже зарегистрированы?</Text>
-            <Link to={routesInfo.login.path} isActive>
-              <Text variant="mainDefault" color="accent-color">
-                Войти
-              </Text>
-            </Link>
-          </Flex>
+    <UserForm
+      header="Регистрация"
+      submitAction="Зарегистрироваться"
+      onSubmit={handleSubmit}
+      errorMessage="Ошибка регистрации. Проверьте попытку позже"
+    >
+      <Flex direction="column" align="center" gap={4}>
+        <Flex gap={2}>
+          <Text variant="mainDefault">Уже зарегистрированы?</Text>
+          <Link to={routesInfo.login.path} isActive>
+            <Text variant="mainDefault" color="accent-color">
+              Войти
+            </Text>
+          </Link>
         </Flex>
-      </UserForm>
-    </>
+      </Flex>
+    </UserForm>
   )
-}
+})

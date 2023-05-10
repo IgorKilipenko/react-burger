@@ -16,7 +16,7 @@ interface InputsState {
   code: UserFormDataState["name"]
 }
 
-export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
+export const ResetPasswordPage = React.memo<ResetPasswordPageProps>(() => {
   const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const [state, setState] = React.useState<InputsState>({
     password: { value: "", isValid: false },
@@ -150,4 +150,4 @@ export const ResetPasswordPage: React.FC<ResetPasswordPageProps> = () => {
       </Flex>
     </Form>
   )
-}
+})

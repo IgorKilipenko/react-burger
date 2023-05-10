@@ -3,7 +3,7 @@ import { UserForm, UserFormDataState } from "../../components/user-form"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { authActions, getAuthStore } from "../../services/slices/auth"
 
-export const ProfilePage = () => {
+export const ProfilePage = React.memo(() => {
   const authState = useAppSelector(getAuthStore)
   const dispatch = useAppDispatch()
 
@@ -36,4 +36,4 @@ export const ProfilePage = () => {
   return (
     <UserForm withEditIcons={true} values={loadedUserData} submitAction="Сохранить" onSubmit={handleSubmit}></UserForm>
   )
-}
+})

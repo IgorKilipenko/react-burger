@@ -9,7 +9,7 @@ import { authActions, getAuthStore } from "../../services/slices/auth"
 import { useNavigate } from "react-router-dom"
 import { useToastStatus } from "../../hooks"
 
-export const LoginPage = () => {
+export const LoginPage = React.memo(() => {
   const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const [state, setState] = React.useState<Record<string, { value: string; isValid: boolean }>>({
     password: { value: "", isValid: false },
@@ -120,4 +120,4 @@ export const LoginPage = () => {
       </Flex>
     </Form>
   )
-}
+})
