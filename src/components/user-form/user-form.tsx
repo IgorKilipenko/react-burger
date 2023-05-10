@@ -1,11 +1,13 @@
 import React from "react"
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
 import { Form, EmailInput, PasswordInput, AdvancedInput } from "../common/form"
-import { Flex, FormErrorMessage, Text } from "@chakra-ui/react"
+import { Flex, FlexboxProps, FormErrorMessage, LayoutProps, SpaceProps, Text } from "@chakra-ui/react"
 import { useAppSelector } from "../../services/store"
 import { getAuthStore } from "../../services/slices/auth"
 import { FlexOptions } from "../../utils/types"
 import { FormProps } from "../common/form/form"
+import { Link } from "../common"
+import { appColors } from "../../theme/styles"
 
 interface UserFormDataStateValue {
   value: string
@@ -19,6 +21,7 @@ export interface UserFormProps
     Omit<FormProps, "children" | "onSubmit"> {
   header?: string | null
   submitAction?: string | null
+  resetAction?: string | null
   withEditIcons?: boolean
   children?: React.ReactElement
   onSubmit?: (dataState: UserFormDataState) => void
@@ -29,14 +32,17 @@ export interface UserFormProps
   errorMessage?: string
   forceSubmit?: boolean | null
   onValidated?: (args: { name?: string; value: string; isValid: boolean }) => void
+  actionsContainerOptions?: FlexOptions & FlexboxProps & SpaceProps & LayoutProps
 }
 
 export const UserForm = React.memo<UserFormProps>(
   ({
     header = null,
     submitAction = null,
+    resetAction = null,
     withEditIcons = false,
     onSubmit,
+    onReset,
     children,
     values,
     inputs = { email: true, name: true, password: true },
@@ -44,6 +50,7 @@ export const UserForm = React.memo<UserFormProps>(
     errorMessage,
     forceSubmit = false,
     onValidated,
+    actionsContainerOptions,
     ...props
   }) => {
     const [state, setState] = React.useState<UserFormDataState>({
@@ -109,13 +116,21 @@ export const UserForm = React.memo<UserFormProps>(
       [onSubmit, state]
     )
 
+    const resetState = React.useCallback((defaultValues: typeof values) => {
+      return {
+        name: { value: defaultValues?.name ?? "", isValid: false },
+        password: { value: defaultValues?.password ?? "", isValid: false },
+        email: { value: defaultValues?.email ?? "", isValid: false },
+      }
+    }, [])
+
     React.useEffect(() => {
-      setState({
-        name: { value: values?.name ?? "", isValid: false },
-        password: { value: values?.password ?? "", isValid: false },
-        email: { value: values?.email ?? "", isValid: false },
-      })
-    }, [values])
+      setState(resetState(values))
+    }, [resetState, values])
+
+    const handleReset = React.useCallback(() => {
+      setState(resetState(values))
+    }, [resetState, values])
 
     return (
       <Form
@@ -164,11 +179,22 @@ export const UserForm = React.memo<UserFormProps>(
               </Flex>
             </FormErrorMessage>
           ) : null}
-          {submitAction ? (
-            <Flex alignSelf="center" grow={0}>
-              <Button htmlType="submit" size="medium" disabled={!(forceSubmit || isValid)}>
-                {submitAction}
-              </Button>
+          {resetAction || submitAction ? (
+            <Flex gap={5} {...actionsContainerOptions}>
+              {resetAction ? (
+                <Flex justify="center" align="center" pl={2} pr={2}>
+                  <Link onClick={handleReset}>
+                    <Text color={appColors.accent}>{resetAction}</Text>
+                  </Link>
+                </Flex>
+              ) : null}
+              {submitAction ? (
+                <Flex alignSelf="center" grow={0}>
+                  <Button htmlType="submit" size="medium" disabled={!(forceSubmit || isValid)}>
+                    {submitAction}
+                  </Button>
+                </Flex>
+              ) : null}
             </Flex>
           ) : null}
         </Flex>
