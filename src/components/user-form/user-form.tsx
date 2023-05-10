@@ -91,7 +91,7 @@ export const UserForm = React.memo<UserFormProps>(
 
         onValidated && onValidated({ name, value, isValid })
       },
-      []
+      [onValidated]
     )
 
     const isValid = React.useMemo(() => {
