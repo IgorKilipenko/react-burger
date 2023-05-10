@@ -22,10 +22,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const targetPathRef = React.useRef<string | null>(null)
 
   React.useEffect(() => {
-    if (accessType === "withAuth" && !authState.isAuthenticatedUser) {
+    if (accessType === "withAuth" && !authState.loading && !authState.isAuthenticatedUser) {
       targetPathRef.current = redirectPath
     }
-  }, [accessType, authState.isAuthenticatedUser, redirectPath])
+  }, [accessType, authState.isAuthenticatedUser, authState.loading, redirectPath])
 
   const loader = React.useMemo(
     () => (
@@ -48,7 +48,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     } else {
       return <Navigate to={redirectPath} state={{ targetAfterAuth: location.pathname }} replace />
     }
-  }, [authState.isAuthenticatedUser, element, location, redirectPath])
+  }, [authState.isAuthenticatedUser, element, location.pathname, redirectPath])
 
   const redirectWithoutAuth = React.useMemo(() => {
     return !authState.isAuthenticatedUser ? element : <Navigate to={redirectPath} />
