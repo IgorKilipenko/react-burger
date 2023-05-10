@@ -38,7 +38,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
 
   return (
     <Flex align="start" gap={15} mt="28">
-      <Flex direction="column" w="min-content">
+      <Flex direction="column" w="min-content" grow={0}>
         <Flex direction="column" pb={30} w="320px">
           {buildLink({ text: "Профиль", path: routesInfo.profile.path })}
           {buildLink({ text: "История заказов", path: routesInfo.orders.path })}
@@ -55,7 +55,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
           </Flex>
         ) : null}
       </Flex>
-      <Flex minW="844px">
+      <Flex grow={1}>
         <Outlet />
       </Flex>
     </Flex>

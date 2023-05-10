@@ -25,7 +25,8 @@ export const ProfileContainer = React.memo<ProfileContainerProps>(({ ...restProp
   const containerOptions = React.useMemo(() => {
     if (location.pathname.match(`${routesInfo.profile.path}.*`)) {
       return {
-        justify:"start"
+        justify:"start",
+        align:"stretch"
       }
     } 
     return {}
