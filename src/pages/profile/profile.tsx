@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../services/store"
 import { authActions, getAuthStore } from "../../services/slices/auth"
 
 export const ProfilePage = React.memo(() => {
+  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const authState = useAppSelector(getAuthStore)
   const dispatch = useAppDispatch()
   const [enableForceSubmit, setEnableForceSubmit] = React.useState(false)
@@ -11,22 +12,26 @@ export const ProfilePage = React.memo(() => {
 
   const handleSubmit = React.useCallback(
     (userData: UserFormDataState) => {
-      const data = Object.entries(changedItemsRef.current).reduce<Partial<Record<keyof UserFormDataState, string>>>(
-        (res, [key, val]) => {
-          const currVal = val.isValid ? val.value : undefined
-          if (currVal) {
-            res[key as keyof UserFormDataState] = currVal
-          }
-          return res
-        },
-        {}
-      )
+      if (lockRef.current === false) {
+        lockRef.current = true
+        
+        const data = Object.entries(changedItemsRef.current).reduce<Partial<Record<keyof UserFormDataState, string>>>(
+          (res, [key, val]) => {
+            const currVal = val.isValid ? val.value : undefined
+            if (currVal) {
+              res[key as keyof UserFormDataState] = currVal
+            }
+            return res
+          },
+          {}
+        )
 
-      console.assert(
-        Object.entries(data).every(([key, val]) => val === userData[key as keyof UserFormDataState]?.value)
-      )
+        console.assert(
+          Object.entries(data).every(([key, val]) => val === userData[key as keyof UserFormDataState]?.value)
+        )
 
-      dispatch(authActions.updateUser(data))
+        dispatch(authActions.updateUser(data))
+      }
     },
     [dispatch]
   )
@@ -48,7 +53,6 @@ export const ProfilePage = React.memo(() => {
       } else if (changedItemsRef.current[itemKey]) {
         delete changedItemsRef.current[itemKey]
       }
-      console.log(changedItemsRef.current[itemKey])
 
       const isValid =
         Object.keys(changedItemsRef.current).length > 0 &&
