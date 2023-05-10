@@ -14,7 +14,7 @@ export const ProfilePage = React.memo(() => {
     (userData: UserFormDataState) => {
       if (lockRef.current === false) {
         lockRef.current = true
-        
+
         const data = Object.entries(changedItemsRef.current).reduce<Partial<Record<keyof UserFormDataState, string>>>(
           (res, [key, val]) => {
             const currVal = val.isValid ? val.value : undefined
@@ -70,9 +70,11 @@ export const ProfilePage = React.memo(() => {
       withEditIcons={true}
       values={loadedUserData}
       submitAction={enableForceSubmit ? "Сохранить" : null}
+      resetAction={enableForceSubmit ? "Отменить" : null}
       onSubmit={handleSubmit}
       onValidated={handleValidated}
       forceSubmit={enableForceSubmit}
+      actionsContainerOptions={{ justify: "end", w:"100%" }}
     />
   )
 })
