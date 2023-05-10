@@ -13,7 +13,7 @@ const App = () => {
   React.useEffect(() => {
     if (lockRef.current === false) {
       lockRef.current = true
-      
+
       !isAuthenticatedUser && dispatch(authActions.getUser())
     }
   }, [dispatch, isAuthenticatedUser])
