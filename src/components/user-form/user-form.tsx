@@ -9,7 +9,7 @@ import { FormProps } from "../common/form/form"
 
 interface UserFormDataStateValue {
   value: string
-  isValid: false
+  isValid: boolean
 }
 
 export type UserFormDataState = Record<"name" | "password" | "email", UserFormDataStateValue>
@@ -21,12 +21,14 @@ export interface UserFormProps
   submitAction?: string | null
   withEditIcons?: boolean
   children?: React.ReactElement
-  onSubmit?: (dataState: UserFormDataState) => void | null
+  onSubmit?: (dataState: UserFormDataState) => void
   values?: Partial<Record<keyof UserFormDataState, string | null>> | null
   isReadOnly?: boolean | null
   inputs?: Partial<Record<keyof UserFormDataState, boolean | null | undefined>>
   inputPlaceholders?: Partial<Record<keyof UserFormDataState, string | undefined>>
   errorMessage?: string
+  forceSubmit?: boolean | null
+  onValidated?: (args: { name?: string; value: string; isValid: boolean }) => void
 }
 
 export const UserForm = React.memo<UserFormProps>(
@@ -34,12 +36,14 @@ export const UserForm = React.memo<UserFormProps>(
     header = null,
     submitAction = null,
     withEditIcons = false,
-    onSubmit = null,
+    onSubmit,
     children,
     values,
     inputs = { email: true, name: true, password: true },
     inputPlaceholders = { name: "Имя" },
     errorMessage,
+    forceSubmit = false,
+    onValidated,
     ...props
   }) => {
     const [state, setState] = React.useState<UserFormDataState>({
@@ -84,6 +88,8 @@ export const UserForm = React.memo<UserFormProps>(
             [name]: { ...prevState[name as keyof UserFormDataState], isValid },
           }
         })
+
+        onValidated && onValidated({ name, value, isValid })
       },
       []
     )
@@ -160,7 +166,7 @@ export const UserForm = React.memo<UserFormProps>(
           ) : null}
           {submitAction ? (
             <Flex alignSelf="center" grow={0}>
-              <Button htmlType="submit" size="medium" disabled={!isValid}>
+              <Button htmlType="submit" size="medium" disabled={!(forceSubmit || isValid)}>
                 {submitAction}
               </Button>
             </Flex>
