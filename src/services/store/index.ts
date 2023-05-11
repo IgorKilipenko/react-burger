@@ -4,12 +4,18 @@ import { activeModalItemReducer } from "../slices/active-modal-items"
 import { burgerReducer } from "../slices/burger-constructor"
 import { orderReducer } from "../slices/orders"
 import { productsReducer } from "../slices/products"
+import { authReducer } from "../slices/auth"
+import { userPasswordReducer } from "../slices/auth"
+import { appReducer } from "../slices/app"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
   orders: orderReducer,
   products: productsReducer,
-  activeModalItem: activeModalItemReducer
+  activeModalItem: activeModalItemReducer,
+  auth: authReducer,
+  userPassword: userPasswordReducer,
+  app: appReducer,
 })
 
 interface Options {
@@ -43,5 +49,5 @@ export const store = configureAppStore({ forceDisableLogger: true })
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch: () => AppDispatch = useDispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

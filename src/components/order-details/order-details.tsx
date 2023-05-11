@@ -4,12 +4,13 @@ import { Icon, Icons } from "../common"
 import { ErrorMessage } from "../error-message"
 import { useAppSelector } from "../../services/store"
 import { getOrdersStore } from "../../services/slices/orders"
+import { appColors } from "../../theme/styles"
 
 export interface OrderDetailsProps {}
 
 export const headerText = "Детали ингредиента"
 
-export const OrderDetails: React.FC<OrderDetailsProps> = () => {
+export const OrderDetails = React.memo<OrderDetailsProps>(() => {
   const { order, loading, error } = useAppSelector(getOrdersStore)
 
   return (
@@ -33,7 +34,7 @@ export const OrderDetails: React.FC<OrderDetailsProps> = () => {
             overflow="hidden"
             textOverflow="ellipsis"
             whiteSpace="nowrap"
-            color={"link-inactive-color"}
+            color={appColors.inactive}
           >
             Дождитесь готовности на орбитальной станции
           </Text>
@@ -45,4 +46,4 @@ export const OrderDetails: React.FC<OrderDetailsProps> = () => {
       )}
     </Flex>
   )
-}
+})

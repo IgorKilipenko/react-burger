@@ -6,23 +6,25 @@ import { CategorySection } from "./category-section"
 import { BurgerIngredientType, CategoryBase } from "../../data"
 import { selectIngredients } from "./utils"
 import { Modal } from "../modal"
-import { headerText, IngredientDetail } from "../ingredient-details"
+import { headerText } from "../ingredient-details"
 import { useTabInView } from "../../hooks"
-import { burgerActions } from "../../services/slices/burger-constructor"
+import { burgerActions, getBunFromBurgerStore } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
 import { getProductsStore } from "../../services/slices/products"
-import { uid } from "uid"
+import { Outlet, useMatches, useNavigate, useLocation } from "react-router-dom"
+import { routesInfo } from "../app-router"
 
 export interface BurgerIngredientsProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
+type CategoryRefType = HTMLDivElement
+type CategoryIdType = CategoryBase["id"]
 
 const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions }) => {
-  type CategoryRefType = HTMLDivElement
-  type CategoryIdType = CategoryBase["id"]
-
+  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const dispatch = useAppDispatch()
   const { addProductToCart, clearCart } = burgerActions
   const { products: ingredientsTable, categories } = useAppSelector(getProductsStore)
+  const currentBun = useAppSelector(getBunFromBurgerStore)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
@@ -35,18 +37,25 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
 
   const { currentTabId, setInViewState, setCurrentTabIdForce } = useTabInView(categories!)
 
+  const matches = useMatches()
+  const navigate = useNavigate()
+  const { state: locationState } = useLocation()
+
   /// Mock select ingredients for constructor (need remove from production!)
   React.useEffect(() => {
-    dispatch(clearCart())
-    const selectedIngredients =
-      Object.keys(ingredientsTable ?? {}).length > 0
-        ? selectIngredients({ ingredients: ingredientsTable ?? {}, maxQuantity: 0 })
-        : []
-    selectedIngredients.forEach((x) => {
-      dispatch(addProductToCart({ product: x.item, uid: uid() }))
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ingredientsTable])
+    if (!currentBun && lockRef.current === false) {  /// Execute only once
+      lockRef.current = true
+
+      dispatch(clearCart())
+      const selectedIngredients =
+        Object.keys(ingredientsTable ?? {}).length > 0
+          ? selectIngredients({ ingredients: ingredientsTable ?? {}, maxQuantity: 0 })
+          : []
+      selectedIngredients.forEach((x) => {
+        dispatch(addProductToCart({ product: x.item }))
+      })
+    }
+  }, [addProductToCart, clearCart, currentBun, dispatch, ingredientsTable])
 
   /// Initialize refs to categories elements
   React.useEffect(() => {
@@ -75,16 +84,46 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   /// Open modal category details for selected ingredient
   const handleIngredientClick = React.useCallback(
     (ingredient: BurgerIngredientType) => {
-      dispatch(setActiveIngredient(ingredient))
-      setModalOpen(true)
+      navigate(`${routesInfo.ingredientItem.rootPath}/${ingredient._id}`, { state: { ingredient } })
     },
-    [dispatch]
+    [navigate]
   )
 
-  const handleModalClose = React.useCallback(() => {
+  const closeModal = React.useCallback(() => {
     setModalOpen(false)
     dispatch(clearActiveIngredient())
-  }, [dispatch])
+    navigate("", { replace: true })
+  }, [dispatch, navigate])
+
+  React.useEffect(() => {
+    if (!ingredientsTable) {
+      return
+    }
+
+    const routeIngredientMatch = matches.find(
+      (m) => m.id === routesInfo.ingredientItem.id && m.params && m.params[routesInfo.ingredientItem.paramName]
+    )
+    if (!routeIngredientMatch) {
+      if (modalOpen) {
+        closeModal()
+      }
+      return
+    }
+
+    const id = routeIngredientMatch!.params!.id!
+    const ingredient =
+      (locationState?.ingredient as BurgerIngredientType) ??
+      Object.values(ingredientsTable).reduce<BurgerIngredientType | null | undefined>((res, item) => {
+        return res ?? item.find((p) => p._id === id)
+      }, null)
+
+    if (ingredient) {
+      dispatch(setActiveIngredient(ingredient))
+      setModalOpen(true)
+    } else {
+      navigate("*", { replace: true })
+    }
+  }, [closeModal, dispatch, ingredientsTable, locationState?.ingredient, matches, modalOpen, navigate])
 
   return (
     <>
@@ -92,7 +131,11 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         <Text variant={"mainLarge"} pt={10} pb={5}>
           {capitalizeFirstLetter("соберите бургер")}
         </Text>
-        <IngredientsTabPanel onTabClick={handleTabClick} activeTabId={currentTabId as CategoryIdType} />
+        <IngredientsTabPanel
+          onTabClick={handleTabClick}
+          activeTabId={currentTabId as CategoryIdType}
+          options={{ container: { justify: "center" } }}
+        />
         <Flex ref={scrollContainerRef} direction="column" overflowY="auto" className="custom-scroll" mt={10} gap={10}>
           {categories?.map((category, i) => (
             <CategorySection
@@ -109,8 +152,8 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
         </Flex>
       </Flex>
       {modalOpen ? (
-        <Modal headerText={headerText} onClose={handleModalClose}>
-          <IngredientDetail />
+        <Modal headerText={headerText} onClose={closeModal}>
+          <Outlet />
         </Modal>
       ) : null}
     </>

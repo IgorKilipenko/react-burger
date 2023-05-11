@@ -1,11 +1,7 @@
 import React from "react"
 import { Text } from "@chakra-ui/react"
 import { Flex, type LayoutProps } from "@chakra-ui/react"
-import { useIsTouchEnabled } from "../../hooks"
 import { ErrorMessage } from "../error-message"
-import { HTML5Backend } from "react-dnd-html5-backend"
-import { DndProvider } from "react-dnd"
-import { TouchBackend } from "react-dnd-touch-backend"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { getProductsStore, getAllIngredients } from "../../services/slices/products"
 
@@ -23,13 +19,17 @@ const loadingMessage = () => (
 )
 
 export const MainContainer = React.memo<MainContainerProps>(({ children, maxContentWidth, h, height = "100%" }) => {
+  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const currHeight = h ?? height
-  const isTouchEnabled = useIsTouchEnabled()
   const { categories, loading, error } = useAppSelector(getProductsStore)
   const dispatch = useAppDispatch()
 
   React.useEffect(() => {
-    dispatch(getAllIngredients())
+    if (lockRef.current === false) {
+      lockRef.current = true
+
+      dispatch(getAllIngredients())
+    }
   }, [dispatch])
 
   return (
@@ -40,23 +40,8 @@ export const MainContainer = React.memo<MainContainerProps>(({ children, maxCont
         ) : loading || !categories || categories.length === 0 ? (
           loadingMessage()
         ) : (
-          <Flex
-            maxW={maxContentWidth}
-            justify="space-between"
-            pl={5}
-            pr={5}
-            gap={10}
-            pb={10}
-            justifySelf="stretch"
-            grow={1}
-          >
-            <DndProvider backend={!isTouchEnabled ? HTML5Backend : TouchBackend}>
-              {React.Children.map(children, (child) => (
-                <Flex as="section" grow={1} basis={0} justify="stretch">
-                  {child}
-                </Flex>
-              ))}
-            </DndProvider>
+          <Flex maxW={maxContentWidth} justify="stretch" pl={5} pr={5} pb={10} justifySelf="stretch" grow={1}>
+            {children}
           </Flex>
         )}
       </Flex>

@@ -63,7 +63,7 @@ export const dropHover: <T extends WithUidType>(args: DargHoverArgs<T>) => void 
 
 interface TargetProps {}
 
-export interface DndSortContainerProps {
+export interface DndSortItemProps {
   target: React.ForwardRefExoticComponent<React.PropsWithoutRef<TargetProps> & React.RefAttributes<HTMLDivElement>>
   key?: React.Key | null
   uid: string | number
@@ -72,7 +72,7 @@ export interface DndSortContainerProps {
   moveItem: DargHoverArgs<WithUidType>["moveItem"]
 }
 
-export const DndSortContainer: React.FC<DndSortContainerProps> = ({ target: Target, uid, index, accept, moveItem }) => {
+export const DndSortItem: React.FC<DndSortItemProps> = ({ target: Target, uid, index, accept, moveItem }) => {
   type TDragItem = DragItem<WithUidType>
 
   const ref = React.useRef<HTMLDivElement>(null)

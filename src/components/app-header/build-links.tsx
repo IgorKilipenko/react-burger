@@ -2,45 +2,56 @@ import React from "react"
 import { ProfileIcon, BurgerIcon, ListIcon } from "../common/icons"
 import { Link } from "../common"
 import { ResponsiveLogo } from "../common/logo"
+import { routesInfo } from "../app-router"
+
+interface LinkBuilderProps {
+  isActive?: boolean
+  onClick?: (value?: string | number) => void
+}
 
 export const buildLinks = () => {
-  const initializeLink =
-    (element:React.ReactElement) =>
-    ({ isActive=false, onClick } : {isActive?: boolean, onClick?: (value: string) => void}) =>
-      React.cloneElement(element, {
-        isActive,
-        onClick: (value: string) => {
-          onClick && onClick(value)
-        },
-      })
-
   return {
     burgerConstructor: {
-      tag: "burgerConstructor",
+      tag: routesInfo.home.path,
       get element() {
-        return initializeLink(<Link icon={BurgerIcon} text="Конструктор" value={this.tag} />)
+        return (props: LinkBuilderProps) => (
+          <Link to={this.tag} icon={BurgerIcon} text="Конструктор" value={this.tag} {...props} />
+        )
       },
     },
     orderList: {
       tag: "orderList",
       get element() {
-        return initializeLink(<Link icon={ListIcon} text="Лента заказов" value={this.tag} />)
+        return (props: LinkBuilderProps) => (
+          <Link to={this.tag} icon={ListIcon} text="Лента заказов" value={this.tag} {...props} />
+        )
       },
     },
     homeLink: {
-      tag: "homeLink",
+      tag: routesInfo.home.path,
       get element() {
-        return initializeLink(
-          <Link value={this.tag}>
+        return (props: LinkBuilderProps) => (
+          <Link to={this.tag} value={this.tag} {...props}>
             <ResponsiveLogo breakpoint={"md"} />
           </Link>
         )
       },
     },
     userProfile: {
-      tag: "userProfile",
+      tag: routesInfo.profile.path,
+      validTags: [
+        routesInfo.login.path,
+        routesInfo.profile.path,
+        routesInfo.register.path,
+        routesInfo.forgotPassword.path,
+        routesInfo.resetPassword.path,
+        routesInfo.orders.path,
+        routesInfo.order.path,
+      ],
       get element() {
-        return initializeLink(<Link icon={ProfileIcon} text="Личный кабинет" value={this.tag} />)
+        return (props: LinkBuilderProps) => (
+          <Link to={this.tag} icon={ProfileIcon} text="Личный кабинет" value={this.tag} {...props} />
+        )
       },
     },
   }

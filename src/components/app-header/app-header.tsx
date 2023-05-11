@@ -3,6 +3,7 @@ import { Flex, Center, type FlexProps } from "@chakra-ui/react"
 import { useHeight } from "../../hooks/useSize"
 import { buildLinks } from "./build-links"
 import { useMultiStyleConfig } from "@chakra-ui/react"
+import { useLocation } from "react-router-dom"
 
 export interface AppHeaderProps {
   variant?: string
@@ -10,8 +11,9 @@ export interface AppHeaderProps {
 }
 
 const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHeight }) => {
+  const location = useLocation()
   const links = buildLinks()
-  const [currentLink, setCurrentLink] = React.useState(links.burgerConstructor.tag)
+  const [currentLink, setCurrentLink] = React.useState<string | number | undefined>(location.pathname)
   const headerRef = React.useRef<HTMLDivElement | null>(null)
   const height = useHeight(headerRef)
   const styles = useMultiStyleConfig("AppHeader", { variant })
@@ -19,6 +21,10 @@ const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHei
   React.useEffect(() => {
     onChangeHeight && onChangeHeight(height)
   }, [onChangeHeight, height])
+
+  React.useEffect(() => {
+    setCurrentLink(location.pathname)
+  }, [location.pathname])
 
   const headerItems = [
     (props: FlexProps) => (
@@ -43,7 +49,10 @@ const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHei
     ),
     (props: FlexProps) => (
       <Flex justify="end" {...props}>
-        {links.userProfile.element({ isActive: currentLink === links.userProfile.tag, onClick: setCurrentLink })}
+        {links.userProfile.element({
+          isActive: links.userProfile.validTags.some((tag) => tag === currentLink),
+          onClick: setCurrentLink,
+        })}
       </Flex>
     ),
   ]

@@ -1,4 +1,5 @@
 import { defineStyle, createMultiStyleConfigHelpers } from "@chakra-ui/react"
+import { appColors } from "../styles"
 
 const components = { container: "container", nav: "nav", items: "items" }
 const helpers = createMultiStyleConfigHelpers([components.container, components.nav, components.items])
@@ -11,7 +12,7 @@ const sizes = {
 
 const baseStyle = defineStyle({
   [components.container]: {
-    bg: "alt-body-bg",
+    bg: appColors.bodyAltBackground,
   },
 })
 

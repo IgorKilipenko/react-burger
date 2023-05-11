@@ -1,17 +1,32 @@
 import { type ChakraTheme as ChakraThemeType } from "@chakra-ui/react"
 
+export const appColors = {
+  inactive: "link-inactive-color",
+  bodyAltBackground: "alt-body-bg",
+  bodyBackground: "body-bg",
+  elementBackground: "element-bg",
+  hoveredBackground: "hovered-bg",
+  textPrimary: "text-primary-color",
+  accent: "accent-color",
+  error: "error-color",
+  success: "success-color",
+  overlayBackground: "overlay-bg",
+  activeBorderColor: "active-border-color",
+} as const
+
 export const semanticTokens = {
   colors: {
-    "link-inactive-color": { _light: "gray.800", _dark: "#8585AD" },
-    "alt-body-bg": { _light: "gray.200", _dark: "#1C1C21" },
-    "body-bg": { _light: "white", _dark: "#131316" },
-    "element-bg": { _light: "gray.200", _dark: "#2f2f37" },
-    "hovered-bg": { _light: "gray.200", _dark: "#2f2f37" },
-    "text-primary-color": { _light: "gray.800", _dark: "white" },
-    "error-color": { _light: "#E52B1A", _dark: "#E52B1A" },
-    "success-color": { _light: "#00CCCC", _dark: "#00CCCC" },
-    "overlay-bg":{ _light: "blackAlpha.600", _dark: "blackAlpha.600" },
-    "active-border-color" : { _light: "#4C4CFF", _dark: "#4C4CFF" },
+    [appColors.bodyBackground]: { _light: "white", _dark: "#131316" },
+    [appColors.bodyAltBackground]: { _light: "gray.200", _dark: "#1C1C21" },
+    [appColors.elementBackground]: { _light: "gray.200", _dark: "#2f2f37" },
+    [appColors.hoveredBackground]: { _light: "gray.200", _dark: "#2f2f37" },
+    [appColors.overlayBackground]: { _light: "blackAlpha.600", _dark: "blackAlpha.600" },
+    [appColors.textPrimary]: { _light: "gray.800", _dark: "white" },
+    [appColors.accent]: { _light: "#4C4CFF", _dark: "#4C4CFF" },
+    [appColors.error]: { _light: "#E52B1A", _dark: "#E52B1A" },
+    [appColors.success]: { _light: "#00CCCC", _dark: "#00CCCC" },
+    [appColors.inactive]: { _light: "gray.800", _dark: "#8585AD" },
+    [appColors.activeBorderColor]: { _light: "#4C4CFF", _dark: "#4C4CFF" },
   },
 }
 

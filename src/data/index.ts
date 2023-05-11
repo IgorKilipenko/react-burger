@@ -1,6 +1,4 @@
-import { BurgerIngredientType, IngredientsTableView } from "./data-types"
-
-export { apiConfig as apiClientConfig } from "./api"
+export { apiConfig as apiClientConfig } from "./api-config"
 
 export type {
   DbIndexType,
@@ -12,28 +10,19 @@ export type {
   IngredientsTableView,
 } from "./data-types"
 
-export { api, type ApiOrderIdResponseType } from "./api"
+export { api } from "./api"
+export type {
+  ApiOrderIdResponseType,
+  ApiLoginResponseType,
+  UserDataType,
+  WithPassword,
+  WithoutTokens,
+} from "./api-response"
 
-export const allowableCategories = { bun: "bun", sauce: "sauce", main: "main" }
+export * from "./common-data"
 
-export const ingredientCategoriesMap: Record<keyof typeof allowableCategories, string> = {
-  bun: "булки",
-  sauce: "соусы",
-  main: "начинки",
-}
-
-export const categoryMapper = (categoryRaw: string) => {
-  return ingredientCategoriesMap[categoryRaw as keyof typeof ingredientCategoriesMap]
-}
-
-export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData: T[]) {
-  const table = rawData.reduce<IngredientsTableView<T>>((res, item) => {
-    const category = (res[item.type] ??= [])
-    category.push(item)
-    return res
-  }, {})
-
-  const categories = Object.keys(table).map((category) => ({ id: category, name: categoryMapper(category) }))
-
-  return { table, categories }
-}
+export {
+  refreshTokenStorageManager,
+  accessTokenStorageManager,
+  type LocalStorageManager,
+} from "./local-storage-manager"

@@ -1,4 +1,5 @@
 import { defineStyle, defineStyleConfig } from "@chakra-ui/react"
+import { appColors } from "../styles"
 
 const baseStyle = defineStyle({
   _hover: {
@@ -9,7 +10,7 @@ const baseStyle = defineStyle({
 const variants = {
   secondary: defineStyle(() => {
     return {
-      color: "link-inactive-color",
+      color: appColors.inactive,
     }
   }),
 }
