@@ -86,7 +86,7 @@ export const BurgerItem = React.memo<BurgerItemProps>(({ element, type = null, s
         )
       }
     )
-  }, [bunProps, constructorElement, isBunElement, type])
+  }, [bunProps, constructorElement, dragIconElement, type])
 
   const swapItems = React.useCallback(
     ({ dragIndex, hoverIndex }: { dragIndex: number; hoverIndex: number }) => {
