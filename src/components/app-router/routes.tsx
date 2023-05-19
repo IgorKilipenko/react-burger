@@ -15,59 +15,86 @@ const preparePath = (path: string) => {
   return path.replace(/\/{2,}/, "/")
 }
 
-export const ROOT_PATH = process.env.NODE_ENV === "development" ? "/" : "/react-burger/"
-export const LOGIN = preparePath(`${ROOT_PATH}/login`)
-export const REGISTER = preparePath(`${ROOT_PATH}/register`)
-export const FORGOT_PASSWORD = preparePath(`${ROOT_PATH}/forgot-password`)
-export const RESET_PASSWORD = preparePath(`${ROOT_PATH}/reset-password`)
-export const PROFILE = preparePath(`${ROOT_PATH}/profile`)
-export const ERROR_PAGE = preparePath(`${ROOT_PATH}/error-page`)
-export const INGREDIENTS = preparePath(`${ROOT_PATH}/ingredients`)
-export const ORDERS = preparePath(`${PROFILE}/orders`)
-export const ORDER = preparePath(`${ORDERS}/:id`)
+export const AppPaths = {
+  ROOT_PATH: "/",
+  get LOGIN() {
+    return preparePath(`${AppPaths.ROOT_PATH}/login`)
+  },
+  get REGISTER() {
+    return preparePath(`${AppPaths.ROOT_PATH}/register`)
+  },
+  get FORGOT_PASSWORD() {
+    return preparePath(`${AppPaths.ROOT_PATH}/forgot-password`)
+  },
+  get RESET_PASSWORD() {
+    return preparePath(`${AppPaths.ROOT_PATH}/reset-password`)
+  },
+  get PROFILE() {
+    return preparePath(`${AppPaths.ROOT_PATH}/profile`)
+  },
+  get ERROR_PAGE() {
+    return preparePath(`${AppPaths.ROOT_PATH}/error-page`)
+  },
+  get INGREDIENTS() {
+    return preparePath(`${AppPaths.ROOT_PATH}/ingredients`)
+  },
+  get ORDERS() {
+    return preparePath(`${AppPaths.PROFILE}/orders`)
+  },
+  get ORDER() {
+    return preparePath(`${AppPaths.ORDERS}/:id`)
+  },
+  get NOT_FOUND_PAGE() {
+    return preparePath(`${AppPaths.ROOT_PATH}/*`)
+  },
+} as const
 
 export const routesInfo = {
-  root: { path: ROOT_PATH, element: <App /> },
+  root: { path: AppPaths.ROOT_PATH, element: <App /> },
   layout: { element: <Layout /> },
-  profileContainer: { path: PROFILE, element: <ProfileContainer /> },
-  profileLayout: { path: PROFILE, element: <ProfileLayout /> },
-  home: { path: ROOT_PATH, element: <HomePage /> },
+  profileContainer: { path: AppPaths.PROFILE, element: <ProfileContainer /> },
+  profileLayout: { path: AppPaths.PROFILE, element: <ProfileLayout /> },
+  home: { path: AppPaths.ROOT_PATH, element: <HomePage /> },
   login: {
-    path: LOGIN,
-    element: <ProtectedRoute accessType="withoutAuth" element={<LoginPage />} redirectPath={ROOT_PATH} />,
+    path: AppPaths.LOGIN,
+    element: <ProtectedRoute accessType="withoutAuth" element={<LoginPage />} redirectPath={AppPaths.ROOT_PATH} />,
   },
   register: {
-    path: REGISTER,
-    element: <ProtectedRoute accessType="withoutAuth" element={<RegisterPage />} redirectPath={ROOT_PATH} />,
+    path: AppPaths.REGISTER,
+    element: <ProtectedRoute accessType="withoutAuth" element={<RegisterPage />} redirectPath={AppPaths.ROOT_PATH} />,
   },
   forgotPassword: {
-    path: FORGOT_PASSWORD,
-    element: <ProtectedRoute accessType="withoutAuth" element={<ForgotPasswordPage />} redirectPath={ROOT_PATH} />,
+    path: AppPaths.FORGOT_PASSWORD,
+    element: (
+      <ProtectedRoute accessType="withoutAuth" element={<ForgotPasswordPage />} redirectPath={AppPaths.ROOT_PATH} />
+    ),
   },
   resetPassword: {
-    path: RESET_PASSWORD,
-    element: <ProtectedRoute accessType="withoutAuth" element={<ResetPasswordPage />} redirectPath={ROOT_PATH} />,
+    path: AppPaths.RESET_PASSWORD,
+    element: (
+      <ProtectedRoute accessType="withoutAuth" element={<ResetPasswordPage />} redirectPath={AppPaths.ROOT_PATH} />
+    ),
   },
   profile: {
-      path: PROFILE,
-      element: <ProtectedRoute accessType="withAuth" element={<ProfilePage />} redirectPath={LOGIN} />,
+    path: AppPaths.PROFILE,
+    element: <ProtectedRoute accessType="withAuth" element={<ProfilePage />} redirectPath={AppPaths.LOGIN} />,
   },
   ingredientItem: {
     id: "ingredientItem",
     paramName: "id",
-    rootPath: INGREDIENTS,
+    rootPath: AppPaths.INGREDIENTS,
     get path() {
       return `${this.rootPath}/:${this.paramName}`
     },
     element: <IngredientDetail />,
   },
   orders: {
-    path: ORDERS,
-    element: <ProtectedRoute accessType="withAuth" element={<OrdersPage />} redirectPath={LOGIN} />,
+    path: AppPaths.ORDERS,
+    element: <ProtectedRoute accessType="withAuth" element={<OrdersPage />} redirectPath={AppPaths.LOGIN} />,
   },
   order: {
-    path: ORDER,
-    element: <ProtectedRoute accessType="withAuth" element={<OrderPage />} redirectPath={LOGIN} />,
+    path: AppPaths.ORDER,
+    element: <ProtectedRoute accessType="withAuth" element={<OrderPage />} redirectPath={AppPaths.LOGIN} />,
   },
-  errorPage: { path: ERROR_PAGE, element: <NotFoundPage /> },
+  errorPage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
 } as const
