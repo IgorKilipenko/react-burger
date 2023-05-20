@@ -5,6 +5,7 @@ import { ErrorMessage } from "../error-message"
 import { useAppSelector } from "../../services/store"
 import { getOrdersStore } from "../../services/slices/orders"
 import { appColors } from "../../theme/styles"
+import { LoadingProgress } from "../common/loading-progress"
 
 export interface OrderDetailsProps {}
 
@@ -40,7 +41,7 @@ export const OrderDetails = React.memo<OrderDetailsProps>(() => {
           </Text>
         </>
       ) : loading ? (
-        <Text variant="mainMedium">Обработка заказа...</Text>
+        <LoadingProgress text="Обработка заказа..." />
       ) : (
         <ErrorMessage message={`Ошибка получения номера заказа. ${error?.code ?? ""}`} />
       )}

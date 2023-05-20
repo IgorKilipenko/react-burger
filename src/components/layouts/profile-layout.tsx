@@ -1,17 +1,19 @@
 import React from "react"
 import { Flex, Text } from "@chakra-ui/react"
-import { useAppDispatch } from "../../services/store"
-import { authActions } from "../../services/slices/auth"
+import { useAppDispatch, useAppSelector } from "../../services/store"
+import { authActions, getAuthStore } from "../../services/slices/auth"
 import { Link } from "../../components/common"
 import { routesInfo } from "../../components/app-router"
 import { Outlet, useLocation } from "react-router-dom"
 import { appColors } from "../../theme/styles"
 import { FlexOptions } from "../../utils/types"
+import { LoadingProgress } from "../common/loading-progress"
 
 export interface ProfileLayoutProps extends FlexOptions {}
 
 export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
   const location = useLocation()
+  const authState = useAppSelector(getAuthStore)
   const dispatch = useAppDispatch()
 
   const buildLink = React.useCallback(
@@ -36,7 +38,9 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
     return null
   }, [location.pathname])
 
-  return (
+  return authState.loading ? (
+    <LoadingProgress />
+  ) : (
     <Flex align="start" gap={15} mt="28">
       <Flex direction="column" w="min-content" grow={0}>
         <Flex direction="column" pb={30} w="320px">

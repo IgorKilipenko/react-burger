@@ -1,9 +1,9 @@
 import React from "react"
-import { Text } from "@chakra-ui/react"
 import { Flex, type LayoutProps } from "@chakra-ui/react"
 import { ErrorMessage } from "../error-message"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { getProductsStore, getAllIngredients } from "../../services/slices/products"
+import { LoadingProgress } from "../common/loading-progress"
 
 interface MainContainerProps {
   children: React.ReactNode
@@ -11,12 +11,6 @@ interface MainContainerProps {
   height?: LayoutProps["height"]
   h?: LayoutProps["h"]
 }
-
-const loadingMessage = () => (
-  <Flex align="center" justify="center">
-    <Text variant="mainLarge">Загрузка...</Text>
-  </Flex>
-)
 
 export const MainContainer = React.memo<MainContainerProps>(({ children, maxContentWidth, h, height = "100%" }) => {
   const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
@@ -38,7 +32,7 @@ export const MainContainer = React.memo<MainContainerProps>(({ children, maxCont
         {error ? (
           <ErrorMessage message={`Ошибка загрузки данных. ${error.message}`} />
         ) : loading || !categories || categories.length === 0 ? (
-          loadingMessage()
+          <LoadingProgress />
         ) : (
           <Flex maxW={maxContentWidth} justify="stretch" pl={5} pr={5} pb={10} justifySelf="stretch" grow={1}>
             {children}
