@@ -41,8 +41,8 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
   return authState.loading ? (
     <LoadingProgress />
   ) : (
-    <Flex align="start" gap={15} mt="28">
-      <Flex direction="column" w="min-content" grow={0}>
+    <Flex align="start" gap={15} h="100%">
+      <Flex direction="column" w="min-content" grow={0} mt={28}>
         <Flex direction="column" pb={30} w="320px">
           {buildLink({ text: "Профиль", path: routesInfo.profile.path })}
           {buildLink({ text: "История заказов", path: routesInfo.orders.path })}
@@ -59,7 +59,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
           </Flex>
         ) : null}
       </Flex>
-      <Flex grow={1}>
+      <Flex grow={1} maxH="100%">
         <Outlet />
       </Flex>
     </Flex>
