@@ -2,7 +2,7 @@
   "cSpell.language": "en,ru",
   "editor.tabSize": 2,
   "cmake.configureOnOpen": false,
-  "cSpell.words": ["clsx", "middlewares", "noselect", "praktikum", "predeploy", "reduxjs"],
+  "cSpell.words": ["clsx", "Flexbox", "middlewares", "noselect", "praktikum", "predeploy", "reduxjs"],
   "jest.autoRun": "off",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
