@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom"
+import { createBrowserRouter, IndexRouteObject, Navigate, RouteObject } from "react-router-dom"
 import { AppPaths, routesInfo } from "./routes"
 
 export const appRouter = createBrowserRouter(
@@ -26,13 +26,24 @@ export const appRouter = createBrowserRouter(
               children: [
                 {
                   element: routesInfo.profileLayout.element,
-                  children: [routesInfo.profile as RouteObject, routesInfo.orders as RouteObject],
+                  children: [
+                    routesInfo.profile as RouteObject,
+                    {
+                      element: routesInfo.ordersBoard.element,
+                      path: routesInfo.ordersBoard.path,
+                      children: [
+                        {
+                          path: routesInfo.ordersBoardItem.path,
+                          element: routesInfo.ordersBoardItem.element,
+                        },
+                      ],
+                    },
+                  ],
                 },
                 routesInfo.forgotPassword as RouteObject,
                 routesInfo.resetPassword as RouteObject,
                 routesInfo.login as RouteObject,
                 routesInfo.register as RouteObject,
-                routesInfo.order as RouteObject,
               ],
             },
           ],
