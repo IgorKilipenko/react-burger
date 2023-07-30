@@ -1,6 +1,6 @@
 import React from "react"
 import { OrdersList } from "../../components/orders-list"
-import { Outlet, useLocation, useMatches, useNavigate } from "react-router-dom"
+import { Outlet, useMatches, useNavigate } from "react-router-dom"
 import { Modal } from "../../components/modal"
 import { routesInfo } from "../../components/app-router"
 import { Order, OrderStatus } from "../../data"
@@ -10,6 +10,8 @@ import {
   setActiveOrdersListItem,
 } from "../../services/slices/active-modal-items"
 import { useAppDispatch, useAppSelector } from "../../services/store"
+import { NotFoundPage } from "../not-found"
+import { appStateActions, getAppIsBackgroundRouteMode } from "../../services/slices/app"
 
 const _mockOrders: Order[] = [
   {
@@ -95,13 +97,15 @@ export const OrdersListPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState(false)
   const matches = useMatches()
   const navigate = useNavigate()
-  const { state: locationState } = useLocation()
   const dispatch = useAppDispatch()
   const { activeOrdersListItem } = useAppSelector(getActiveModalItemStore)
+  const isBackgroundMode = useAppSelector(getAppIsBackgroundRouteMode)
+  const orderRef = React.useRef<Order| null>(null)
 
   const handleOrderItemClick = React.useCallback(
     (order: Order) => {
-      navigate(`${routesInfo.ordersListItem.rootPath}/${order.number}`, { state: { order } })
+      navigate(`${routesInfo.ordersListItem.rootPath}/${order.number}`, {replace : orderRef.current ? false : false})
+      orderRef.current = order
     },
     [navigate]
   )
@@ -111,6 +115,12 @@ export const OrdersListPage: React.FC = () => {
     dispatch(clearActiveOrdersListItem())
     navigate("", { replace: true })
   }, [dispatch, navigate])
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(appStateActions.setIsBackgroundRouteMode(false))
+    }
+  }, [dispatch, isBackgroundMode])
 
   React.useEffect(() => {
     const routeOrderItemMatch = matches.find(
@@ -124,24 +134,32 @@ export const OrdersListPage: React.FC = () => {
     }
 
     const id = routeOrderItemMatch!.params!.id!
-    const order = (locationState?.order as Order) ?? Object.values(_mockOrders).find((item) => item.number === id)
+    const order = orderRef.current ?? Object.values(_mockOrders).find((item) => item.number === id)
 
     if (order) {
       dispatch(setActiveOrdersListItem(order))
-      setModalOpen(true)
+      if (!orderRef.current) {
+        dispatch(appStateActions.setIsBackgroundRouteMode(true))
+      } else {
+        setModalOpen(true)
+      }
     } else {
       navigate("*", { replace: true })
     }
-  }, [closeModal, dispatch, locationState?.order, matches, modalOpen, navigate])
+  }, [closeModal, dispatch, matches, modalOpen, navigate])
 
-  return (
+  return !isBackgroundMode ? (
     <>
       <OrdersList align="stretch" orders={_mockOrders} mt={10} pr={2} maxH="100%" onOrderClick={handleOrderItemClick} />
       {modalOpen && activeOrdersListItem && (
         <Modal headerText={activeOrdersListItem.number} onClose={closeModal}>
-          <Outlet />
+          <Outlet context={{ order: activeOrdersListItem }} />
         </Modal>
       )}
     </>
+  ) : activeOrdersListItem ? (
+    <Outlet context={{ order: activeOrdersListItem }} />
+  ) : (
+    <NotFoundPage />
   )
 }

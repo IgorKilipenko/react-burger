@@ -8,6 +8,7 @@ import { Outlet, useLocation } from "react-router-dom"
 import { appColors } from "../../theme/styles"
 import { FlexOptions } from "../../utils/types"
 import { LoadingProgress } from "../common/loading-progress"
+import { getAppIsBackgroundRouteMode } from "../../services/slices/app"
 
 export interface ProfileLayoutProps extends FlexOptions {}
 
@@ -15,6 +16,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
   const location = useLocation()
   const authState = useAppSelector(getAuthStore)
   const dispatch = useAppDispatch()
+  const isBackgroundMode = useAppSelector(getAppIsBackgroundRouteMode)
 
   const buildLink = React.useCallback(
     ({ text, path, onClick }: { text: string; onClick?: () => void; path?: string }) => {
@@ -40,7 +42,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
 
   return authState.loading ? (
     <LoadingProgress />
-  ) : (
+  ) : !isBackgroundMode ? (
     <Flex align="start" gap={15} h="100%">
       <Flex direction="column" w="min-content" grow={0} mt={28}>
         <Flex direction="column" pb={30} w="320px">
@@ -63,5 +65,5 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
         <Outlet />
       </Flex>
     </Flex>
-  )
+  ) : <Outlet />
 })

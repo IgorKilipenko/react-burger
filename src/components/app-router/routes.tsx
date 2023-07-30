@@ -1,7 +1,6 @@
 import { HomePage, NotFoundPage } from "../../pages"
 import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
-import { OrderPage } from "../../pages/order"
 import { OrdersListPage } from "../../pages/orders"
 import { ProfileContainer, ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
@@ -9,6 +8,7 @@ import { ResetPasswordPage } from "../../pages/reset-password"
 import App from "../app"
 import { IngredientDetail } from "../ingredient-details"
 import { Layout, ProfileLayout } from "../layouts"
+import { OrdersListItemDetails } from "../order-details"
 import { ProtectedRoute } from "./protected-route"
 
 const preparePath = (path: string) => {
@@ -97,7 +97,7 @@ export const routesInfo = {
     paramName: "id",
     rootPath: AppPaths.ORDERS_LIST,
     path: AppPaths.ORDERS_BOARD_ITEM,
-    element: <ProtectedRoute accessType="withAuth" element={<OrderPage />} redirectPath={AppPaths.LOGIN} />,
+    element: <ProtectedRoute accessType="withAuth" element={<OrdersListItemDetails />} redirectPath={AppPaths.LOGIN} />,
   },
   errorPage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
 } as const
