@@ -1,5 +1,8 @@
 import React from "react"
 import { Order, OrderStatus, OrdersList } from "../../components/orders-list"
+import { Outlet, useLocation, useMatches, useNavigate } from "react-router-dom"
+import { Modal } from "../../components/modal"
+import { routesInfo } from "../../components/app-router"
 
 const _mockOrders: Order[] = [
   {
@@ -81,6 +84,32 @@ const _mockOrders: Order[] = [
   },
 ]
 
-export const OrdersPage: React.FC = () => {
-  return <OrdersList align="stretch" orders={_mockOrders} mt={10} pr={2} maxH="100%" />
+export const OrdersBoardPage: React.FC = () => {
+  const [modalOpen, setModalOpen] = React.useState(false)
+  const matches = useMatches()
+  const navigate = useNavigate()
+  const { state: locationState } = useLocation()
+
+  const handleOrderItemClick = React.useCallback(
+    (orderNumber: string) => {
+      navigate(`${routesInfo.ordersBoardItem.rootPath}/${orderNumber}`, { state: { orderNumber } })
+    },
+    [navigate]
+  )
+
+  const order = React.useMemo(() => {
+    const orderItem = matches.find((m) => m.params && m.params["id"])
+    return orderItem ? "111" : null
+  }, [matches])
+
+  return (
+    <>
+      <OrdersList align="stretch" orders={_mockOrders} mt={10} pr={2} maxH="100%" onOrderClick={handleOrderItemClick} />
+      {order && (
+        <Modal headerText="teeee">
+          <Outlet />
+        </Modal>
+      )}
+    </>
+  )
 }

@@ -2,7 +2,7 @@ import { HomePage, NotFoundPage } from "../../pages"
 import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
 import { OrderPage } from "../../pages/order"
-import { OrdersPage } from "../../pages/orders"
+import { OrdersBoardPage } from "../../pages/orders"
 import { ProfileContainer, ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
 import { ResetPasswordPage } from "../../pages/reset-password"
@@ -90,7 +90,7 @@ export const routesInfo = {
   },
   ordersBoard: {
     path: AppPaths.ORDERS_BOARD,
-    element: <ProtectedRoute accessType="withAuth" element={<OrdersPage />} redirectPath={AppPaths.LOGIN} />,
+    element: <ProtectedRoute accessType="withAuth" element={<OrdersBoardPage />} redirectPath={AppPaths.LOGIN} />,
   },
   ordersBoardItem: {
     id: "ordersBoardItem",
