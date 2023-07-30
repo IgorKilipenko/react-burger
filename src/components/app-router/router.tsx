@@ -33,8 +33,9 @@ export const appRouter = createBrowserRouter(
                       path: routesInfo.ordersBoard.path,
                       children: [
                         {
-                          path: routesInfo.ordersBoardItem.path,
-                          element: routesInfo.ordersBoardItem.element,
+                          id: routesInfo.ordersListItem.id,
+                          path: routesInfo.ordersListItem.path,
+                          element: routesInfo.ordersListItem.element,
                         },
                       ],
                     },

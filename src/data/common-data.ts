@@ -23,3 +23,8 @@ export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData:
 
   return { table, categories }
 }
+
+export enum OrderStatus {
+  complete = "выполнен",
+  executing = "готовится",
+}

@@ -2,7 +2,7 @@ import { HomePage, NotFoundPage } from "../../pages"
 import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
 import { OrderPage } from "../../pages/order"
-import { OrdersBoardPage } from "../../pages/orders"
+import { OrdersListPage } from "../../pages/orders"
 import { ProfileContainer, ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
 import { ResetPasswordPage } from "../../pages/reset-password"
@@ -38,11 +38,11 @@ export const AppPaths = {
   get INGREDIENTS() {
     return preparePath(`${AppPaths.ROOT_PATH}/ingredients`)
   },
-  get ORDERS_BOARD() {
+  get ORDERS_LIST() {
     return preparePath(`${AppPaths.PROFILE}/orders`)
   },
   get ORDERS_BOARD_ITEM() {
-    return preparePath(`${AppPaths.ORDERS_BOARD}/:id`)
+    return preparePath(`${AppPaths.ORDERS_LIST}/:id`)
   },
   get NOT_FOUND_PAGE() {
     return preparePath(`${AppPaths.ROOT_PATH}/*`)
@@ -89,12 +89,13 @@ export const routesInfo = {
     element: <IngredientDetail />,
   },
   ordersBoard: {
-    path: AppPaths.ORDERS_BOARD,
-    element: <ProtectedRoute accessType="withAuth" element={<OrdersBoardPage />} redirectPath={AppPaths.LOGIN} />,
+    path: AppPaths.ORDERS_LIST,
+    element: <ProtectedRoute accessType="withAuth" element={<OrdersListPage />} redirectPath={AppPaths.LOGIN} />,
   },
-  ordersBoardItem: {
+  ordersListItem: {
     id: "ordersBoardItem",
-    rootPath: AppPaths.ORDERS_BOARD,
+    paramName: "id",
+    rootPath: AppPaths.ORDERS_LIST,
     path: AppPaths.ORDERS_BOARD_ITEM,
     element: <ProtectedRoute accessType="withAuth" element={<OrderPage />} redirectPath={AppPaths.LOGIN} />,
   },

@@ -1,3 +1,5 @@
+import { OrderStatus } from "./common-data"
+
 export type DbIndexType = string
 
 export interface DbObjectType {
@@ -31,3 +33,10 @@ export interface IngredientsTableView<T extends IngredientBase & DbObjectType = 
   [key: IngredientsTableViewKeyType]: T[]
 }
 
+export interface Order {
+  number: string
+  name: string
+  status: OrderStatus
+  date?: Date
+  burgerIds: DbObjectType["_id"][]
+}

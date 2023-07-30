@@ -1,2 +1,2 @@
-export { OrdersList, OrderStatus } from "./orders-list"
-export type { OrdersListProps, Order } from "./orders-list"
+export { OrdersList } from "./orders-list"
+export type { OrdersListProps } from "./orders-list"

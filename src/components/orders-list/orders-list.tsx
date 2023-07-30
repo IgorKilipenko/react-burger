@@ -1,34 +1,21 @@
 import React from "react"
 import { Avatar, AvatarGroup, Flex, Text } from "@chakra-ui/react"
-import { BurgerIngredientType, DbObjectType } from "../../data/data-types"
+import { BurgerIngredientType, DbObjectType, Order, OrderStatus } from "../../data"
 import { getProductsFromProductsStore } from "../../services/slices/products"
 import { useAppSelector } from "../../services/store"
 import { capitalizeFirstLetter } from "../../utils"
 import { appColors } from "../../theme/styles"
-import { Icon, Link } from "../../components/common"
-import { CurrencyIcon } from "../../components/common/icons"
+import { Icon, Link } from "../common"
+import { CurrencyIcon } from "../common/icons"
 import { FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components"
 import { FlexContainer } from "../../utils/types"
-
-export enum OrderStatus {
-  complete = "выполнен",
-  executing = "готовится",
-}
-
-export interface Order {
-  number: string
-  name: string
-  status: OrderStatus
-  date?: Date
-  burgerIds: DbObjectType["_id"][]
-}
 
 type _FlexOmitted = "direction" | "dir"
 type ContainerOptions = Omit<FlexContainer, _FlexOmitted>
 export interface OrdersListProps extends ContainerOptions {
   orders: Order[]
   maxVisibleOrderItems?: number
-  onOrderClick?: (order: string) => void
+  onOrderClick?: (order: Order) => void
 }
 
 export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderItems = 5, onOrderClick, ...props }) => {
@@ -47,9 +34,38 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
     [ingredients]
   )
 
-  const handleOrderItemClick = React.useCallback((order: Order) => {
-    onOrderClick && order && onOrderClick(order.number)
-  }, [onOrderClick]);
+  const handleOrderItemClick = React.useCallback(
+    (order: Order) => {
+      onOrderClick && order && onOrderClick(order)
+    },
+    [onOrderClick]
+  )
+
+  const buildIconsSection = React.useCallback(
+    (order: Order) => {
+      return (
+        <AvatarGroup size="lg" max={maxVisibleOrderItems} spacing={-4}>
+          {order.burgerIds.map((id, i, arr) => {
+            const ingredient = getIngredient(id)
+            console.assert(ingredient)
+            return ingredient ? (
+              <Avatar
+                key={i}
+                showBorder
+                borderColor={appColors.accent}
+                bg={appColors.bodyBackground}
+                zIndex={zIndexBase + arr.length - i}
+                boxShadow={"2px 0px 2px 0px #1c1c1c"}
+                name={getIngredient(id)?.name ?? ""}
+                src={ingredient.image}
+              />
+            ) : null
+          })}
+        </AvatarGroup>
+      )
+    },
+    [getIngredient, maxVisibleOrderItems]
+  )
 
   return (
     <Flex
@@ -80,26 +96,7 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
                   {capitalizeFirstLetter(`${item.status}`)}
                 </Text>
                 <Flex justify="stretch" gap={6}>
-                  <Flex grow={1}>
-                    <AvatarGroup size="lg" max={maxVisibleOrderItems} spacing={-4}>
-                      {item.burgerIds.map((id, i, arr) => {
-                        const ingredient = getIngredient(id)
-                        console.assert(ingredient)
-                        return ingredient ? (
-                          <Avatar
-                            key={i}
-                            showBorder
-                            borderColor={appColors.accent}
-                            bg={appColors.bodyBackground}
-                            zIndex={zIndexBase + arr.length - i}
-                            boxShadow={"2px 0px 2px 0px #1c1c1c"}
-                            name={getIngredient(id)?.name ?? ""}
-                            src={ingredient.image}
-                          />
-                        ) : null
-                      })}
-                    </AvatarGroup>
-                  </Flex>
+                  <Flex grow={1}>{buildIconsSection(item)}</Flex>
                   <Flex justify="end" align="center" gap={2}>
                     <Text variant="digitsDefault">480</Text>
                     <Icon as={CurrencyIcon} type="primary" boxSize={6} />
