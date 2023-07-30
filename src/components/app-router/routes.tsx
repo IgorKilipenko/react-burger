@@ -38,11 +38,11 @@ export const AppPaths = {
   get INGREDIENTS() {
     return preparePath(`${AppPaths.ROOT_PATH}/ingredients`)
   },
-  get ORDERS() {
+  get ORDERS_BOARD() {
     return preparePath(`${AppPaths.PROFILE}/orders`)
   },
-  get ORDER() {
-    return preparePath(`${AppPaths.ORDERS}/:id`)
+  get ORDERS_BOARD_ITEM() {
+    return preparePath(`${AppPaths.ORDERS_BOARD}/:id`)
   },
   get NOT_FOUND_PAGE() {
     return preparePath(`${AppPaths.ROOT_PATH}/*`)
@@ -88,12 +88,14 @@ export const routesInfo = {
     },
     element: <IngredientDetail />,
   },
-  orders: {
-    path: AppPaths.ORDERS,
+  ordersBoard: {
+    path: AppPaths.ORDERS_BOARD,
     element: <ProtectedRoute accessType="withAuth" element={<OrdersPage />} redirectPath={AppPaths.LOGIN} />,
   },
-  order: {
-    path: AppPaths.ORDER,
+  ordersBoardItem: {
+    id: "ordersBoardItem",
+    rootPath: AppPaths.ORDERS_BOARD,
+    path: AppPaths.ORDERS_BOARD_ITEM,
     element: <ProtectedRoute accessType="withAuth" element={<OrderPage />} redirectPath={AppPaths.LOGIN} />,
   },
   errorPage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
