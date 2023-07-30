@@ -1,17 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
-import { BurgerIngredientType } from "../../../data"
+import { BurgerIngredientType, Order } from "../../../data"
 
 interface ActiveModalItemState {
   activeIngredient?: BurgerIngredientType | null
+  activeOrdersListItem?: Order | null
 }
 
 const initialState: ActiveModalItemState = {
   activeIngredient: null,
+  activeOrdersListItem: null,
 }
 
 const activeModalItemSlice = createSlice({
-  name: "burgerConstructor",
+  name: "activeModalItem",
   initialState,
   reducers: {
     setActiveIngredient: (state, action: PayloadAction<BurgerIngredientType>) => {
@@ -19,10 +21,23 @@ const activeModalItemSlice = createSlice({
     },
 
     clearActiveIngredient: (state) => {
-      state = initialState
+      state.activeIngredient = initialState.activeIngredient
+    },
+
+    setActiveOrdersListItem: (state, action: PayloadAction<Order>) => {
+      state.activeOrdersListItem = action.payload
+    },
+
+    clearActiveOrdersListItem: (state) => {
+      state.activeOrdersListItem = initialState.activeOrdersListItem
     },
   },
 })
 
-export const { setActiveIngredient, clearActiveIngredient } = activeModalItemSlice.actions
+export const {
+  setActiveIngredient,
+  clearActiveIngredient,
+  setActiveOrdersListItem,
+  clearActiveOrdersListItem,
+} = activeModalItemSlice.actions
 export const activeModalItemReducer = activeModalItemSlice.reducer
