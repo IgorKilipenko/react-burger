@@ -32,7 +32,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
   const sectionInfoMessage = React.useMemo(() => {
     if (location.pathname === routesInfo.profile.path) {
       return "В этом разделе вы можете изменить свои персональные данные"
-    } else if (location.pathname === routesInfo.orders.path) {
+    } else if (location.pathname === routesInfo.ordersBoard.path) {
       return "В этом разделе вы можете посмотреть свою историю заказов"
     }
     return null
@@ -45,7 +45,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
       <Flex direction="column" w="min-content" grow={0} mt={28}>
         <Flex direction="column" pb={30} w="320px">
           {buildLink({ text: "Профиль", path: routesInfo.profile.path })}
-          {buildLink({ text: "История заказов", path: routesInfo.orders.path })}
+          {buildLink({ text: "История заказов", path: routesInfo.ordersBoard.path })}
           {buildLink({
             text: "Выход",
             onClick: () => {
