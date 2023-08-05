@@ -7,7 +7,6 @@ import {
   ApiPasswordResetResponseType,
   ApiRefreshTokenResponseType,
   ApiRegisterResponseType,
-  ApiResponseBase,
   ApiUserResponseType,
   TokenDataType,
   UserDataType,
