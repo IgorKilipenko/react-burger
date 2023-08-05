@@ -79,8 +79,8 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
     >
       {Object.entries(orders).map(([k, item], i) => {
         return (
-          <Link onClick={() => handleOrderItemClick(item)}>
-            <Flex key={k} direction="column" align="stretch" p={6} bg={appColors.bodyAltBackground} borderRadius="40px">
+          <Link key={k} onClick={() => handleOrderItemClick(item)}>
+            <Flex direction="column" align="stretch" p={6} bg={appColors.bodyAltBackground} borderRadius="40px">
               <Flex direction="column" grow={1} gap={6} pb={2}>
                 <Flex justify="space-between">
                   <Text variant="digitsDefault">{`#${item.number}`}</Text>
