@@ -73,7 +73,16 @@ const burgerSlice = createSlice({
     },
 
     clearBurgerConstructor: (state) => {
-      state = initialState
+      state.bun = initialState.bun
+      state.productQuantities = initialState.productQuantities
+      state.products = initialState.products
+    },
+
+    clearSelectedIngredients: (state) => {
+      state.productQuantities = state.bun
+        ? { [state.bun.product._id]: state.productQuantities[state.bun.product._id] }
+        : initialState.productQuantities
+      state.products = initialState.products
     },
 
     swapItemsByIndex: (
@@ -95,6 +104,12 @@ const burgerSlice = createSlice({
   },
 })
 
-export const { addIngredient, removeIngredient, clearBurgerConstructor, swapItemsByIndex, clearBuns } =
-  burgerSlice.actions
+export const {
+  addIngredient,
+  removeIngredient,
+  clearBurgerConstructor,
+  swapItemsByIndex,
+  clearBuns,
+  clearSelectedIngredients,
+} = burgerSlice.actions
 export const burgerReducer = burgerSlice.reducer

@@ -1,12 +1,13 @@
 import { RootState } from "../../store"
-import { addIngredient, removeIngredient, clearBurgerConstructor, swapItemsByIndex } from "./burger-slice"
+import { addIngredient, removeIngredient, clearBurgerConstructor, swapItemsByIndex, clearSelectedIngredients } from "./burger-slice"
 
 export { burgerReducer } from "./burger-slice"
 export const burgerActions = {
   addProductToCart: addIngredient,
   removeProductFromCart: removeIngredient,
   clearCart: clearBurgerConstructor,
-  swapItemsByIndex
+  swapItemsByIndex,
+  clearSelectedIngredients
 }
 export type { BurgerItemType, BurgerState } from "./burger-slice"
 

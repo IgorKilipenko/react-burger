@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, SerializedError, PayloadAction } from "@
 import { api } from "../../../data"
 
 export const createOrder = createAsyncThunk("order/createOrder", async (ingredientsIds: string[], thunkApi) => {
-  thunkApi.dispatch(clearOrder())
   const { data, error } = await api.createOrderWithAuth(ingredientsIds)
   if (error || !data?.success) throw error ?? Error(data?.message ?? "Error.")
   return { data, orderList: [...ingredientsIds], error }
@@ -29,7 +28,10 @@ const orderSlice = createSlice({
   initialState,
   reducers: {
     clearOrder: (state) => {
-      state = initialState
+      state.order = initialState.order
+      state.orderList = initialState.orderList
+      state.error = initialState.error
+      state.loading = initialState.loading
     },
   },
   extraReducers: (builder) => {
@@ -45,6 +47,8 @@ const orderSlice = createSlice({
       state.loading = false
     })
     builder.addCase(createOrder.pending, (state) => {
+      state.order = initialState.order
+      state.orderList = initialState.orderList
       state.error = initialState.error
       state.loading = true
     })

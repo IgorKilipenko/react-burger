@@ -69,7 +69,6 @@ const authSlice = createSlice({
       authSlice.caseReducers._setError(state, { type, payload: { error } })
     })
     builder.addCase(login.pending, (state) => {
-      //! authSlice.caseReducers.clearState(state)
       state.loading = true
     })
 

@@ -6,7 +6,7 @@ import { Icon } from "../common/icon"
 import { Burger } from "./burger"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
-import { BurgerItemType, getBurgerStore } from "../../services/slices/burger-constructor"
+import { BurgerItemType, burgerActions, getBurgerStore } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { allowableCategories, DbObjectType } from "../../data"
 import { createOrder } from "../../services/slices/orders"
@@ -56,8 +56,8 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
     } else {
       if (lockRef.current === false) {
         lockRef.current = true
-        setModalOpen(true)
         dispatch(createOrder(getSelectedIngredientsIds(allSelectedProductsForOrder)))
+        setModalOpen(true)
       }
     }
   }, [isAuthenticatedUser, navigate, dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
@@ -65,7 +65,8 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   const handleModalClose = React.useCallback(() => {
     lockRef.current = false
     setModalOpen(false)
-  },[])
+    dispatch(burgerActions.clearSelectedIngredients())
+  },[dispatch])
 
   return (
     <>
