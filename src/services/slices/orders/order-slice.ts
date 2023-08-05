@@ -3,12 +3,12 @@ import { api } from "../../../data"
 
 export const createOrder = createAsyncThunk("order/createOrder", async (ingredientsIds: string[], thunkApi) => {
   thunkApi.dispatch(clearOrder())
-  const { data, error } = await api.createOrder(ingredientsIds)
+  const { data, error } = await api.createOrderWithAuth(ingredientsIds)
   if (error || !data?.success) throw error ?? Error(data?.message ?? "Error.")
   return { data, orderList: [...ingredientsIds], error }
 })
 
-type Response = Awaited<ReturnType<(typeof api.createOrder)>> & {orderList?: string [] | null}
+type Response = Awaited<ReturnType<typeof api.createOrderWithAuth>> & { orderList?: string[] | null }
 
 interface OrderResponseState {
   order?: NonNullable<Response["data"]>["order"] | null
