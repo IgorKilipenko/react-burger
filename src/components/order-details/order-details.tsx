@@ -41,7 +41,7 @@ export const OrderDetails = React.memo<OrderDetailsProps>(() => {
           </Text>
         </>
       ) : loading ? (
-        <LoadingProgress text="Обработка заказа..." />
+        <Flex m="auto" minH="sm"><LoadingProgress text="Обработка заказа..." /></Flex>
       ) : (
         <ErrorMessage message={`Ошибка получения номера заказа. ${error?.code ?? ""}`} />
       )}

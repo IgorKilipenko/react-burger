@@ -34,7 +34,7 @@ export const Modal = ({ children, headerText, onClose, ...layoutProps }: ModalPr
             </Flex>
           ) : (
             <Box position="absolute" top={6} right={6}>
-              <ModalCloseButton size={8} onClick={onClose} />
+              <ModalCloseButton size={6} onClick={onClose} />
             </Box>
           )}
           <Flex grow={1} justify="center">

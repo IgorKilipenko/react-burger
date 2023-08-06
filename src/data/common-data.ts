@@ -25,6 +25,11 @@ export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData:
 }
 
 export enum OrderStatus {
-  complete = "выполнен",
-  executing = "готовится",
+  done = "выполнен",
+  pending = "готовится",
+  created = "создан"
+}
+
+export const orderStatusMapper = (val : "done" | "pending" | "created") => {
+  return OrderStatus[val]
 }

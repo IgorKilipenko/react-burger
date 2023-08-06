@@ -2,15 +2,18 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import { activeModalItemReducer } from "../slices/active-modal-items"
 import { burgerReducer } from "../slices/burger-constructor"
-import { orderReducer } from "../slices/orders"
+import { orderReducer, ordersListActions } from "../slices/orders"
+import { ordersListReducer } from "../slices/orders"
 import { productsReducer } from "../slices/products"
 import { authReducer } from "../slices/auth"
 import { userPasswordReducer } from "../slices/auth"
 import { appReducer } from "../slices/app"
+import { websocketMiddleware } from "../middlewares/ws"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
   orders: orderReducer,
+  ordersList: ordersListReducer,
   products: productsReducer,
   activeModalItem: activeModalItemReducer,
   auth: authReducer,
@@ -30,6 +33,8 @@ export default function configureAppStore({ forceDisableLogger = true }: Options
 
     middlewares.push(logger)
   }
+
+  middlewares.push(websocketMiddleware("wss://norma.nomoreparties.space/orders", ordersListActions, true))
 
   const store = configureStore({
     reducer: rootReducer,

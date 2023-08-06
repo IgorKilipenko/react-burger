@@ -24,7 +24,7 @@ const initialState: OrderResponseState = {
 }
 
 const orderSlice = createSlice({
-  name: "order",
+  name: "orders/order",
   initialState,
   reducers: {
     clearOrder: (state) => {

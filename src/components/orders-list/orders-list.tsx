@@ -45,11 +45,11 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
     (order: Order) => {
       return (
         <AvatarGroup size="lg" max={maxVisibleOrderItems} spacing={-4}>
-          {order.burgerIds.map((id, i, arr) => {
+          {order.ingredients.map((id, i, arr) => {
             const ingredient = getIngredient(id)
 
             console.assert(ingredient)
-            
+
             return ingredient ? (
               <Avatar
                 key={i}
@@ -93,9 +93,9 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
               <Flex direction="column" grow={1} gap={6}>
                 <Text
                   variant="mainDefault"
-                  color={item.status === OrderStatus.complete ? appColors.success : undefined}
+                  color={OrderStatus[item.status] === OrderStatus.done ? appColors.success : undefined}
                 >
-                  {capitalizeFirstLetter(`${item.status}`)}
+                  {capitalizeFirstLetter(OrderStatus[item.status])}
                 </Text>
                 <Flex justify="stretch" gap={6}>
                   <Flex grow={1}>{buildIconsSection(item)}</Flex>

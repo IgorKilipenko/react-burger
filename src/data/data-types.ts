@@ -33,10 +33,12 @@ export interface IngredientsTableView<T extends IngredientBase & DbObjectType = 
   [key: IngredientsTableViewKeyType]: T[]
 }
 
-export interface Order {
+export interface Order extends DbObjectType {
   number: string
   name: string
-  status: OrderStatus
+  status: "done" | "pending" | "created"
   date?: Date
-  burgerIds: DbObjectType["_id"][]
+  ingredients: DbObjectType["_id"][]
+  createdAt?: string
+  updatedAt?: string
 }

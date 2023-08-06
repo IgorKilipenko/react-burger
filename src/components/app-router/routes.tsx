@@ -99,5 +99,6 @@ export const routesInfo = {
     path: AppPaths.ORDERS_BOARD_ITEM,
     element: <ProtectedRoute accessType="withAuth" element={<OrdersListItemDetails />} redirectPath={AppPaths.LOGIN} />,
   },
-  errorPage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
+  notFoundPagePage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
+  errorPage: { path: AppPaths.NOT_FOUND_PAGE, element: <NotFoundPage /> },
 } as const

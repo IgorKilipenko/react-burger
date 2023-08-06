@@ -34,7 +34,7 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
   const sectionInfoMessage = React.useMemo(() => {
     if (location.pathname === routesInfo.profile.path) {
       return "В этом разделе вы можете изменить свои персональные данные"
-    } else if (location.pathname === routesInfo.ordersBoard.path) {
+    } else if (location.pathname.startsWith(routesInfo.ordersBoard.path)) {
       return "В этом разделе вы можете посмотреть свою историю заказов"
     }
     return null

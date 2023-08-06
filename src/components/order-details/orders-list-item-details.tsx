@@ -10,6 +10,7 @@ import { useGetProductsByIds } from "../../hooks"
 import { Icon } from "../common"
 import { CurrencyIcon } from "../common/icons"
 import { FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components"
+import { ErrorMessage } from "../error-message"
 
 export interface OrdersListItemDetailsProps {
   maxVisibleOrderItems?: number
@@ -20,7 +21,7 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
   const dispatch = useAppDispatch()
   const isBackgroundRouteMode = useAppSelector(getAppIsBackgroundRouteMode)
   const zIndexBase = 10
-  const ingredients = useGetProductsByIds(order?.burgerIds ?? [])
+  const ingredients = useGetProductsByIds(order?.ingredients ?? [])
 
   React.useEffect(() => {
     return () => {
@@ -40,12 +41,19 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
   const buildIconsSection = React.useCallback(
     (order: Order) => {
       return ingredients ? (
-        <Flex direction="column" gap={6} overflowY="auto" className="custom-scroll" maxH={`${(64 + 16) * 3}`} pr={6}>
+        <Flex
+          direction="column"
+          gap={6}
+          overflowY="auto"
+          className="custom-scroll"
+          maxH={`${(64 + 16) * 4}`}
+          w="100%"
+          pr={6}
+        >
           {Object.values(ingredients).map(({ element: ingredient, count }, i, arr) => {
             return (
-              <Flex justify="stretch" align="center" gap={4}>
+              <Flex key={ingredient._id} justify="stretch" align="center" gap={4}>
                 <Avatar
-                  key={i}
                   boxSize={16}
                   showBorder
                   borderColor={appColors.accent}
@@ -68,7 +76,7 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
             )
           })}
         </Flex>
-      ) : null
+      ) : <ErrorMessage message={`Отсутствует соединение с сервером`}/>
     },
     [ingredients]
   )
@@ -77,21 +85,21 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
     <Flex
       direction="column"
       {...(!isBackgroundRouteMode ? { w: "100%" } : { maxW: "100%", w: "640px" })}
-      align="start"
+      align="stretch"
       justify="center"
-      flexGrow={1}
+      grow={1}
     >
       {order ? (
         <>
           <Text variant="digitsDefault" align="center" w="100%">
-            {`#${order.number ?? ""}`.padStart(6, "0")}
+            {`${order.number ? `#${order.number.toString().padStart(6, "0")}` : ""}`}
           </Text>
           <Text variant="mainMedium" noOfLines={1} mt={10}>
             {order.name}
           </Text>
           <Flex mt={3}>
-            <Text variant="mainDefault" color={order.status === OrderStatus.complete ? appColors.success : undefined}>
-              {capitalizeFirstLetter(`${order.status}`)}
+            <Text variant="mainDefault" color={OrderStatus[order.status] === OrderStatus.done ? appColors.success : undefined}>
+              {capitalizeFirstLetter(OrderStatus[order.status])}
             </Text>
           </Flex>
           <Flex mt={15}>
@@ -103,7 +111,9 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
               <FormattedDate date={order.date ?? new Date(Date.now() - 0 * 24 * 1000 * 3600)} />
             </Flex>
             <Flex justify="end" align="center" gap={2} grow={1}>
-              <Text variant="digitsDefault" whiteSpace="nowrap">{orderTotalPrice}</Text>
+              <Text variant="digitsDefault" whiteSpace="nowrap">
+                {orderTotalPrice}
+              </Text>
               <Icon as={CurrencyIcon} type="primary" boxSize={6} />
             </Flex>
           </Flex>
