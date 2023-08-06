@@ -22,6 +22,17 @@ export const appRouter = createBrowserRouter(
               ],
             },
             {
+              element: routesInfo.ordersFeed.element,
+              path: routesInfo.ordersFeed.path,
+              children: [
+                {
+                  id: routesInfo.ordersFeedItem.id,
+                  path: routesInfo.ordersFeedItem.path,
+                  element: routesInfo.ordersFeedItem.element,
+                },
+              ],
+            },
+            {
               element: routesInfo.profileContainer.element,
               children: [
                 {
@@ -29,8 +40,8 @@ export const appRouter = createBrowserRouter(
                   children: [
                     routesInfo.profile as RouteObject,
                     {
-                      element: routesInfo.ordersBoard.element,
-                      path: routesInfo.ordersBoard.path,
+                      element: routesInfo.ordersList.element,
+                      path: routesInfo.ordersList.path,
                       children: [
                         {
                           id: routesInfo.ordersListItem.id,

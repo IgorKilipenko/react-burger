@@ -6,6 +6,8 @@ export {
   clearActiveIngredient,
   setActiveOrdersListItem,
   clearActiveOrdersListItem,
+  setActiveOrdersFeedItem,
+  clearActiveOrdersFeedItem,
 } from "./active-modal-item-slice"
 
 export const getActiveModalItemStore = (state: RootState) => state.activeModalItem

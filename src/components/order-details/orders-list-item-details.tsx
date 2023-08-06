@@ -76,7 +76,9 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
             )
           })}
         </Flex>
-      ) : <ErrorMessage message={`Отсутствует соединение с сервером`}/>
+      ) : (
+        <ErrorMessage message={`Отсутствует соединение с сервером`} />
+      )
     },
     [ingredients]
   )
@@ -98,7 +100,10 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
             {order.name}
           </Text>
           <Flex mt={3}>
-            <Text variant="mainDefault" color={OrderStatus[order.status] === OrderStatus.done ? appColors.success : undefined}>
+            <Text
+              variant="mainDefault"
+              color={OrderStatus[order.status] === OrderStatus.done ? appColors.success : undefined}
+            >
               {capitalizeFirstLetter(OrderStatus[order.status])}
             </Text>
           </Flex>
@@ -108,7 +113,7 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
           <Flex mt={6}>{buildIconsSection(order)}</Flex>
           <Flex justify="space-between" align="center" w="100%" mt={10}>
             <Flex color={appColors.inactive}>
-              <FormattedDate date={new Date(order.createdAt) ?? new Date(Date.now() - 0 * 24 * 1000 * 3600)} />
+              <FormattedDate date={new Date(order.createdAt)} />
             </Flex>
             <Flex justify="end" align="center" gap={2} grow={1}>
               <Text variant="digitsDefault" whiteSpace="nowrap">

@@ -20,7 +20,7 @@ export const buildLinks = () => {
       },
     },
     orderList: {
-      tag: "orderList",
+      tag: routesInfo.ordersFeed.path,
       get element() {
         return (props: LinkBuilderProps) => (
           <Link to={this.tag} icon={ListIcon} text="Лента заказов" value={this.tag} {...props} />
@@ -45,7 +45,7 @@ export const buildLinks = () => {
         routesInfo.register.path,
         routesInfo.forgotPassword.path,
         routesInfo.resetPassword.path,
-        routesInfo.ordersBoard.path,
+        routesInfo.ordersList.path,
         routesInfo.ordersListItem.path,
       ],
       get element() {

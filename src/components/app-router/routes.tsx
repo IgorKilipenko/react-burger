@@ -2,6 +2,7 @@ import { HomePage, NotFoundPage } from "../../pages"
 import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
 import { OrdersListPage } from "../../pages/orders"
+import { OrdersFeedPage } from "../../pages/orders-feed/orders-feed"
 import { ProfileContainer, ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
 import { ResetPasswordPage } from "../../pages/reset-password"
@@ -41,8 +42,14 @@ export const AppPaths = {
   get ORDERS_LIST() {
     return preparePath(`${AppPaths.PROFILE}/orders`)
   },
-  get ORDERS_BOARD_ITEM() {
+  get ORDERS_FEED() {
+    return preparePath(`${AppPaths.ROOT_PATH}/feed`)
+  },
+  get ORDERS_LIST_ITEM() {
     return preparePath(`${AppPaths.ORDERS_LIST}/:id`)
+  },
+  get ORDERS_FEED_ITEM() {
+    return preparePath(`${AppPaths.ORDERS_FEED}/:id`)
   },
   get NOT_FOUND_PAGE() {
     return preparePath(`${AppPaths.ROOT_PATH}/*`)
@@ -88,16 +95,27 @@ export const routesInfo = {
     },
     element: <IngredientDetail />,
   },
-  ordersBoard: {
+  ordersList: {
     path: AppPaths.ORDERS_LIST,
     element: <ProtectedRoute accessType="withAuth" element={<OrdersListPage />} redirectPath={AppPaths.LOGIN} />,
   },
   ordersListItem: {
-    id: "ordersBoardItem",
+    id: "ordersListItem",
     paramName: "id",
     rootPath: AppPaths.ORDERS_LIST,
-    path: AppPaths.ORDERS_BOARD_ITEM,
+    path: AppPaths.ORDERS_LIST_ITEM,
     element: <ProtectedRoute accessType="withAuth" element={<OrdersListItemDetails />} redirectPath={AppPaths.LOGIN} />,
+  },
+  ordersFeed: {
+    path: AppPaths.ORDERS_FEED,
+    element: <OrdersFeedPage />,
+  },
+  ordersFeedItem: {
+    id: "ordersFeedItem",
+    paramName: "id",
+    rootPath: AppPaths.ORDERS_FEED,
+    path: AppPaths.ORDERS_FEED_ITEM,
+    element: <OrdersListItemDetails />,
   },
   notFoundPagePage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
   errorPage: { path: AppPaths.NOT_FOUND_PAGE, element: <NotFoundPage /> },

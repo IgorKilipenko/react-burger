@@ -1,11 +1,11 @@
 import { Middleware } from "redux"
 import { RootState } from "../../store"
-import { ordersListActions } from "../../slices/orders"
+import { ordersFeedActions, ordersListActions } from "../../slices/orders"
 import { tokenManager } from "../../../data/utils"
 
 export const websocketMiddleware = (
   url: string,
-  actions: typeof ordersListActions,
+  actions: typeof ordersListActions | typeof ordersFeedActions,
   authRequired: boolean = false
 ): Middleware<{}, RootState> => {
   return (store) => (next) => (action) => {

@@ -5,11 +5,13 @@ import { BurgerIngredientType, Order } from "../../../data"
 interface ActiveModalItemState {
   activeIngredient?: BurgerIngredientType | null
   activeOrdersListItem?: Order | null
+  activeOrdersFeedItem?: Order | null
 }
 
 const initialState: ActiveModalItemState = {
   activeIngredient: null,
   activeOrdersListItem: null,
+  activeOrdersFeedItem: null,
 }
 
 const activeModalItemSlice = createSlice({
@@ -31,6 +33,14 @@ const activeModalItemSlice = createSlice({
     clearActiveOrdersListItem: (state) => {
       state.activeOrdersListItem = initialState.activeOrdersListItem
     },
+
+    setActiveOrdersFeedItem: (state, action: PayloadAction<Order>) => {
+      state.activeOrdersFeedItem = action.payload
+    },
+
+    clearActiveOrdersFeedItem: (state) => {
+      state.activeOrdersFeedItem = initialState.activeOrdersFeedItem
+    },
   },
 })
 
@@ -39,5 +49,7 @@ export const {
   clearActiveIngredient,
   setActiveOrdersListItem,
   clearActiveOrdersListItem,
+  setActiveOrdersFeedItem,
+  clearActiveOrdersFeedItem,
 } = activeModalItemSlice.actions
 export const activeModalItemReducer = activeModalItemSlice.reducer

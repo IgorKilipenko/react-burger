@@ -25,8 +25,8 @@ export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData:
 }
 
 export enum OrderStatus {
-  done = "выполнен",
-  pending = "готовится",
+  done = "готов",
+  pending = "в работе",
   created = "создан"
 }
 
