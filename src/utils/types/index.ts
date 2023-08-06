@@ -7,6 +7,8 @@ import type {
   SpaceProps,
 } from "@chakra-ui/react"
 
+export type { LayoutProps } from "@chakra-ui/react"
+
 export type WithoutIntersect<T, V> = { [K in keyof T]: T[K] extends V ? never : K }[keyof T]
 export type WithRequired<T extends {}, K extends keyof T> = Omit<T, K> & Required<SelectProps<T, K>>
 
