@@ -24,7 +24,7 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
 
   const getIngredient = React.useCallback(
     (id: DbObjectType["_id"]) => {
-      return Object.entries(ingredients!).reduce<BurgerIngredientType | null>((res, [_, items]) => {
+      return Object.values(ingredients!).reduce<BurgerIngredientType | null>((res, items) => {
         if (!res) {
           res = items.find((x) => x._id === id) ?? null
         }
@@ -47,7 +47,9 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
         <AvatarGroup size="lg" max={maxVisibleOrderItems} spacing={-4}>
           {order.burgerIds.map((id, i, arr) => {
             const ingredient = getIngredient(id)
+
             console.assert(ingredient)
+            
             return ingredient ? (
               <Avatar
                 key={i}
@@ -56,7 +58,7 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
                 bg={appColors.bodyBackground}
                 zIndex={zIndexBase + arr.length - i}
                 boxShadow={"2px 0px 2px 0px #1c1c1c"}
-                name={getIngredient(id)?.name ?? ""}
+                name={ingredient.name}
                 src={ingredient.image}
               />
             ) : null
