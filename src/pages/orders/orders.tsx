@@ -152,7 +152,7 @@ export const OrdersListPage: React.FC = () => {
     <>
       <OrdersList align="stretch" orders={_mockOrders} mt={10} pr={2} maxH="100%" onOrderClick={handleOrderItemClick} />
       {modalOpen && activeOrdersListItem && (
-        <Modal headerText={activeOrdersListItem.number} onClose={closeModal}>
+        <Modal w={{ base: "sm", sm: "md", md: "620px"}} onClose={closeModal}>
           <Outlet context={{ order: activeOrdersListItem }} />
         </Modal>
       )}

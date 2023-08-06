@@ -27,5 +27,14 @@ export const apiConfig = {
         return `${this.passwordReset}/reset`
       },
     },
+    wss: {
+      baseWssUrl: "wss://norma.nomoreparties.space",
+      endpoints: {
+        userOrdersList: "orders",
+        get ordersList() {
+          return `${this.userOrdersList}/all`
+        },
+      },
+    },
   },
 }

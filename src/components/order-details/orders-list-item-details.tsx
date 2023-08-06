@@ -21,14 +21,14 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(() =
   }, [dispatch])
 
   return (
-    <Flex direction="column" align="center" mb={20}>
+    <Flex direction="column" align="center">
       {order ? (
         <>
-          <Text variant="digitsLarge" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-            {`${order.number ?? ""}`.padStart(6, "0")}
+          <Text variant="digitsDefault" overflow="hidden" justifyContent="center" textOverflow="ellipsis" whiteSpace="nowrap">
+            {`#${order.number ?? ""}`.padStart(6, "0")}
           </Text>
-          <Text variant="mainMedium" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" mt={8}>
-            Идентификатор заказа
+          <Text variant={{base:"mainDefault", md: "mainMedium"}} noOfLines={1} mt={10}>
+            {order.name}
           </Text>
           <Flex mb={15} mt={15}>
             <Icon as={Icons.OrderSuccessIcon} />
