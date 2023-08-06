@@ -1,4 +1,4 @@
-import { Box, Flex, LayoutProps, layout } from "@chakra-ui/react"
+import { Box, Flex, LayoutProps } from "@chakra-ui/react"
 import { ModalHeader } from "./modal-header"
 import { ModalContainer } from "./modal-container"
 import { ModalCloseButton } from "./modal-close-button"
