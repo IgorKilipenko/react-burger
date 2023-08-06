@@ -108,7 +108,7 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ m
           <Flex mt={6}>{buildIconsSection(order)}</Flex>
           <Flex justify="space-between" align="center" w="100%" mt={10}>
             <Flex color={appColors.inactive}>
-              <FormattedDate date={order.date ?? new Date(Date.now() - 0 * 24 * 1000 * 3600)} />
+              <FormattedDate date={new Date(order.createdAt) ?? new Date(Date.now() - 0 * 24 * 1000 * 3600)} />
             </Flex>
             <Flex justify="end" align="center" gap={2} grow={1}>
               <Text variant="digitsDefault" whiteSpace="nowrap">

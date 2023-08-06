@@ -13,9 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../services/store"
 import { NotFoundPage } from "../not-found"
 import { appStateActions, getAppIsBackgroundRouteMode } from "../../services/slices/app"
 import { getOrdersListStore, ordersListActions } from "../../services/slices/orders"
-import { LoadingProgress } from "../../components/common/loading-progress"
 import { ErrorMessage } from "../../components/error-message"
-import { Flex } from "@chakra-ui/react"
 
 export const OrdersListPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState(false)

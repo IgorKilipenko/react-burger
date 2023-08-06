@@ -1,5 +1,3 @@
-import { OrderStatus } from "./common-data"
-
 export type DbIndexType = string
 
 export interface DbObjectType {
@@ -37,8 +35,7 @@ export interface Order extends DbObjectType {
   number: string
   name: string
   status: "done" | "pending" | "created"
-  date?: Date
   ingredients: DbObjectType["_id"][]
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
 }
