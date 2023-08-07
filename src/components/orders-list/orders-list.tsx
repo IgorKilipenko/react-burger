@@ -22,6 +22,10 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
   const ingredients = useAppSelector(getProductsFromProductsStore)
   const zIndexBase = 10
 
+  const sortedOrders = React.useMemo(() => {
+    return [...orders].sort((a,b) => Number.parseInt(b.number) - Number.parseInt(a.number))
+  }, [orders])
+
   const getIngredient = React.useCallback(
     (id: DbObjectType["_id"]) => {
       return Object.values(ingredients!).reduce<BurgerIngredientType | null>((res, items) => {
@@ -79,7 +83,7 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
       className="custom-scroll"
       {...(props as ContainerOptions)}
     >
-      {orders.map((item) => {
+      {sortedOrders.map((item) => {
         return (
           <Link key={item._id} onClick={() => handleOrderItemClick(item)}>
             <Flex direction="column" align="stretch" p={6} bg={appColors.bodyAltBackground} borderRadius="40px">
