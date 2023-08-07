@@ -2,7 +2,7 @@ import React from "react"
 import { Avatar, Flex, Text } from "@chakra-ui/react"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { appColors } from "../../theme/styles"
-import { useOutletContext } from "react-router-dom"
+import { useMatches, useOutletContext } from "react-router-dom"
 import { Order, OrderStatus } from "../../data"
 import { appStateActions, getAppIsBackgroundRouteMode } from "../../services/slices/app"
 import { capitalizeFirstLetter } from "../../utils"
@@ -12,22 +12,22 @@ import { CurrencyIcon } from "../common/icons"
 import { FormattedDate } from "@ya.praktikum/react-developer-burger-ui-components"
 import { ErrorMessage } from "../error-message"
 
-export interface OrdersListItemDetailsProps {
-  maxVisibleOrderItems?: number
-}
+export interface OrdersListItemDetailsProps {}
 
-export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(({ maxVisibleOrderItems = 5 }) => {
+export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(() => {
   const { order } = useOutletContext<{ order: Order | undefined | null }>()
   const dispatch = useAppDispatch()
   const isBackgroundRouteMode = useAppSelector(getAppIsBackgroundRouteMode)
   const zIndexBase = 10
   const ingredients = useGetProductsByIds(order?.ingredients ?? [])
+  const matches = useMatches()
 
   React.useEffect(() => {
     return () => {
-      dispatch(appStateActions.setIsBackgroundRouteMode(false))
+      !matches.find((m) => m.params) &&
+        dispatch(appStateActions.setIsBackgroundRouteMode(false))
     }
-  }, [dispatch])
+  }, [dispatch, matches])
 
   const orderTotalPrice = React.useMemo(() => {
     return !ingredients

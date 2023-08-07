@@ -10,12 +10,12 @@ import {
   setActiveOrdersFeedItem,
 } from "../../services/slices/active-modal-items"
 import { useAppDispatch, useAppSelector } from "../../services/store"
-import { NotFoundPage } from "../not-found"
 import { appStateActions, getAppIsBackgroundRouteMode } from "../../services/slices/app"
 import { getOrdersFeedStore, ordersFeedActions } from "../../services/slices/orders"
 import { ErrorMessage } from "../../components/error-message"
 import { Flex, Text } from "@chakra-ui/react"
 import { appColors } from "../../theme/styles"
+import { LoadingProgress } from "../../components/common/loading-progress"
 
 export const OrdersFeedPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState(false)
@@ -38,14 +38,14 @@ export const OrdersFeedPage: React.FC = () => {
   const closeModal = React.useCallback(() => {
     setModalOpen(false)
     dispatch(clearActiveOrdersListItem())
+    orderRef.current = null
     navigate("", { replace: true })
   }, [dispatch, navigate])
 
-  React.useEffect(() => {
-    return () => {
-      dispatch(appStateActions.setIsBackgroundRouteMode(false))
-    }
-  }, [dispatch, isBackgroundMode])
+  React.useCallback(() => {
+    matches.find((m) => m.id === routesInfo.ordersFeedItem.id && m.params[routesInfo.ordersFeedItem.paramName]) &&
+      dispatch(appStateActions.setIsBackgroundRouteMode(true))
+  }, [dispatch, matches])
 
   React.useEffect(() => {
     if (!ordersFeedState.transportState.connected && !ordersFeedState.transportState.connecting) {
@@ -55,6 +55,7 @@ export const OrdersFeedPage: React.FC = () => {
       if (ordersFeedState.transportState.connected) {
         dispatch(ordersFeedActions.disconnect())
       }
+      dispatch(appStateActions.setIsBackgroundRouteMode(false))
     }
   }, [dispatch, ordersFeedState.transportState.connected, ordersFeedState.transportState.connecting])
 
@@ -79,19 +80,10 @@ export const OrdersFeedPage: React.FC = () => {
       } else {
         setModalOpen(true)
       }
-    } else if (ordersFeedState.message) {
+    } else if (ordersFeedState.message?.orders) {
       navigate(routesInfo.notFoundPagePage.path, { replace: true })
     }
-  }, [
-    closeModal,
-    dispatch,
-    matches,
-    modalOpen,
-    navigate,
-    ordersFeedState.message,
-    ordersFeedState.message?.orders,
-    ordersFeedState.transportState.connected,
-  ])
+  }, [closeModal, dispatch, matches, modalOpen, navigate, ordersFeedState.message])
 
   return !isBackgroundMode ? (
     <Flex direction="column" overflow="hidden" maxH={"100%"}>
@@ -171,8 +163,12 @@ export const OrdersFeedPage: React.FC = () => {
       )}
     </Flex>
   ) : activeOrdersFeedItem ? (
-    <Outlet context={{ order: activeOrdersFeedItem }} />
+    <Flex grow={1} justify="center">
+      <Flex shrink={1}>
+        <Outlet context={{ order: activeOrdersFeedItem }} />
+      </Flex>
+    </Flex>
   ) : (
-    <NotFoundPage />
+    <LoadingProgress />
   )
 }

@@ -10,10 +10,10 @@ import {
   setActiveOrdersListItem,
 } from "../../services/slices/active-modal-items"
 import { useAppDispatch, useAppSelector } from "../../services/store"
-import { NotFoundPage } from "../not-found"
 import { appStateActions, getAppIsBackgroundRouteMode } from "../../services/slices/app"
 import { getOrdersListStore, ordersListActions } from "../../services/slices/orders"
 import { ErrorMessage } from "../../components/error-message"
+import { LoadingProgress } from "../../components/common/loading-progress"
 
 export const OrdersListPage: React.FC = () => {
   const [modalOpen, setModalOpen] = React.useState(false)
@@ -36,14 +36,15 @@ export const OrdersListPage: React.FC = () => {
   const closeModal = React.useCallback(() => {
     setModalOpen(false)
     dispatch(clearActiveOrdersListItem())
+    orderRef.current = null
     navigate("", { replace: true })
   }, [dispatch, navigate])
 
   React.useEffect(() => {
-    return () => {
-      dispatch(appStateActions.setIsBackgroundRouteMode(false))
-    }
-  }, [dispatch, isBackgroundMode])
+    matches.find(
+      (m) => m.id === routesInfo.ordersListItem.id && m.params && m.params[routesInfo.ordersListItem.paramName]
+    ) && dispatch(appStateActions.setIsBackgroundRouteMode(true))
+  }, [dispatch, matches])
 
   React.useEffect(() => {
     if (!ordersListState.transportState.connected && !ordersListState.transportState.connecting) {
@@ -53,6 +54,7 @@ export const OrdersListPage: React.FC = () => {
       if (ordersListState.transportState.connected) {
         dispatch(ordersListActions.disconnect())
       }
+      dispatch(appStateActions.setIsBackgroundRouteMode(false))
     }
   }, [dispatch, ordersListState.transportState.connected, ordersListState.transportState.connecting])
 
@@ -80,16 +82,7 @@ export const OrdersListPage: React.FC = () => {
     } else if (ordersListState.message) {
       navigate(routesInfo.notFoundPagePage.path, { replace: true })
     }
-  }, [
-    closeModal,
-    dispatch,
-    matches,
-    modalOpen,
-    navigate,
-    ordersListState.message,
-    ordersListState.message?.orders,
-    ordersListState.transportState.connected,
-  ])
+  }, [closeModal, dispatch, matches, modalOpen, navigate, ordersListState.message])
 
   return !isBackgroundMode ? (
     <>
@@ -116,6 +109,6 @@ export const OrdersListPage: React.FC = () => {
   ) : activeOrdersListItem ? (
     <Outlet context={{ order: activeOrdersListItem }} />
   ) : (
-    <NotFoundPage />
+    <LoadingProgress />
   )
 }
