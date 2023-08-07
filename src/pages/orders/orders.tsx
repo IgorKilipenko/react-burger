@@ -40,10 +40,12 @@ export const OrdersListPage: React.FC = () => {
     navigate("", { replace: true })
   }, [dispatch, navigate])
 
-  React.useEffect(() => {
-    matches.find(
-      (m) => m.id === routesInfo.ordersListItem.id && m.params && m.params[routesInfo.ordersListItem.paramName]
-    ) && dispatch(appStateActions.setIsBackgroundRouteMode(true))
+  React.useCallback(() => {
+    matches.find((m) => m.id === routesInfo.ordersListItem.id && m.params[routesInfo.ordersListItem.paramName]) &&
+      dispatch(appStateActions.setIsBackgroundRouteMode(true))
+    return () => {
+      dispatch(appStateActions.setIsBackgroundRouteMode(false))
+    }
   }, [dispatch, matches])
 
   React.useEffect(() => {
@@ -54,7 +56,6 @@ export const OrdersListPage: React.FC = () => {
       if (ordersListState.transportState.connected) {
         dispatch(ordersListActions.disconnect())
       }
-      dispatch(appStateActions.setIsBackgroundRouteMode(false))
     }
   }, [dispatch, ordersListState.transportState.connected, ordersListState.transportState.connecting])
 

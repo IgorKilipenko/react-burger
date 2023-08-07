@@ -24,7 +24,7 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(() =
 
   React.useEffect(() => {
     return () => {
-      !matches.find((m) => m.params) &&
+      matches.find((m) => m.params) &&
         dispatch(appStateActions.setIsBackgroundRouteMode(false))
     }
   }, [dispatch, matches])
