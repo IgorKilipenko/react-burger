@@ -3,16 +3,15 @@ import { Flex } from "@chakra-ui/react"
 import { BurgerIngredientType } from "../../data"
 import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
 import { useDrop } from "react-dnd"
-import { useSelector, useDispatch } from "react-redux"
-import { burgerActions } from "../../services/slices/burger-constructor"
-import { RootState } from "../../services/store"
+import { burgerActions, getBurgerStore } from "../../services/slices/burger-constructor"
+import {  useAppDispatch, useAppSelector } from "../../services/store"
 
 export interface BurgerProps {}
 
 export const Burger = React.memo<BurgerProps>(() => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { addProductToCart } = burgerActions
-  const {bun, products:ingredients} = useSelector((store: RootState) => store.burgerConstructor)
+  const {bun, products:ingredients} = useAppSelector(getBurgerStore)
 
   const handleDrop = React.useCallback(
     (ingredient: BurgerIngredientType) => {

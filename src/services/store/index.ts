@@ -9,6 +9,7 @@ import { authReducer } from "../slices/auth"
 import { userPasswordReducer } from "../slices/auth"
 import { appReducer } from "../slices/app"
 import { websocketMiddleware } from "../middlewares/ws"
+import { apiConfig } from "../../data/api-config"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
@@ -34,8 +35,12 @@ export default function configureAppStore({ forceDisableLogger = true }: Options
     middlewares.push(logger)
   }
 
-  middlewares.push(websocketMiddleware("wss://norma.nomoreparties.space/orders", ordersListActions, true))
-  middlewares.push(websocketMiddleware("wss://norma.nomoreparties.space/orders/all", ordersFeedActions, false))
+  middlewares.push(
+    websocketMiddleware(`${apiConfig.wss.baseWssUrl}/${apiConfig.wss.endpoints.ordersList}`, ordersListActions, true)
+  )
+  middlewares.push(
+    websocketMiddleware(`${apiConfig.wss.baseWssUrl}/${apiConfig.wss.endpoints.ordersFeed}`, ordersFeedActions, false)
+  )
 
   const store = configureStore({
     reducer: rootReducer,
