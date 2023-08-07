@@ -19,7 +19,7 @@ export const buildLinks = () => {
         )
       },
     },
-    orderList: {
+    ordersFeed: {
       tag: routesInfo.ordersFeed.path,
       get element() {
         return (props: LinkBuilderProps) => (

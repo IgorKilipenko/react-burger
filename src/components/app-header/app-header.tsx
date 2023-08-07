@@ -39,7 +39,10 @@ const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHei
           isActive: currentLink === links.burgerConstructor.tag,
           onClick: setCurrentLink,
         })}
-        {links.orderList.element({ isActive: currentLink === links.orderList.tag, onClick: setCurrentLink })}
+        {links.ordersFeed.element({
+          isActive: currentLink === links.ordersFeed.tag || (currentLink as string).startsWith(links.ordersFeed.tag),
+          onClick: setCurrentLink,
+        })}
       </Flex>
     ),
     (props: FlexProps) => (
@@ -50,7 +53,9 @@ const AppHeader = React.memo<AppHeaderProps>(({ variant = "desktop", onChangeHei
     (props: FlexProps) => (
       <Flex justify="end" {...props}>
         {links.userProfile.element({
-          isActive: links.userProfile.validTags.some((tag) => tag === currentLink),
+          isActive: links.userProfile.validTags.some(
+            (tag) => tag === currentLink || (currentLink as string).startsWith(tag)
+          ),
           onClick: setCurrentLink,
         })}
       </Flex>
