@@ -4,11 +4,9 @@ import { capitalizeFirstLetter } from "../../utils/string-processing"
 import { IngredientsTabPanel } from "./ingredients-tab-panel"
 import { CategorySection } from "./category-section"
 import { BurgerIngredientType, CategoryBase } from "../../data"
-import { selectIngredients } from "./utils"
 import { Modal } from "../modal"
 import { headerText } from "../ingredient-details"
 import { useTabInView } from "../../hooks"
-import { burgerActions, getBunFromBurgerStore } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { clearActiveIngredient, setActiveIngredient } from "../../services/slices/active-modal-items"
 import { getProductsStore } from "../../services/slices/products"
@@ -20,11 +18,8 @@ type CategoryRefType = HTMLDivElement
 type CategoryIdType = CategoryBase["id"]
 
 const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions }) => {
-  const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender
   const dispatch = useAppDispatch()
-  const { addProductToCart, clearCart } = burgerActions
   const { products: ingredientsTable, categories } = useAppSelector(getProductsStore)
-  const currentBun = useAppSelector(getBunFromBurgerStore)
 
   /// Need for calculate adaptive inView rate in CategorySection
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
@@ -40,22 +35,6 @@ const BurgerIngredients: React.FC<BurgerIngredientsProps> = ({ ...flexOptions })
   const matches = useMatches()
   const navigate = useNavigate()
   const { state: locationState } = useLocation()
-
-  /// Mock select ingredients for constructor (need remove from production!)
-  React.useEffect(() => {
-    if (!currentBun && lockRef.current === false) {  /// Execute only once
-      lockRef.current = true
-
-      dispatch(clearCart())
-      const selectedIngredients =
-        Object.keys(ingredientsTable ?? {}).length > 0
-          ? selectIngredients({ ingredients: ingredientsTable ?? {}, maxQuantity: 0 })
-          : []
-      selectedIngredients.forEach((x) => {
-        dispatch(addProductToCart({ product: x.item }))
-      })
-    }
-  }, [addProductToCart, clearCart, currentBun, dispatch, ingredientsTable])
 
   /// Initialize refs to categories elements
   React.useEffect(() => {

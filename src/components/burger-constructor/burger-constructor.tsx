@@ -25,7 +25,7 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   const isAuthenticatedUser = useAppSelector(getIsAuthUserFromStore)
   const navigate = useNavigate()
 
-  const allSelectedProductsForOrder = React.useMemo(
+  const allSelectedProductsForOrder : Array<NonNullable<typeof selectedBun>> = React.useMemo(
     () => (selectedBun ? [...Array(2).fill(selectedBun), ...selectedIngredients] : selectedIngredients),
     [selectedBun, selectedIngredients]
   )
@@ -47,6 +47,10 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   }, [calcTotalPrice, allSelectedProductsForOrder])
 
   const handleOrderButtonClick = React.useCallback(() => {
+    if (!selectedBun) {
+      return
+    }
+
     if (!isAuthenticatedUser) {
       navigate(routesInfo.login.path, { replace: true })
     } else {
@@ -56,11 +60,12 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
         setModalOpen(true)
       }
     }
-  }, [isAuthenticatedUser, navigate, dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
+  }, [selectedBun, isAuthenticatedUser, navigate, dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
 
   const handleModalClose = React.useCallback(() => {
     lockRef.current = false
     setModalOpen(false)
+    dispatch(burgerActions.clearBuns())
     dispatch(burgerActions.clearSelectedIngredients())
   }, [dispatch])
 
@@ -73,7 +78,14 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
             <Text variant={"digitsMedium"}>{totalPrice}</Text>
             <Icon as={CurrencyIcon} boxSize={9} />
           </Flex>
-          <Button htmlType="button" type="primary" size="large" extraClass="ml-2" onClick={handleOrderButtonClick}>
+          <Button
+            htmlType="button"
+            type={"primary"}
+            disabled={!selectedBun}
+            size="large"
+            extraClass="ml-2"
+            onClick={handleOrderButtonClick}
+          >
             Оформить заказ
           </Button>
         </Flex>

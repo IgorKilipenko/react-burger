@@ -1,5 +1,5 @@
 import { RootState } from "../../store"
-import { addIngredient, removeIngredient, clearBurgerConstructor, swapItemsByIndex, clearSelectedIngredients } from "./burger-slice"
+import { addIngredient, removeIngredient, clearBurgerConstructor, swapItemsByIndex, clearSelectedIngredients, clearBuns } from "./burger-slice"
 
 export { burgerReducer } from "./burger-slice"
 export const burgerActions = {
@@ -7,7 +7,8 @@ export const burgerActions = {
   removeProductFromCart: removeIngredient,
   clearCart: clearBurgerConstructor,
   swapItemsByIndex,
-  clearSelectedIngredients
+  clearSelectedIngredients,
+  clearBuns
 }
 export type { BurgerItemType, BurgerState } from "./burger-slice"
 
