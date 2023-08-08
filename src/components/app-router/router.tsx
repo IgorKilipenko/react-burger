@@ -68,5 +68,5 @@ export const appRouter = createBrowserRouter(
       ],
     },
   ],
-  { basename: process.env.NODE_ENV === "development" ? AppPaths.ROOT_PATH : "/react-burger/" }
+  { basename: AppPaths.ROOT_PATH }
 )
