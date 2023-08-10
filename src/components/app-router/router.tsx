@@ -22,17 +22,40 @@ export const appRouter = createBrowserRouter(
               ],
             },
             {
+              element: routesInfo.ordersFeed.element,
+              path: routesInfo.ordersFeed.path,
+              children: [
+                {
+                  id: routesInfo.ordersFeedItem.id,
+                  path: routesInfo.ordersFeedItem.path,
+                  element: routesInfo.ordersFeedItem.element,
+                },
+              ],
+            },
+            {
               element: routesInfo.profileContainer.element,
               children: [
                 {
                   element: routesInfo.profileLayout.element,
-                  children: [routesInfo.profile as RouteObject, routesInfo.orders as RouteObject],
+                  children: [
+                    routesInfo.profile as RouteObject,
+                    {
+                      element: routesInfo.ordersList.element,
+                      path: routesInfo.ordersList.path,
+                      children: [
+                        {
+                          id: routesInfo.ordersListItem.id,
+                          path: routesInfo.ordersListItem.path,
+                          element: routesInfo.ordersListItem.element,
+                        },
+                      ],
+                    },
+                  ],
                 },
                 routesInfo.forgotPassword as RouteObject,
                 routesInfo.resetPassword as RouteObject,
                 routesInfo.login as RouteObject,
                 routesInfo.register as RouteObject,
-                routesInfo.order as RouteObject,
               ],
             },
           ],
@@ -45,5 +68,5 @@ export const appRouter = createBrowserRouter(
       ],
     },
   ],
-  { basename: process.env.NODE_ENV === "development" ? AppPaths.ROOT_PATH : "/react-burger/" }
+  { basename: AppPaths.ROOT_PATH }
 )

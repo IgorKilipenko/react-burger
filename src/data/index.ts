@@ -8,6 +8,7 @@ export type {
   BurgerIngredientType,
   IngredientsTableViewKeyType,
   IngredientsTableView,
+  Order,
 } from "./data-types"
 
 export { api } from "./api"

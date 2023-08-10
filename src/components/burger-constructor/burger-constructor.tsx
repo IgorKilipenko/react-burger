@@ -6,9 +6,9 @@ import { Icon } from "../common/icon"
 import { Burger } from "./burger"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
-import { BurgerItemType, getBurgerStore } from "../../services/slices/burger-constructor"
+import { BurgerItemType, burgerActions, getBurgerStore } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
-import { allowableCategories, DbObjectType } from "../../data"
+import { DbObjectType } from "../../data"
 import { createOrder } from "../../services/slices/orders"
 import { getIsAuthUserFromStore } from "../../services/slices/auth"
 import { useNavigate } from "react-router-dom"
@@ -25,17 +25,13 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   const isAuthenticatedUser = useAppSelector(getIsAuthUserFromStore)
   const navigate = useNavigate()
 
-  const allSelectedProductsForOrder = React.useMemo(
-    () => (selectedBun ? [selectedBun, ...selectedIngredients] : selectedIngredients),
+  const allSelectedProductsForOrder : Array<NonNullable<typeof selectedBun>> = React.useMemo(
+    () => (selectedBun ? [...Array(2).fill(selectedBun), ...selectedIngredients] : selectedIngredients),
     [selectedBun, selectedIngredients]
   )
 
   const calcTotalPrice = useCallback(
-    (ingredients: BurgerItemType[]) =>
-      ingredients.reduce(
-        (res, curr) => (res += curr.product.price * (curr.product.type === allowableCategories.bun ? 2 : 1)),
-        0
-      ),
+    (ingredients: BurgerItemType[]) => ingredients.reduce((res, curr) => (res += curr.product.price), 0),
     []
   )
 
@@ -51,21 +47,27 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
   }, [calcTotalPrice, allSelectedProductsForOrder])
 
   const handleOrderButtonClick = React.useCallback(() => {
+    if (!selectedBun) {
+      return
+    }
+
     if (!isAuthenticatedUser) {
       navigate(routesInfo.login.path, { replace: true })
     } else {
       if (lockRef.current === false) {
         lockRef.current = true
-        setModalOpen(true)
         dispatch(createOrder(getSelectedIngredientsIds(allSelectedProductsForOrder)))
+        setModalOpen(true)
       }
     }
-  }, [isAuthenticatedUser, navigate, dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
+  }, [selectedBun, isAuthenticatedUser, navigate, dispatch, getSelectedIngredientsIds, allSelectedProductsForOrder])
 
   const handleModalClose = React.useCallback(() => {
     lockRef.current = false
     setModalOpen(false)
-  },[])
+    dispatch(burgerActions.clearBuns())
+    dispatch(burgerActions.clearSelectedIngredients())
+  }, [dispatch])
 
   return (
     <>
@@ -76,16 +78,20 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
             <Text variant={"digitsMedium"}>{totalPrice}</Text>
             <Icon as={CurrencyIcon} boxSize={9} />
           </Flex>
-          <Button htmlType="button" type="primary" size="large" extraClass="ml-2" onClick={handleOrderButtonClick}>
+          <Button
+            htmlType="button"
+            type={"primary"}
+            disabled={!selectedBun}
+            size="large"
+            extraClass="ml-2"
+            onClick={handleOrderButtonClick}
+          >
             Оформить заказ
           </Button>
         </Flex>
       </Flex>
       {modalOpen ? (
-        <Modal
-          headerText=""
-          onClose={handleModalClose}
-        >
+        <Modal headerText="" onClose={handleModalClose}>
           <OrderDetails />
         </Modal>
       ) : null}

@@ -18,5 +18,17 @@ export const api = {
     })
   },
 
+  createOrderWithAuth: async (ingredientsIds: string[], options?: RequestInit) => {
+    let withAuthOptions = {}
+    try {
+      withAuthOptions = await authApi.getWithAuthOptions(options)
+    } catch (_) {
+      return Promise.resolve({ data: { success: false, message: "Token not found" } }) as ReturnType<
+        typeof apiRequest.get<ApiOrderIdResponseType>
+      >
+    }
+    return api.createOrder(ingredientsIds, withAuthOptions)
+  },
+
   auth: authApi,
 }

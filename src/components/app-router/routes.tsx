@@ -1,14 +1,15 @@
 import { HomePage, NotFoundPage } from "../../pages"
 import { ForgotPasswordPage } from "../../pages/forgot-password"
 import { LoginPage } from "../../pages/login"
-import { OrderPage } from "../../pages/order"
-import { OrdersPage } from "../../pages/orders"
+import { OrdersListPage } from "../../pages/orders"
+import { OrdersFeedPage } from "../../pages/orders-feed/orders-feed"
 import { ProfileContainer, ProfilePage } from "../../pages/profile"
 import { RegisterPage } from "../../pages/register"
 import { ResetPasswordPage } from "../../pages/reset-password"
 import App from "../app"
 import { IngredientDetail } from "../ingredient-details"
 import { Layout, ProfileLayout } from "../layouts"
+import { OrdersListItemDetails } from "../order-details"
 import { ProtectedRoute } from "./protected-route"
 
 const preparePath = (path: string) => {
@@ -38,11 +39,17 @@ export const AppPaths = {
   get INGREDIENTS() {
     return preparePath(`${AppPaths.ROOT_PATH}/ingredients`)
   },
-  get ORDERS() {
+  get ORDERS_LIST() {
     return preparePath(`${AppPaths.PROFILE}/orders`)
   },
-  get ORDER() {
-    return preparePath(`${AppPaths.ORDERS}/:id`)
+  get ORDERS_FEED() {
+    return preparePath(`${AppPaths.ROOT_PATH}/feed`)
+  },
+  get ORDERS_LIST_ITEM() {
+    return preparePath(`${AppPaths.ORDERS_LIST}/:id`)
+  },
+  get ORDERS_FEED_ITEM() {
+    return preparePath(`${AppPaths.ORDERS_FEED}/:id`)
   },
   get NOT_FOUND_PAGE() {
     return preparePath(`${AppPaths.ROOT_PATH}/*`)
@@ -88,13 +95,28 @@ export const routesInfo = {
     },
     element: <IngredientDetail />,
   },
-  orders: {
-    path: AppPaths.ORDERS,
-    element: <ProtectedRoute accessType="withAuth" element={<OrdersPage />} redirectPath={AppPaths.LOGIN} />,
+  ordersList: {
+    path: AppPaths.ORDERS_LIST,
+    element: <ProtectedRoute accessType="withAuth" element={<OrdersListPage />} redirectPath={AppPaths.LOGIN} />,
   },
-  order: {
-    path: AppPaths.ORDER,
-    element: <ProtectedRoute accessType="withAuth" element={<OrderPage />} redirectPath={AppPaths.LOGIN} />,
+  ordersListItem: {
+    id: "ordersListItem",
+    paramName: "id",
+    rootPath: AppPaths.ORDERS_LIST,
+    path: AppPaths.ORDERS_LIST_ITEM,
+    element: <ProtectedRoute accessType="withAuth" element={<OrdersListItemDetails />} redirectPath={AppPaths.LOGIN} />,
   },
-  errorPage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
+  ordersFeed: {
+    path: AppPaths.ORDERS_FEED,
+    element: <OrdersFeedPage />,
+  },
+  ordersFeedItem: {
+    id: "ordersFeedItem",
+    paramName: "id",
+    rootPath: AppPaths.ORDERS_FEED,
+    path: AppPaths.ORDERS_FEED_ITEM,
+    element: <OrdersListItemDetails />,
+  },
+  notFoundPagePage: { path: AppPaths.ERROR_PAGE, element: <NotFoundPage /> },
+  errorPage: { path: AppPaths.NOT_FOUND_PAGE, element: <NotFoundPage /> },
 } as const

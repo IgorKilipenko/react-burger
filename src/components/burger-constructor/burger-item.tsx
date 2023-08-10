@@ -105,3 +105,21 @@ export const BurgerItem = React.memo<BurgerItemProps>(({ element, type = null, s
     />
   )
 })
+
+interface EmptyBunItemProps {
+  type: NonNullable<ElementType>
+}
+
+export const EmptyBunItem = React.memo<EmptyBunItemProps>(({ type = "top" }) => {
+  const element = React.useMemo(
+    () =>
+      ({
+        name: "Булка",
+        price: 0,
+        image: "",
+      }) as BurgerIngredientType,
+    []
+  )
+
+  return <BurgerItem uid={"empty-bun-element"} type={type} element={element} />
+})

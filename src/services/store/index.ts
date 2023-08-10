@@ -2,15 +2,20 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import { activeModalItemReducer } from "../slices/active-modal-items"
 import { burgerReducer } from "../slices/burger-constructor"
-import { orderReducer } from "../slices/orders"
+import { orderReducer, ordersFeedActions, ordersFeedReducer, ordersListActions } from "../slices/orders"
+import { ordersListReducer } from "../slices/orders"
 import { productsReducer } from "../slices/products"
 import { authReducer } from "../slices/auth"
 import { userPasswordReducer } from "../slices/auth"
 import { appReducer } from "../slices/app"
+import { websocketMiddleware } from "../middlewares/ws"
+import { apiConfig } from "../../data/api-config"
 
 const rootReducer = combineReducers({
   burgerConstructor: burgerReducer,
   orders: orderReducer,
+  ordersList: ordersListReducer,
+  ordersFeed: ordersFeedReducer,
   products: productsReducer,
   activeModalItem: activeModalItemReducer,
   auth: authReducer,
@@ -27,9 +32,15 @@ export default function configureAppStore({ forceDisableLogger = true }: Options
   const middlewares: any[] = []
   if (isDevelopmentMode() && !forceDisableLogger) {
     const { logger } = require(`redux-logger`)
-
     middlewares.push(logger)
   }
+
+  middlewares.push(
+    websocketMiddleware(`${apiConfig.wss.baseWssUrl}/${apiConfig.wss.endpoints.ordersList}`, ordersListActions, true)
+  )
+  middlewares.push(
+    websocketMiddleware(`${apiConfig.wss.baseWssUrl}/${apiConfig.wss.endpoints.ordersFeed}`, ordersFeedActions, false)
+  )
 
   const store = configureStore({
     reducer: rootReducer,

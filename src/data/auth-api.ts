@@ -77,8 +77,8 @@ export const authApi = {
     })
   },
 
-  getToken: async (withoutAccessToken = false) => {
-    if (!withoutAccessToken && tokenManager.getAccess()) {
+  getToken: async (withoutRefresh = false) => {
+    if (!withoutRefresh && tokenManager.getAccess()) {
       return tokenManager.getAccess()
     }
     if (!tokenManager.getRefresh()) {
@@ -144,7 +144,7 @@ export const authApi = {
 
     console.assert(Object.values(userData).some((val) => val))
     console.assert(!token.match(/^Bearer\s+/g))
-    
+
     return apiRequest.post<ApiUserResponseType>({
       url,
       method: "PATCH",
@@ -182,5 +182,16 @@ export const authApi = {
         return true
       },
     })
+  },
+
+  getWithAuthOptions: async (options?: RequestInit): Promise<RequestInit> => {
+    const token = await authApi.getToken(false)
+    if (!token) {
+      return Promise.reject(new Error("Invalid token"))
+    }
+
+    const { headers } = options ?? {}
+
+    return Promise.resolve({ ...options, headers: { ...headers, Authorization: `Bearer ${token}` } })
   },
 }

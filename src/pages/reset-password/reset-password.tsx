@@ -33,6 +33,7 @@ export const ResetPasswordPage = React.memo<ResetPasswordPageProps>(() => {
   React.useEffect(() => {
     if (passwordResetState.error) {
       lockRef.current = false
+      setHasChanged(false)
     } else if (!passwordResetState.resetEmailSent) {
       navigate(routesInfo.home.path, { replace: true })
     } else if (!isAuthenticatedUser && passwordResetState.resetConfirmed) {
@@ -93,7 +94,6 @@ export const ResetPasswordPage = React.memo<ResetPasswordPageProps>(() => {
   const handleSubmit = React.useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      setHasChanged(false)
       if (lockRef.current === false) {
         lockRef.current = true
 
@@ -126,17 +126,19 @@ export const ResetPasswordPage = React.memo<ResetPasswordPageProps>(() => {
           placeholder="Введите код из письма"
           onChange={handleChange}
           onValidated={handleValidate}
-          autoComplete="one-time-code"
+          autoComplete="off"
         />
-        <FormErrorMessage>
-          <Flex direction={"column"} color="error-color" align="center">
-            <Text>Ошибка подтверждения сброса пароля</Text>
-            {passwordResetState.error?.message ? (
-              <Text>{`Сообщение сервера: "${passwordResetState.error?.message}"`}</Text>
-            ) : null}
-          </Flex>
-        </FormErrorMessage>
-        {!passwordResetState.error || hasChanged ? (
+        {passwordResetState.error || hasChanged ? (
+          <FormErrorMessage>
+            <Flex direction={"column"} color="error-color" align="center">
+              <Text>Ошибка подтверждения сброса пароля</Text>
+              {passwordResetState.error?.message ? (
+                <Text>{`Сообщение сервера: "${passwordResetState.error?.message}"`}</Text>
+              ) : null}
+            </Flex>
+          </FormErrorMessage>
+        ) : null}
+        {!passwordResetState.error ? (
           <Flex direction="column" align="center" color={appColors.inactive}>
             <Text>Сообщение с кодом для сброса пароля отправлено</Text>
             <Text>{`на почтовый ящик - ${submittedEmailRef.current}`}</Text>

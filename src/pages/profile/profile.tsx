@@ -66,7 +66,7 @@ export const ProfilePage = React.memo(() => {
   )
 
   return (
-    <UserForm
+    <UserForm mt={28}
       withEditIcons={true}
       values={loadedUserData}
       submitAction={enableForceSubmit ? "Сохранить" : null}

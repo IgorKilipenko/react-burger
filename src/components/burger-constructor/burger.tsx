@@ -1,18 +1,18 @@
 import React from "react"
-import { Flex } from "@chakra-ui/react"
+import { Flex, Text } from "@chakra-ui/react"
 import { BurgerIngredientType } from "../../data"
-import { BurgerItem, ElementType, allowableTypes } from "./burger-item"
+import { BurgerItem, ElementType, EmptyBunItem, allowableTypes } from "./burger-item"
 import { useDrop } from "react-dnd"
-import { useSelector, useDispatch } from "react-redux"
-import { burgerActions } from "../../services/slices/burger-constructor"
-import { RootState } from "../../services/store"
+import { burgerActions, getBurgerStore } from "../../services/slices/burger-constructor"
+import { useAppDispatch, useAppSelector } from "../../services/store"
+import { appColors } from "../../theme/styles"
 
 export interface BurgerProps {}
 
 export const Burger = React.memo<BurgerProps>(() => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { addProductToCart } = burgerActions
-  const {bun, products:ingredients} = useSelector((store: RootState) => store.burgerConstructor)
+  const { bun, products: ingredients } = useAppSelector(getBurgerStore)
 
   const handleDrop = React.useCallback(
     (ingredient: BurgerIngredientType) => {
@@ -44,27 +44,34 @@ export const Burger = React.memo<BurgerProps>(() => {
       pr={4}
       {...(isHover ? { boxShadow: `0 0 0px 2px var(--chakra-colors-active-border-color)` } : {})}
     >
-      {bun && (
+      {bun ? (
         <BurgerItem
           element={bun.product}
           type={allowableTypes.top as ElementType}
           uid={`${bun.uid}-${allowableTypes.top}`}
         />
+      ) : (
+        <EmptyBunItem type={"top"} />
       )}
-      {ingredients?.map((element, i) => (
-        <BurgerItem
-          key={`bi-${element.uid}`}
-          sortIndex={i}
-          element={element.product}
-          uid={element.uid}
-        />
-      ))}
-      {bun && (
+      {bun ||  ingredients.length > 0 ? (
+        ingredients?.map((element, i) => (
+          <BurgerItem key={`bi-${element.uid}`} sortIndex={i} element={element.product} uid={element.uid} />
+        ))
+      ) : (
+        <Flex justify={"center"}>
+          <Text mt={6} mb={6} textAlign={"center"} maxW={"80%"} variant={"mainDefault"} color={appColors.inactive}>
+            Пожалуйста, перенесите сюда булку и ингредиенты для создания заказа
+          </Text>
+        </Flex>
+      )}
+      {bun ? (
         <BurgerItem
           element={bun.product}
           type={allowableTypes.bottom as ElementType}
           uid={`${bun.uid}-${allowableTypes.bottom}`}
         />
+      ) : (
+        <EmptyBunItem type={"bottom"} />
       )}
     </Flex>
   )

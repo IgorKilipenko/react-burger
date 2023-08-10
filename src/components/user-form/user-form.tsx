@@ -139,7 +139,7 @@ export const UserForm = React.memo<UserFormProps>(
         options={{ control: { isInvalid: !!authState.error && !hasChanged } }}
         {...(props as FormProps)}
       >
-        <Flex direction="column" align="center" gap={6} pb={20} {...(props as FlexOptions)}>
+        <Flex direction="column" align="center" gap={6} pb={20} >
           {header ? <Text variant="mainMedium">{header}</Text> : null}
           {inputs.name ? (
             <AdvancedInput

@@ -23,3 +23,13 @@ export function parseRawIngredientsData<T extends BurgerIngredientType>(rawData:
 
   return { table, categories }
 }
+
+export enum OrderStatus {
+  done = "готов",
+  pending = "в работе",
+  created = "создан"
+}
+
+export const orderStatusMapper = (val : "done" | "pending" | "created") => {
+  return OrderStatus[val]
+}

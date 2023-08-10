@@ -1,8 +1,8 @@
 import React from "react"
-import { CircularProgress, Flex } from "@chakra-ui/react"
 import { Navigate, useLocation } from "react-router-dom"
 import { getAuthStore } from "../../services/slices/auth"
 import { useAppSelector } from "../../services/store"
+import { LoadingProgress } from "../common/loading-progress"
 
 export type ProtectedRouteAccessType = "withAuth" | "withoutAuth"
 
@@ -27,14 +27,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
   }, [accessType, authState.isAuthenticatedUser, authState.loading, redirectPath])
 
-  const loader = React.useMemo(
-    () => (
-      <Flex align="center" justify="center" grow={1}>
-        <CircularProgress isIndeterminate color="accent-color" />
-      </Flex>
-    ),
-    []
-  )
+  const loader = React.useMemo(() => <LoadingProgress />, [])
 
   const redirectWithAuth = React.useMemo(() => {
     if (authState.isAuthenticatedUser) {

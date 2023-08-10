@@ -28,4 +28,13 @@ export const apiConfig = {
       },
     },
   },
+  wss: {
+    baseWssUrl: "wss://norma.nomoreparties.space",
+    endpoints: {
+      ordersList: "orders",
+      get ordersFeed() {
+        return `${this.ordersList}/all`
+      },
+    },
+  },
 }

@@ -3,6 +3,7 @@ import { Flex, Image, Text } from "@chakra-ui/react"
 import { Icon } from "../common"
 import { LockIcon, DeleteIcon, CurrencyIcon } from "../common/icons"
 import { OmitFlexOptions } from "../../utils/types"
+import { appColors } from "../../theme/styles"
 
 export interface ContainerOptions extends OmitFlexOptions<"direction"> {}
 
@@ -39,13 +40,17 @@ export const ConstructorElement: React.FC<ConstructorElementProps> = ({
     [handleClose, isLocked]
   )
 
+  const isEmpty = React.useMemo(() => {
+    return !thumbnail || thumbnail === ""
+  }, [thumbnail])
+
   const borderRadius = {
     default: { borderRadius: "40px" },
     top: { borderTopLeftRadius: "88px", borderTopRightRadius: "88px" },
     bottom: { borderBottomLeftRadius: "88px", borderBottomRightRadius: "88px" },
   }
 
-  const mainGaps = 5;
+  const mainGaps = 5
 
   return (
     <Flex
@@ -63,19 +68,27 @@ export const ConstructorElement: React.FC<ConstructorElementProps> = ({
       {...{ ...borderRadius["default"], ...borderRadius[type] }}
       {...options?.container}
     >
-      <Flex grow={1} align="center" gap={mainGaps}>
-        <Image src={thumbnail} alt={text} w="80px" h="50px" />
-        <Text textAlign="start" noOfLines={2} variant="mainDefault">
+      {!isEmpty ? (
+        <>
+          <Flex grow={1} align="center" gap={mainGaps}>
+            <Image src={thumbnail} alt={text} w="80px" h="50px" />
+            <Text textAlign="start" noOfLines={2} variant="mainDefault">
+              {text}
+            </Text>
+          </Flex>
+          <Flex align="center" gap={mainGaps}>
+            <Flex align="center" gap={2}>
+              <Text variant="digitsDefault">{price}</Text>
+              <Icon as={CurrencyIcon} type="primary" />
+            </Flex>
+            {action}
+          </Flex>
+        </>
+      ) : (
+        <Text minW={"md"} textAlign="center" color={appColors.inactive} noOfLines={2} variant="mainDefault">
           {text}
         </Text>
-      </Flex>
-      <Flex align="center" gap={mainGaps}>
-        <Flex align="center" gap={2}>
-          <Text variant="digitsDefault">{price}</Text>
-          <Icon as={CurrencyIcon} type="primary" />
-        </Flex>
-        {action}
-      </Flex>
+      )}
     </Flex>
   )
 }

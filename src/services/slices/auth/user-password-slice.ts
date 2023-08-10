@@ -75,7 +75,9 @@ const userPasswordSlice = createSlice({
       }
     )
     builder.addCase(passwordResetConfirm.rejected, (state, { type, error }) => {
+      const wasEmailSended = state.resetEmailSent
       userPasswordSlice.caseReducers._setError(state, { type, payload: { error } })
+      state.resetEmailSent = wasEmailSended
     })
     builder.addCase(passwordResetConfirm.pending, (state) => {
       userPasswordSlice.caseReducers.clearErrors(state)

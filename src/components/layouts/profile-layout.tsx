@@ -1,18 +1,22 @@
 import React from "react"
 import { Flex, Text } from "@chakra-ui/react"
-import { useAppDispatch } from "../../services/store"
-import { authActions } from "../../services/slices/auth"
+import { useAppDispatch, useAppSelector } from "../../services/store"
+import { authActions, getAuthStore } from "../../services/slices/auth"
 import { Link } from "../../components/common"
 import { routesInfo } from "../../components/app-router"
 import { Outlet, useLocation } from "react-router-dom"
 import { appColors } from "../../theme/styles"
 import { FlexOptions } from "../../utils/types"
+import { LoadingProgress } from "../common/loading-progress"
+import { getAppIsBackgroundRouteMode } from "../../services/slices/app"
 
 export interface ProfileLayoutProps extends FlexOptions {}
 
 export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
   const location = useLocation()
+  const authState = useAppSelector(getAuthStore)
   const dispatch = useAppDispatch()
+  const isBackgroundMode = useAppSelector(getAppIsBackgroundRouteMode)
 
   const buildLink = React.useCallback(
     ({ text, path, onClick }: { text: string; onClick?: () => void; path?: string }) => {
@@ -30,18 +34,20 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
   const sectionInfoMessage = React.useMemo(() => {
     if (location.pathname === routesInfo.profile.path) {
       return "В этом разделе вы можете изменить свои персональные данные"
-    } else if (location.pathname === routesInfo.orders.path) {
+    } else if (location.pathname.startsWith(routesInfo.ordersList.path)) {
       return "В этом разделе вы можете посмотреть свою историю заказов"
     }
     return null
   }, [location.pathname])
 
-  return (
-    <Flex align="start" gap={15} mt="28">
-      <Flex direction="column" w="min-content" grow={0}>
+  return authState.loading ? (
+    <LoadingProgress />
+  ) : !isBackgroundMode ? (
+    <Flex align="start" gap={15} h="100%">
+      <Flex direction="column" w="min-content" grow={0} mt={28}>
         <Flex direction="column" pb={30} w="320px">
           {buildLink({ text: "Профиль", path: routesInfo.profile.path })}
-          {buildLink({ text: "История заказов", path: routesInfo.orders.path })}
+          {buildLink({ text: "История заказов", path: routesInfo.ordersList.path })}
           {buildLink({
             text: "Выход",
             onClick: () => {
@@ -55,9 +61,11 @@ export const ProfileLayout = React.memo<ProfileLayoutProps>(() => {
           </Flex>
         ) : null}
       </Flex>
-      <Flex grow={1}>
+      <Flex grow={1} maxH="100%">
         <Outlet />
       </Flex>
     </Flex>
+  ) : (
+    <Outlet />
   )
 })
