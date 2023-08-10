@@ -42,9 +42,9 @@ export const OrdersFeedPage: React.FC = () => {
     navigate("", { replace: true })
   }, [dispatch, navigate])
 
-  React.useCallback(() => {
-    matches.find((m) => m.id === routesInfo.ordersFeedItem.id && m.params[routesInfo.ordersFeedItem.paramName]) &&
-      dispatch(appStateActions.setIsBackgroundRouteMode(true))
+  React.useEffect(() => {
+    matches.find((m) => !m.params[routesInfo.ordersFeedItem.paramName]) &&
+      dispatch(appStateActions.setIsBackgroundRouteMode(false))
   }, [dispatch, matches])
 
   React.useEffect(() => {
