@@ -1,6 +1,6 @@
 import React from "react"
 import { Avatar, AvatarGroup, Flex, Text } from "@chakra-ui/react"
-import { BurgerIngredientType, DbObjectType, Order, OrderStatus } from "../../data"
+import { BurgerIngredientType, Order, OrderStatus } from "../../data"
 import { getProductsFromProductsStore } from "../../services/slices/products"
 import { useAppSelector } from "../../services/store"
 import { capitalizeFirstLetter } from "../../utils"
@@ -23,20 +23,32 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
   const zIndexBase = 10
 
   const sortedOrders = React.useMemo(() => {
-    return [...orders].sort((a,b) => Number.parseInt(b.number) - Number.parseInt(a.number))
+    return [...orders].sort((a, b) => Number.parseInt(b.number) - Number.parseInt(a.number))
   }, [orders])
 
-  const getIngredient = React.useCallback(
-    (id: DbObjectType["_id"]) => {
-      return Object.values(ingredients!).reduce<BurgerIngredientType | null>((res, items) => {
-        if (!res) {
-          res = items.find((x) => x._id === id) ?? null
-        }
+  const calcTotalPrice = React.useCallback((ingredients: BurgerIngredientType[]) => {
+    return ingredients.reduce<number>((res, ingredient) => res + ingredient.price, 0)
+  }, [])
+
+  const ordersIngredientsMap = React.useMemo<Record<Order["_id"], BurgerIngredientType[]>>(() => {
+    if (!ingredients) {
+      return {}
+    }
+
+    const allIngredients = Object.values(ingredients).reduce<BurgerIngredientType[]>((res, ingredients) => {
+      res = [...res, ...ingredients]
+      return res
+    }, [])
+
+    return orders.reduce<Record<Order["_id"], BurgerIngredientType[]>>((res, order) => {
+      res[order._id] = order.ingredients.reduce<BurgerIngredientType[]>((res, ingredientId) => {
+        const val = allIngredients.find((ingredient) => ingredient._id === ingredientId)
+        val && res.push(val)
         return res
-      }, null)
-    },
-    [ingredients]
-  )
+      }, [])
+      return res
+    }, {})
+  }, [ingredients, orders])
 
   const handleOrderItemClick = React.useCallback(
     (order: Order) => {
@@ -49,9 +61,7 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
     (order: Order) => {
       return (
         <AvatarGroup size="lg" max={maxVisibleOrderItems} spacing={-4}>
-          {order.ingredients.map((id, i, arr) => {
-            const ingredient = getIngredient(id)
-
+          {ordersIngredientsMap[order._id].map((ingredient, i, arr) => {
             console.assert(ingredient)
 
             return ingredient ? (
@@ -70,7 +80,7 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
         </AvatarGroup>
       )
     },
-    [getIngredient, maxVisibleOrderItems]
+    [maxVisibleOrderItems, ordersIngredientsMap]
   )
 
   return (
@@ -104,7 +114,7 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
                 <Flex justify="stretch" gap={6}>
                   <Flex grow={1}>{buildIconsSection(item)}</Flex>
                   <Flex justify="end" align="center" gap={2}>
-                    <Text variant="digitsDefault">480</Text>
+                    <Text variant="digitsDefault">{calcTotalPrice(ordersIngredientsMap[item._id])}</Text>
                     <Icon as={CurrencyIcon} type="primary" boxSize={6} />
                   </Flex>
                 </Flex>
