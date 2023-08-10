@@ -84,45 +84,39 @@ export const OrdersList: React.FC<OrdersListProps> = ({ orders, maxVisibleOrderI
   )
 
   return (
-    <Flex
-      direction="column"
-      align="stretch"
-      grow={1}
-      gap={6}
-      overflow="auto"
-      className="custom-scroll"
-      {...(props as ContainerOptions)}
-    >
-      {sortedOrders.map((item) => {
-        return (
-          <Link key={item._id} onClick={() => handleOrderItemClick(item)}>
-            <Flex direction="column" align="stretch" p={6} bg={appColors.bodyAltBackground} borderRadius="40px">
-              <Flex direction="column" grow={1} gap={6} pb={2}>
-                <Flex justify="space-between">
-                  <Text variant="digitsDefault">{`#${item.number}`}</Text>
-                  <FormattedDate date={new Date(item.createdAt)} />
+    <Flex className="custom-scroll" {...(props as ContainerOptions)} overflow="auto" pr={4}>
+      <Flex direction="column" align="stretch" grow={1} gap={6} >
+        {sortedOrders.map((item) => {
+          return (
+            <Link key={item._id} onClick={() => handleOrderItemClick(item)}>
+              <Flex direction="column" align="stretch" p={6} bg={appColors.bodyAltBackground} borderRadius="40px">
+                <Flex direction="column" grow={1} gap={6} pb={2}>
+                  <Flex justify="space-between">
+                    <Text variant="digitsDefault">{`#${item.number}`}</Text>
+                    <FormattedDate date={new Date(item.createdAt)} />
+                  </Flex>
+                  <Text variant="mainMedium">{`${item.name}`}</Text>
                 </Flex>
-                <Text variant="mainMedium">{`${item.name}`}</Text>
-              </Flex>
-              <Flex direction="column" grow={1} gap={6}>
-                <Text
-                  variant="mainDefault"
-                  color={OrderStatus[item.status] === OrderStatus.done ? appColors.success : undefined}
-                >
-                  {capitalizeFirstLetter(OrderStatus[item.status])}
-                </Text>
-                <Flex justify="stretch" gap={6}>
-                  <Flex grow={1}>{buildIconsSection(item)}</Flex>
-                  <Flex justify="end" align="center" gap={2}>
-                    <Text variant="digitsDefault">{calcTotalPrice(ordersIngredientsMap[item._id])}</Text>
-                    <Icon as={CurrencyIcon} type="primary" boxSize={6} />
+                <Flex direction="column" grow={1} gap={6}>
+                  <Text
+                    variant="mainDefault"
+                    color={OrderStatus[item.status] === OrderStatus.done ? appColors.success : undefined}
+                  >
+                    {capitalizeFirstLetter(OrderStatus[item.status])}
+                  </Text>
+                  <Flex justify="stretch" gap={6}>
+                    <Flex grow={1}>{buildIconsSection(item)}</Flex>
+                    <Flex justify="end" align="center" gap={2}>
+                      <Text variant="digitsDefault">{calcTotalPrice(ordersIngredientsMap[item._id])}</Text>
+                      <Icon as={CurrencyIcon} type="primary" boxSize={6} />
+                    </Flex>
                   </Flex>
                 </Flex>
               </Flex>
-            </Flex>
-          </Link>
-        )
-      })}
+            </Link>
+          )
+        })}
+      </Flex>
     </Flex>
   )
 }

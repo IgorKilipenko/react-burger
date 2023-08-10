@@ -17,7 +17,7 @@ import { Flex, Text } from "@chakra-ui/react"
 import { appColors } from "../../theme/styles"
 import { LoadingProgress } from "../../components/common/loading-progress"
 
-export const OrdersFeedPage: React.FC = () => {
+export const OrdersFeedPage = React.memo(() => {
   const [modalOpen, setModalOpen] = React.useState(false)
   const matches = useMatches()
   const navigate = useNavigate()
@@ -85,6 +85,68 @@ export const OrdersFeedPage: React.FC = () => {
     }
   }, [closeModal, dispatch, matches, modalOpen, navigate, ordersFeedState.message])
 
+  const totalSection = React.useMemo(() => {
+    return ordersFeedState.message?.orders ? (
+      <Flex grow={1} basis={0} align="stretch" direction="column" overflow="auto" className="custom-scroll" h="100%">
+        <Flex gap={9} w="100%">
+          <Flex direction="column" grow={1} basis={1}>
+            <Text variant="mainMedium" mb={6}>
+              Готовы:
+            </Text>
+            <Flex direction="column" gap={2}>
+              {ordersFeedState.message.orders
+                .filter((o) => OrderStatus[o.status] === OrderStatus.done)
+                .slice(0, 5)
+                .map((o) => (
+                  <Text key={o._id} variant="digitsDefault" color={appColors.success}>
+                    {o.number}
+                  </Text>
+                ))}
+            </Flex>
+          </Flex>
+          <Flex direction="column" grow={1} basis={1}>
+            <Text variant="mainMedium" mb={6}>
+              В работе:
+            </Text>
+            <Flex direction="column" gap={2}>
+              {ordersFeedState.message.orders
+                .filter((o) => OrderStatus[o.status] === OrderStatus.pending)
+                .slice(0, 5)
+                .map((o) => (
+                  <Text key={o._id} variant="digitsDefault">
+                    {o.number}
+                  </Text>
+                ))}
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex direction="column" mt={15} gap={16}>
+          <Flex direction="column">
+            <Text variant="mainMedium" mb={6}>
+              Выполнено за все время:
+            </Text>
+            <Text variant="digitsLarge">{ordersFeedState.message.total}</Text>
+          </Flex>
+          <Flex direction="column">
+            <Text variant="mainMedium" mb={6}>
+              Выполнено за сегодня:
+            </Text>
+            <Text variant="digitsLarge">{ordersFeedState.message.totalToday}</Text>
+          </Flex>
+        </Flex>
+      </Flex>
+    ) : null
+  }, [ordersFeedState.message?.orders, ordersFeedState.message?.total, ordersFeedState.message?.totalToday])
+
+  const ordersFeed = React.useMemo(() => {
+    return ordersFeedState.message?.orders ? (
+      <Flex justify="stretch" maxH="min-content" overflow="hidden" gap={15}>
+        <OrdersList grow={1} basis={0} orders={ordersFeedState.message.orders} mt={4} pr={2} onOrderClick={handleOrderItemClick} />
+        {totalSection}
+      </Flex>
+    ) : null
+  }, [handleOrderItemClick, ordersFeedState.message?.orders, totalSection])
+
   return !isBackgroundMode ? (
     <Flex direction="column" overflow="hidden" maxH={"100%"}>
       <Text variant="mainLarge" mt={8}>
@@ -92,64 +154,7 @@ export const OrdersFeedPage: React.FC = () => {
       </Text>
 
       {ordersFeedState.message?.orders ? (
-        <Flex justify="stretch" gap={15} maxH={"100%"}>
-          <OrdersList
-            orders={ordersFeedState.message.orders}
-            mt={4}
-            pr={2}
-            onOrderClick={handleOrderItemClick}
-            w="55%"
-            grow={1}
-          />
-          <Flex align="stretch" direction="column" grow={1} overflow="auto" className="custom-scroll">
-            <Flex gap={9} w="100%">
-              <Flex direction="column" grow={1}>
-                <Text variant="mainMedium" mb={6}>
-                  Готовы:
-                </Text>
-                <Flex direction="column" gap={2}>
-                  {ordersFeedState.message.orders
-                    .filter((o) => OrderStatus[o.status] === OrderStatus.done)
-                    .slice(0, 5)
-                    .map((o) => (
-                      <Text key={o._id} variant="digitsDefault" color={appColors.success}>
-                        {o.number}
-                      </Text>
-                    ))}
-                </Flex>
-              </Flex>
-              <Flex direction="column" grow={1}>
-                <Text variant="mainMedium" mb={6}>
-                  В работе:
-                </Text>
-                <Flex direction="column" gap={2}>
-                  {ordersFeedState.message.orders
-                    .filter((o) => OrderStatus[o.status] === OrderStatus.pending)
-                    .slice(0, 5)
-                    .map((o) => (
-                      <Text key={o._id} variant="digitsDefault">
-                        {o.number}
-                      </Text>
-                    ))}
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex direction="column" mt={15} gap={16}>
-              <Flex direction="column">
-                <Text variant="mainMedium" mb={6}>
-                  Выполнено за все время:
-                </Text>
-                <Text variant="digitsLarge">{ordersFeedState.message.total}</Text>
-              </Flex>
-              <Flex direction="column">
-                <Text variant="mainMedium" mb={6}>
-                  Выполнено за сегодня:
-                </Text>
-                <Text variant="digitsLarge">{ordersFeedState.message.totalToday}</Text>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Flex>
+        ordersFeed
       ) : ordersFeedState.transportState.error ? (
         <ErrorMessage
           message={`Ошибка загрузки данных.\nСообщение сервера: ${ordersFeedState.transportState.error?.message}`}
@@ -171,4 +176,4 @@ export const OrdersFeedPage: React.FC = () => {
   ) : (
     <LoadingProgress />
   )
-}
+})
