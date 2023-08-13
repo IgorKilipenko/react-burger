@@ -82,7 +82,7 @@
     "build-localhost": "PUBLIC_URL=/ node scripts/build.js",
     "test": "node scripts/test.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "PUBLIC_URL=/react-burger gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
