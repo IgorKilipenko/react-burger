@@ -11,7 +11,7 @@ import { appReducer } from "../slices/app"
 import { websocketMiddleware } from "../middlewares/ws"
 import { apiConfig } from "../../data/api-config"
 
-const rootReducer = combineReducers({
+const appReducers = {
   burgerConstructor: burgerReducer,
   orders: orderReducer,
   ordersList: ordersListReducer,
@@ -21,13 +21,17 @@ const rootReducer = combineReducers({
   auth: authReducer,
   userPassword: userPasswordReducer,
   app: appReducer,
+}
+
+const rootReducer = combineReducers({
+  ...appReducers
 })
 
 interface Options {
   forceDisableLogger?: boolean
 }
 
-export default function configureAppStore({ forceDisableLogger = true }: Options) {
+export const configureAppStore = ({ forceDisableLogger = true }: Options) => {
   const isDevelopmentMode = () => process.env.NODE_ENV === "development"
   const middlewares: any[] = []
   if (isDevelopmentMode() && !forceDisableLogger) {
@@ -58,7 +62,11 @@ export default function configureAppStore({ forceDisableLogger = true }: Options
 export const store = configureAppStore({ forceDisableLogger: true })
 
 export type RootState = ReturnType<typeof store.getState>
+export type AppStore = ReturnType<typeof configureAppStore>
 export type AppDispatch = typeof store.dispatch
+export type AppReducer = typeof rootReducer
+export type AppReducers = [keyof typeof appReducers]
+export type AppStates = ReturnType<typeof appReducers[AppReducers[number]]>
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
