@@ -5,7 +5,7 @@ interface AppState {
   isBackgroundRouteMode: boolean
 }
 
-const initialState: AppState = {
+export const initialState: AppState = {
   appIsLoaded: false,
   isBackgroundRouteMode: false,
 }
