@@ -1,30 +1,28 @@
-import React, { PropsWithChildren, Reducer } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { render } from '@testing-library/react'
 import type { RenderOptions } from '@testing-library/react'
 import { configureStore } from '@reduxjs/toolkit'
-import type { AnyAction, ConfigureStoreOptions, EmptyObject, PreloadedState, ReducerFromReducersMapObject, StateFromReducersMapObject } from '@reduxjs/toolkit'
+import type { AnyAction, EmptyObject, PreloadedState, Reducer } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import { AppReducer, appReducers, AppReduces, AppStore, RootState } from '../../services/store'
-import { FilterProps } from '../types'
+import { AppReducer, AppReducers, AppStates, AppStore } from '../../services/store'
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
-  preloadedState?: PreloadedState<typeof appReducers[AppReduces[number]]>
+  preloadedState?: PreloadedState<AppStates>
   //store?: AppStore
-  store?: ToolkitStore<typeof appReducers[AppReduces[number]]>
+  store?: ToolkitStore<EmptyObject & AppStates>
 }
 
-export const renderWithProviders =/* <S=unknown, A=unknown>*/(
-  //reducer: Parameters<Reducer<unknown, unknown>>,
-  reducer: Reducer<typeof appReducers[AppReduces[number]], AnyAction>,
+export const renderWithProviders = (
+  reducer: {name: AppReducers, reducer: Reducer<AppStates, AnyAction>},
   ui: React.ReactElement,
   {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
-    store = configureStore({reducer}),
+    store = configureStore({reducer: {[reducer.name as keyof AppReducer] : reducer.reducer}}),
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) => {
