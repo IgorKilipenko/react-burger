@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { OrdersListMessage, TransportState } from "../../middlewares/ws"
 
-interface OrdersListState {
+export interface OrdersListState {
   message?: OrdersListMessage | null
   transportState: TransportState
 }
@@ -27,7 +27,7 @@ const ordersListSlice = createSlice({
     error: (state, { payload: error }: PayloadAction<Error>) => {
       state.transportState.error = error
       state.transportState.connecting = false
-      state.transportState.connected = true
+      state.transportState.connected = false
     },
 
     connectionSuccess: (state) => {
@@ -56,3 +56,4 @@ const ordersListSlice = createSlice({
 
 export const ordersListReducer = ordersListSlice.reducer
 export const ordersListActions = ordersListSlice.actions
+export const ordersListInitialState: Readonly<OrdersListState> = { ...initialState }
