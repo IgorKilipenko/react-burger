@@ -15,9 +15,11 @@
     "predeploy",
     "reduxjs",
     "svgr",
+    "swaped",
     "tailwindcss",
     "testname",
-    "typeahead"
+    "typeahead",
+    "unseted"
   ],
   "jest.autoRun": "off",
   "editor.formatOnSave": true,
