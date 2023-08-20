@@ -47,7 +47,10 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     clearProducts: (state) => {
-      state = initialState
+      state.products = initialState.products
+      state.categories = initialState.categories
+      state.error = initialState.error
+      state.loading = initialState.loading
     },
   },
   extraReducers: (builder) => {

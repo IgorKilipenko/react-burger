@@ -86,11 +86,17 @@ describe("burger reducer tests", () => {
   })
 
   it("should be empty products", () => {
+    const { table: products, categories } = parseRawIngredientsData(
+      Array(5)
+        .fill(null)
+        .map((_, i) => genRandomProduct((i + 1) % 3 === 0 ? allowableCategories.bun : allowableCategories.main))
+    )
+
     const expectState: State = {
       ...initialState,
     }
 
-    const state = reducer(initialState, clearProducts())
+    const state = reducer({...initialState, products, categories}, clearProducts())
     expect(state).toEqual(expectState)
   })
 })
