@@ -58,7 +58,7 @@ describe("active modal reducer tests", () => {
     expect(state).toEqual(expectState)
   })
 
-  it("should be clear active modal ingredient", () => {
+  it("should be unseted active modal ingredient", () => {
     const expectState: InitialStateType = initialState
 
     const state = reducer({...initialState, activeIngredient:emptyIngredient}, actions.clearActiveIngredient())
