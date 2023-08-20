@@ -57,3 +57,6 @@ const orderSlice = createSlice({
 
 export const orderReducer = orderSlice.reducer
 export const { clearOrder } = orderSlice.actions
+export type OrderState = typeof initialState
+export const orderInitialState: Readonly<OrderState> = { ...initialState }
+export type OrderPayload = Response
