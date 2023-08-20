@@ -5,7 +5,7 @@ import { Link } from "../link"
 import { CurrencyIcon } from "../icons"
 import { Icon } from "../icon"
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components"
-import { OmitFlexOptions, TestId, WithTestsId } from "../../../utils/types"
+import { OmitFlexOptions, TestId } from "../../../utils/types"
 
 export interface CardContainerOptions extends OmitFlexOptions<"direction"> {}
 export interface CardImageOptions extends ImageProps {}
