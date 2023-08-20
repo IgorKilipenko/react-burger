@@ -5,28 +5,11 @@ import { generateRandomString } from "../../../utils/test-utils"
 
 type State = typeof burgerInitialState
 
-const initialState = burgerInitialState
+const initialState: Readonly<State> = burgerInitialState
 const reducer = burgerReducer
 const actions = burgerActions
 
 describe("burger reducer tests", () => {
-  const emptyProduct: NonNullable<(typeof initialState.products)[number]> = {
-    product: {
-      _id: "0",
-      name: "",
-      type: "",
-      proteins: 0,
-      fat: 0,
-      carbohydrates: 0,
-      calories: 0,
-      price: 0,
-      image: "",
-      image_mobile: "",
-      image_large: "",
-    },
-    uid: "0",
-  }
-
   const getRandomProduct = (
     type: (typeof initialState.products)[number]["product"]["type"] = allowableCategories.main
   ) => {
@@ -45,7 +28,7 @@ describe("burger reducer tests", () => {
         image_large: generateRandomString(),
       },
       uid: uid(),
-    }
+    } as (typeof initialState.products)[number]
   }
 
   it("should return the initial state", () => {
@@ -76,16 +59,16 @@ describe("burger reducer tests", () => {
     const product = getRandomProduct()
     const expectState = initialState
 
-    let state = reducer(initialState, actions.addIngredient(product))
+    let state: State = { ...initialState, products: [product], productQuantities: { [product.product._id]: 1 } }
     state = reducer(state, actions.removeIngredient({ uid: product.uid }))
     expect(state).toEqual(expectState)
   })
 
-  it("should be initial state", () => {
+  it("should clear all products / reset state", () => {
     const product = getRandomProduct()
     const expectState = initialState
 
-    let state = reducer(initialState, actions.addIngredient(product))
+    let state: State = { ...initialState, products: [product], productQuantities: { [product.product._id]: 1 } }
     state = reducer(state, actions.clearBurgerConstructor())
     expect(state).toEqual(expectState)
   })
@@ -95,8 +78,11 @@ describe("burger reducer tests", () => {
     const bun = getRandomProduct(allowableCategories.bun)
     const expectState = { ...initialState, products: [ingredient], productQuantities: { [ingredient.product._id]: 1 } }
 
-    let state = reducer(initialState, actions.addIngredient(ingredient))
-    state = reducer(state, actions.addIngredient(bun))
+    let state: State = {
+      ...expectState,
+      bun: bun,
+      productQuantities: { ...expectState.productQuantities, [bun.product._id]: 1 },
+    }
     state = reducer(state, actions.clearBuns())
     expect(state).toEqual(expectState)
   })
@@ -106,8 +92,11 @@ describe("burger reducer tests", () => {
     const bun = getRandomProduct(allowableCategories.bun)
     const expectState = { ...initialState, bun: bun, productQuantities: { [bun.product._id]: 1 } }
 
-    let state = reducer(initialState, actions.addIngredient(ingredient))
-    state = reducer(state, actions.addIngredient(bun))
+    let state: State = {
+      ...expectState,
+      products: [ingredient],
+      productQuantities: { ...expectState.productQuantities, [ingredient.product._id]: 1 },
+    }
     state = reducer(state, actions.clearSelectedIngredients())
     expect(state).toEqual(expectState)
   })
@@ -115,19 +104,21 @@ describe("burger reducer tests", () => {
   it("should be swaped products", () => {
     const products = Array(2)
       .fill(null)
-      .map(() => getRandomProduct()) as Array<typeof emptyProduct>
+      .map(() => getRandomProduct()).sort((a,b) => a.product._id > b.product._id ? -1 : a.product._id === b.product._id ? 1 : 0)
 
     const expectState = {
       ...initialState,
-      products: [products[0], products[1]].reverse(),
+      products: [...products].reverse(),
       productQuantities: products.reduce<typeof initialState.productQuantities>((res, p) => {
         res[p.product._id] = res[p.product._id] ?? 0 + 1
         return res
       }, {}),
     }
 
-    let state = reducer(initialState, actions.addIngredient(products[0]))
-    state = reducer(state, actions.addIngredient(products[1]))
+    let state: State = {
+      ...expectState,
+      products: [...products],
+    }
     state = reducer(state, actions.swapItemsByIndex({ fromIdx: 0, toIdx: 1 }))
     expect(state).toEqual(expectState)
   })
