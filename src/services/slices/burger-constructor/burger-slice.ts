@@ -117,4 +117,4 @@ export const {
 
 export const burgerReducer = burgerSlice.reducer
 
-export const burgerInitialState = { ...initialState }
+export const burgerInitialState: typeof initialState = { ...initialState }

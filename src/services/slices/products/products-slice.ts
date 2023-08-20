@@ -74,3 +74,6 @@ const productsSlice = createSlice({
 
 export const productsReducer = productsSlice.reducer
 export const { clearProducts } = productsSlice.actions
+export type ProductsInitialState = typeof initialState
+export const productsInitialState: ProductsInitialState = { ...initialState }
+export type ProductsPayload = Response
