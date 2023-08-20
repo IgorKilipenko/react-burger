@@ -3,6 +3,8 @@ import { Flex } from "@chakra-ui/react"
 import { ModalPortal } from "./modal-portal"
 import React from "react"
 
+export const MODAL_CONTAINER_TEST_ID = "modal_container"
+
 export interface ModalContainerProps {
   children?: ReactNode
   onEscKeyDown?: () => void
@@ -27,7 +29,7 @@ export const ModalContainer = ({ children, onEscKeyDown }: ModalContainerProps) 
 
   return (
     <ModalPortal>
-      <Flex position="absolute" w="100vw" h="100vh" justify="stretch" align="stretch" zIndex="overlay">
+      <Flex position="absolute" w="100vw" h="100vh" justify="stretch" align="stretch" zIndex="overlay" data-testid={MODAL_CONTAINER_TEST_ID}>
         {children}
       </Flex>
     </ModalPortal>

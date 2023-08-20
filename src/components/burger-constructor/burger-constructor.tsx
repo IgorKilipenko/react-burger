@@ -85,6 +85,7 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
             size="large"
             extraClass="ml-2"
             onClick={handleOrderButtonClick}
+            data-testid="create-order-button"
           >
             Оформить заказ
           </Button>

@@ -3,12 +3,13 @@ import { Flex, Box, Text, TextProps } from "@chakra-ui/react"
 import { Link as ChakraLink } from "@chakra-ui/react"
 import { Icon } from "../icon"
 import { useNavigate } from "react-router-dom"
+import { TestId } from "../../../utils/types"
 
-export interface LinkProps {
-  to?: string,
+export interface LinkProps extends Partial<TestId> {
+  to?: string
   icon?: React.ElementType<any>
   text?: string
-  textColor?: TextProps['color']
+  textColor?: TextProps["color"]
   children?: React.ReactNode
   isActive?: boolean
   value?: string | number
@@ -16,15 +17,14 @@ export interface LinkProps {
 }
 
 export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
-  ({ to, icon, text, textColor, children, isActive = false, onClick, value }, ref) => {
+  ({ to, icon, text, textColor, children, isActive = false, onClick, value, ...restProps }, ref) => {
     const type = isActive ? "primary" : "secondary"
     const navigate = useNavigate()
 
     const _onClick = React.useCallback(() => {
       onClick && onClick(value)
       to && navigate(to)
-
-    },[navigate, onClick, to, value]);
+    }, [navigate, onClick, to, value])
 
     const containerProps = {
       pt: { base: 1, lg: 4 },
@@ -34,7 +34,11 @@ export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
     }
 
     return (
-      <Box ref={ref} {...(!children ? containerProps : {})}>
+      <Box
+        ref={ref}
+        {...(!children ? containerProps : {})}
+        {...(restProps.dataTestid ? { "data-testid": restProps.dataTestid } : {})}
+      >
         {children ? (
           <ChakraLink onClick={_onClick} variant={type}>
             {children}
@@ -42,7 +46,11 @@ export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
         ) : (
           <ChakraLink as={Flex} align="center" onClick={_onClick} gap={icon && text ? 2 : 0} variant={type}>
             {icon && <Icon as={icon} type={type} />}
-            {text && <Text color={textColor} variant={"mainDefault"}>{text}</Text>}
+            {text && (
+              <Text color={textColor} variant={"mainDefault"}>
+                {text}
+              </Text>
+            )}
           </ChakraLink>
         )}
       </Box>

@@ -30,6 +30,7 @@ const IngredientCard = memo<IngredientCardProps>(({ ingredient, selectedCount = 
       count={selectedCount}
       options={{ imageProps: { h: 120 } }}
       onClick={handleItemClick}
+      dataTestid={`ingredient_id_${ingredient._id}`}
     />
   )
 })
