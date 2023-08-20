@@ -11,7 +11,7 @@ import { appReducer } from "../slices/app"
 import { websocketMiddleware } from "../middlewares/ws"
 import { apiConfig } from "../../data/api-config"
 
-const appReducers = {
+export const appReducers = {
   burgerConstructor: burgerReducer,
   orders: orderReducer,
   ordersList: ordersListReducer,
@@ -65,8 +65,8 @@ export type RootState = ReturnType<typeof store.getState>
 export type AppStore = ReturnType<typeof configureAppStore>
 export type AppDispatch = typeof store.dispatch
 export type AppReducer = typeof rootReducer
-export type AppReducers = [keyof typeof appReducers]
-export type AppStates = ReturnType<typeof appReducers[AppReducers[number]]>
+export type AppReducers = typeof appReducers
+export type AppStates = ReturnType<AppReducers[keyof AppReducers]>
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
