@@ -2,6 +2,8 @@ import { Circle, useMultiStyleConfig, type LayoutProps } from "@chakra-ui/react"
 import { CloseIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 
+export const MODAL_CONTAINER_CLOSE_BUTTON_TEST_ID = "modal_container_close_button"
+
 export interface ModalCloseButtonProps {
   size?: LayoutProps["boxSize"]
   variant?: string

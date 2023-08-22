@@ -3,7 +3,7 @@ import { Flex, Box, Text, TextProps } from "@chakra-ui/react"
 import { Link as ChakraLink } from "@chakra-ui/react"
 import { Icon } from "../icon"
 import { useNavigate } from "react-router-dom"
-import { TestId } from "../../../utils/types"
+import { TestId, testsConfig } from "../../../utils/test-utils"
 
 export interface LinkProps extends Partial<TestId> {
   to?: string
@@ -37,7 +37,9 @@ export const Link = React.forwardRef<HTMLDivElement, LinkProps>(
       <Box
         ref={ref}
         {...(!children ? containerProps : {})}
-        {...(restProps.dataTestid ? { "data-testid": restProps.dataTestid } : {})}
+        {...(restProps[testsConfig.dataTestIdAttribute]
+          ? { [testsConfig.dataTestIdAttribute]: restProps[testsConfig.dataTestIdAttribute] }
+          : {})}
       >
         {children ? (
           <ChakraLink onClick={_onClick} variant={type}>

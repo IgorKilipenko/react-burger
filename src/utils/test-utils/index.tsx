@@ -11,3 +11,13 @@ export const generateRandomString = (length: number = 5) => {
   })
   return result
 }
+
+export const testsConfig = {
+  dataTestIdAttribute: "data-testid",
+} as const
+
+export interface TestId {
+  [testsConfig.dataTestIdAttribute]: string
+}
+
+export type WithTestsId<T extends {}> = T & TestId

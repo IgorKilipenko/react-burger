@@ -1,10 +1,7 @@
 {
+  "extends": "../tsconfig",
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es5", "dom"],
     "types": ["cypress", "node", "@4tw/cypress-drag-drop"],
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
   },
   "include": ["**/*.ts"]
 }

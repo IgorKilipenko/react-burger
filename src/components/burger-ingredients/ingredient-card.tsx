@@ -2,6 +2,7 @@ import { useCallback, memo } from "react"
 import { type BurgerIngredientType } from "../../data"
 import { Card } from "../common/card/card"
 import { useDrag } from "react-dnd"
+import { testsConfig } from "../../utils/test-utils"
 
 export interface IngredientCardProps {
   ingredient: BurgerIngredientType
@@ -13,6 +14,8 @@ const IngredientCard = memo<IngredientCardProps>(({ ingredient, selectedCount = 
   const handleItemClick = useCallback(() => {
     onClick && onClick(ingredient)
   }, [ingredient, onClick])
+  
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [{ isDrag }, dragRef] = useDrag({
     type: "ingredient",
     item: { ingredient: { ...ingredient } },
@@ -30,7 +33,7 @@ const IngredientCard = memo<IngredientCardProps>(({ ingredient, selectedCount = 
       count={selectedCount}
       options={{ imageProps: { h: 120 } }}
       onClick={handleItemClick}
-      dataTestid={`ingredient_id_${ingredient._id}`}
+      {...{[testsConfig.dataTestIdAttribute]:`ingredient_id_${ingredient._id}`}}
     />
   )
 })

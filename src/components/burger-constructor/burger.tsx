@@ -6,6 +6,7 @@ import { useDrop } from "react-dnd"
 import { burgerActions, getBurgerStore } from "../../services/slices/burger-constructor"
 import { useAppDispatch, useAppSelector } from "../../services/store"
 import { appColors } from "../../theme/styles"
+import { testsConfig } from "../../utils/test-utils"
 
 export interface BurgerProps {}
 
@@ -42,7 +43,7 @@ export const Burger = React.memo<BurgerProps>(() => {
       overflowX="hidden"
       className="custom-scroll"
       pr={4}
-      data-testid="dnd_burger_container"
+      {...{[testsConfig.dataTestIdAttribute]:"dnd_burger_container"}}
       {...(isHover ? { boxShadow: `0 0 0px 2px var(--chakra-colors-active-border-color)` } : {})}
     >
       {bun ? (

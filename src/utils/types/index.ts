@@ -32,9 +32,3 @@ export type FilterProps<T extends {}, V> = { [K in keyof T]: T[K] extends V ? T[
 
 export type TypeWithGeneric<T> = T[]
 export type ExtractGeneric<Type> = Type extends TypeWithGeneric<infer X> ? X : never
-
-export interface TestId {
-  dataTestid: string
-}
-
-export type WithTestsId<T extends {}> = T & TestId

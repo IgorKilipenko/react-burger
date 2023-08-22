@@ -5,7 +5,8 @@ import { Link } from "../link"
 import { CurrencyIcon } from "../icons"
 import { Icon } from "../icon"
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components"
-import { OmitFlexOptions, TestId } from "../../../utils/types"
+import { OmitFlexOptions } from "../../../utils/types"
+import { TestId, testsConfig } from "../../../utils/test-utils"
 
 export interface CardContainerOptions extends OmitFlexOptions<"direction"> {}
 export interface CardImageOptions extends ImageProps {}
@@ -24,7 +25,7 @@ export interface CardProps extends Partial<TestId> {
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ name, image, price, count = 0, options, onClick, dataTestid }, ref) => {
+  ({ name, image, price, count = 0, options, onClick, ...restProps }, ref) => {
     const handleItemClick = () => {
       onClick && onClick()
     }
@@ -32,7 +33,14 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const { containerProps, imageProps } = options ?? {}
 
     return (
-      <Link ref={ref} isActive={true} onClick={handleItemClick} {...(dataTestid ? { dataTestid } : null)}>
+      <Link
+        ref={ref}
+        isActive={true}
+        onClick={handleItemClick}
+        {...(restProps[testsConfig.dataTestIdAttribute]
+          ? { [testsConfig.dataTestIdAttribute]: restProps[testsConfig.dataTestIdAttribute] }
+          : null)}
+      >
         <Flex
           position="relative"
           direction="column"

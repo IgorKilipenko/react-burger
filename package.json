@@ -72,12 +72,11 @@
     "workbox-webpack-plugin": "^7.0.0"
   },
   "scripts": {
-    "start": "PUBLIC_URL=/ node scripts/start.js",
-    "build": "node scripts/build.js",
-    "build-localhost": "PUBLIC_URL=/ node scripts/build.js",
-    "test": "node scripts/test.js",
+    "start": "cross-env PUBLIC_URL=/ node scripts/start.js",
+    "build": "cross-env PUBLIC_URL=/ node scripts/build.js",
+    "test": "cross-env PUBLIC_URL=/ node scripts/test.js",
     "predeploy": "npm run build",
-    "deploy": "PUBLIC_URL=/react-burger gh-pages -d build",
+    "deploy": "gh-pages -d build",
     "cypress:open": "./node_modules/.bin/cypress open"
   },
   "eslintConfig": {
@@ -106,6 +105,7 @@
     "@types/jest": "^29.5.3",
     "@types/redux-logger": "^3.0.9",
     "camelcase": "^6.3.0",
+    "cross-env": "^7.0.3",
     "cypress": "^12.17.4",
     "eslint-plugin-cypress": "^2.14.0",
     "gh-pages": "^6.0.0",
