@@ -13,6 +13,9 @@ import { createOrder } from "../../services/slices/orders"
 import { getIsAuthUserFromStore } from "../../services/slices/auth"
 import { useNavigate } from "react-router-dom"
 import { routesInfo } from "../app-router"
+import { testsConfig } from "../../utils/test-utils"
+
+export const PLACE_ORDER_BUTTON_TEST_ID = "place_order_button"
 
 export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
 
@@ -85,6 +88,7 @@ const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }
             size="large"
             extraClass="ml-2"
             onClick={handleOrderButtonClick}
+            {...{[testsConfig.dataTestIdAttribute]:PLACE_ORDER_BUTTON_TEST_ID}}
           >
             Оформить заказ
           </Button>

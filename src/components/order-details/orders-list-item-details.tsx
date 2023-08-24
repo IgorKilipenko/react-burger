@@ -1,10 +1,8 @@
 import React from "react"
 import { Avatar, Flex, Text } from "@chakra-ui/react"
-import { useAppDispatch, useAppSelector } from "../../services/store"
 import { appColors } from "../../theme/styles"
-import { useMatches, useOutletContext } from "react-router-dom"
+import { useOutletContext } from "react-router-dom"
 import { Order, OrderStatus } from "../../data"
-import { appStateActions, getAppIsBackgroundRouteMode } from "../../services/slices/app"
 import { capitalizeFirstLetter } from "../../utils"
 import { useGetProductsByIds } from "../../hooks"
 import { Icon } from "../common"
@@ -16,18 +14,8 @@ export interface OrdersListItemDetailsProps {}
 
 export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(() => {
   const { order } = useOutletContext<{ order: Order | undefined | null }>()
-  const dispatch = useAppDispatch()
-  const isBackgroundRouteMode = useAppSelector(getAppIsBackgroundRouteMode)
   const zIndexBase = 10
   const ingredients = useGetProductsByIds(order?.ingredients ?? [])
-  const matches = useMatches()
-
-  React.useEffect(() => {
-    return () => {
-      matches.find((m) => m.params) &&
-        dispatch(appStateActions.setIsBackgroundRouteMode(false))
-    }
-  }, [dispatch, matches])
 
   const orderTotalPrice = React.useMemo(() => {
     return !ingredients
@@ -84,13 +72,7 @@ export const OrdersListItemDetails = React.memo<OrdersListItemDetailsProps>(() =
   )
 
   return (
-    <Flex
-      direction="column"
-      {...(!isBackgroundRouteMode ? { w: "100%" } : { maxW: "100%", w: "640px" })}
-      align="stretch"
-      justify="center"
-      grow={1}
-    >
+    <Flex direction="column" maxW="100%" w="640px" align="stretch" justify="center" grow={1}>
       {order ? (
         <>
           <Text variant="digitsDefault" align="center" w="100%">

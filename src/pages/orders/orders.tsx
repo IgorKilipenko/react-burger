@@ -40,12 +40,9 @@ export const OrdersListPage: React.FC = () => {
     navigate("", { replace: true })
   }, [dispatch, navigate])
 
-  React.useCallback(() => {
-    matches.find((m) => m.id === routesInfo.ordersListItem.id && m.params[routesInfo.ordersListItem.paramName]) &&
-      dispatch(appStateActions.setIsBackgroundRouteMode(true))
-    return () => {
+  React.useEffect(() => {
+    matches.find((m) => !m.params[routesInfo.ordersListItem.paramName]) &&
       dispatch(appStateActions.setIsBackgroundRouteMode(false))
-    }
   }, [dispatch, matches])
 
   React.useEffect(() => {

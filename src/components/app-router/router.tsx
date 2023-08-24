@@ -1,7 +1,13 @@
 import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom"
 import { AppPaths, routesInfo } from "./routes"
 
-export const appRouter = createBrowserRouter(
+const getIsHashRouterMode = () => !!process.env.PUBLIC_URL && process.env.PUBLIC_URL.startsWith("/react-burger")
+
+const createRouter = () => {
+  return !getIsHashRouterMode() ? createBrowserRouter : createBrowserRouter
+}
+
+export const appRouter = createRouter()(
   [
     {
       path: routesInfo.root.path,
@@ -68,5 +74,5 @@ export const appRouter = createBrowserRouter(
       ],
     },
   ],
-  { basename: AppPaths.ROOT_PATH }
+  { basename: process.env.PUBLIC_URL ?? "" }
 )

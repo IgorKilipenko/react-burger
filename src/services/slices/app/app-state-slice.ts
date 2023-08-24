@@ -5,7 +5,7 @@ interface AppState {
   isBackgroundRouteMode: boolean
 }
 
-const initialState: AppState = {
+export const initialState: AppState = {
   appIsLoaded: false,
   isBackgroundRouteMode: false,
 }
@@ -25,3 +25,5 @@ const appSlice = createSlice({
 
 export const appReducer = appSlice.reducer
 export const { setAppIsLoaded, setIsBackgroundRouteMode } = appSlice.actions
+export const appActions = appSlice.actions
+export const appInitialState = initialState

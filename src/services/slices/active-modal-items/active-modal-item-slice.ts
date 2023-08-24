@@ -53,3 +53,4 @@ export const {
   clearActiveOrdersFeedItem,
 } = activeModalItemSlice.actions
 export const activeModalItemReducer = activeModalItemSlice.reducer
+export const activeModalItemInitialState = {...initialState}

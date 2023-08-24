@@ -11,6 +11,7 @@ import {
   register,
   RegisterResponse,
   updateUser,
+  UpdateUserResponse,
 } from "./auth-async-thunk"
 
 interface AuthResponseState {
@@ -110,7 +111,7 @@ const authSlice = createSlice({
     })
 
     /// Update user data
-    builder.addCase(updateUser.fulfilled, (state, { type, payload }: PayloadAction<GetUserResponse>) => {
+    builder.addCase(updateUser.fulfilled, (state, { type, payload }: PayloadAction<UpdateUserResponse>) => {
       console.assert(payload.data)
 
       authSlice.caseReducers._setUserData(state, { type, payload })
@@ -141,3 +142,11 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer
 export const { clearState, clearErrors } = authSlice.actions
+export const authActions = { ...authSlice.actions, thunk: { login, register, getUser, updateUser, logout } }
+export type AuthState = typeof initialState
+export const authInitialState: AuthState = { ...initialState }
+export type RegisterPayload = RegisterResponse
+export type LoginPayload = LoginResponse
+export type GetUserPayload = GetUserResponse
+export type UpdateUserPayload = UpdateUserResponse
+export type LogoutPayload = LogoutResponse

@@ -104,6 +104,8 @@ const burgerSlice = createSlice({
   },
 })
 
+export const burgerActions = burgerSlice.actions
+
 export const {
   addIngredient,
   removeIngredient,
@@ -111,5 +113,8 @@ export const {
   swapItemsByIndex,
   clearBuns,
   clearSelectedIngredients,
-} = burgerSlice.actions
+} = burgerActions
+
 export const burgerReducer = burgerSlice.reducer
+
+export const burgerInitialState: typeof initialState = { ...initialState }

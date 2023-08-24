@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "name": "",
+  "order": {
+    "ingredients": [],
+    "_id": "",
+    "owner": {
+      "name": "",
+      "email": "",
+      "createdAt": "",
+      "updatedAt": ""
+    },
+    "status": "",
+    "name": "",
+    "createdAt": "",
+    "updatedAt": "",
+    "number": 0,
+    "price": 0
+  }
+}

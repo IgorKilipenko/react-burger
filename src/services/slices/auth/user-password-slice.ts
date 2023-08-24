@@ -89,3 +89,8 @@ const userPasswordSlice = createSlice({
 
 export const userPasswordReducer = userPasswordSlice.reducer
 export const { clearState, clearErrors } = userPasswordSlice.actions
+export const userPasswordActions = { ...userPasswordSlice.actions, thunk: {passwordReset, passwordResetConfirm } }
+export type UserPasswordState = typeof initialState
+export const userPasswordInitialState: UserPasswordState = { ...initialState }
+export type UserPasswordResetPayload = PasswordResetResponse
+export type UserPasswordResetConfirmPayload = PasswordResetConfirmResponse

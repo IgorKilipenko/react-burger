@@ -24,3 +24,11 @@ export type BoxProps = ChakraBoxProps
 export type BoxOptions = Omit<ChakraBoxProps, keyof HTMLChakraProps<"div">>
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null }
+export type WithoutNullableKeys<T> = {
+  [K in keyof T]: WithoutNullableKeys<NonNullable<T[K]>>
+}
+
+export type FilterProps<T extends {}, V> = { [K in keyof T]: T[K] extends V ? T[keyof T] : never }
+
+export type TypeWithGeneric<T> = T[]
+export type ExtractGeneric<Type> = Type extends TypeWithGeneric<infer X> ? X : never
