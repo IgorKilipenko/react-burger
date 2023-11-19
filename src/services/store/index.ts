@@ -35,6 +35,7 @@ export const configureAppStore = ({ forceDisableLogger = true }: Options) => {
   const isDevelopmentMode = () => process.env.NODE_ENV === "development"
   const middlewares: any[] = []
   if (isDevelopmentMode() && !forceDisableLogger) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { logger } = require(`redux-logger`)
     middlewares.push(logger)
   }
