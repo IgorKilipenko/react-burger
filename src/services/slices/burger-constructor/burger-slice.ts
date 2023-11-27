@@ -1,6 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import type { PayloadAction } from "@reduxjs/toolkit"
-import { allowableCategories, BurgerIngredientType, DbObjectType, IngredientBase } from "../../../data"
+import { type PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { type BurgerIngredientType, type DbObjectType, type IngredientBase, allowableCategories } from "../../../data"
 import { uid } from "uid"
 
 type ProductBase = DbObjectType & IngredientBase
@@ -44,7 +43,7 @@ const burgerSlice = createSlice({
 
     addIngredient: {
       reducer: (state, action: PayloadAction<BurgerItemType>) => {
-        let { product, uid } = action.payload
+        const { product, uid } = action.payload
         const isBunType = product.type === allowableCategories.bun
 
         if (isBunType) {
@@ -92,7 +91,7 @@ const burgerSlice = createSlice({
         toIdx: number
       }>
     ) => {
-      let { fromIdx, toIdx } = action.payload
+      const { fromIdx, toIdx } = action.payload
 
       if (fromIdx === toIdx) return
       console.assert(fromIdx >= 0 && toIdx >= 0 && fromIdx < state.products.length && toIdx < state.products.length)

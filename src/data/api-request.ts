@@ -1,4 +1,4 @@
-import { ApiResponseBase } from "./api-response"
+import type { ApiResponseBase } from "./api-response"
 
 interface State<T> {
   data?: T
@@ -40,7 +40,7 @@ export const request = async <T = unknown>({
 
     let checkDataResult: Error | boolean = true
     checkData && (checkDataResult = checkData(data))
-    let error: Error | null =
+    const error: Error | null =
       checkDataResult === true ? null : !checkDataResult ? Error("Check data failed.") : (checkDataResult as Error)
     if (error) {
       throw error

@@ -6,8 +6,8 @@ import { tokenManager } from "../../../data/utils"
 export const websocketMiddleware = (
   url: string,
   actions: typeof ordersListActions | typeof ordersFeedActions,
-  authRequired: boolean = false
-): Middleware<{}, RootState> => {
+  authRequired = false
+): Middleware<object, RootState> => {
   return (store) => (next) => (action) => {
     let socket: WebSocket | null = null
 

@@ -15,7 +15,7 @@ export const createLocalStorageManager = (key: string): LocalStorageManager => {
       let value: string | null = null
       try {
         value = localStorage.getItem(key) ?? null
-      } catch {}
+      } catch { /* empty */ }
 
       return value
     },

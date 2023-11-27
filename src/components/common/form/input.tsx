@@ -33,7 +33,8 @@ function useCombinedRefs<T = HTMLElement>(
       if (typeof ref === "function") {
         ref(targetRef.current)
       } else if (ref != null) {
-        ;(ref as React.MutableRefObject<T | null>).current = targetRef.current
+        const mutableRefObject = ref as React.MutableRefObject<T | null>
+        mutableRefObject.current = targetRef.current
       }
     })
   }, [refs])
@@ -56,7 +57,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       onFocus,
       size = "default",
-      autoComplete="on",
+      autoComplete = "on",
       ...rest
     },
     forwardedRef

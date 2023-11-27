@@ -1,14 +1,14 @@
 import React, { useCallback } from "react"
-import { Flex, FlexProps, HTMLChakraProps, Text } from "@chakra-ui/react"
+import {type FlexProps, type HTMLChakraProps, Flex, Text} from "@chakra-ui/react";
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components"
 import { CurrencyIcon } from "../common/icons"
 import { Icon } from "../common/icon"
 import { Burger } from "./burger"
 import { Modal } from "../modal"
 import { OrderDetails } from "../order-details"
-import { BurgerItemType, burgerActions, getBurgerStore } from "../../services/slices/burger-constructor"
+import { type BurgerItemType, burgerActions, getBurgerStore} from "../../services/slices/burger-constructor";
 import { useAppDispatch, useAppSelector } from "../../services/store"
-import { DbObjectType } from "../../data"
+import type { DbObjectType } from "../../data"
 import { createOrder } from "../../services/slices/orders"
 import { getIsAuthUserFromStore } from "../../services/slices/auth"
 import { useNavigate } from "react-router-dom"
@@ -17,7 +17,7 @@ import { testsConfig } from "../../utils/test-utils"
 
 export const PLACE_ORDER_BUTTON_TEST_ID = "place_order_button"
 
-export interface BurgerConstructorProps extends Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">> {}
+export type BurgerConstructorProps = Omit<FlexProps, "direction" | "dir" | keyof HTMLChakraProps<"div">>
 
 const BurgerConstructor = React.memo<BurgerConstructorProps>(({ ...flexOptions }) => {
   const lockRef = React.useRef(false) /// Needed in strict mode for ignore synthetic/fast rerender

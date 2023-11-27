@@ -1,6 +1,6 @@
 import { apiConfig } from "./api-config"
 import { apiRequest } from "./api-request"
-import { ApiIngredientsResponseType, ApiOrderIdResponseType } from "./api-response"
+import type { ApiIngredientsResponseType, ApiOrderIdResponseType } from "./api-response"
 import { authApi } from "./auth-api"
 
 export const api = {
