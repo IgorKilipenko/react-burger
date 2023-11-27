@@ -74,8 +74,9 @@
   "scripts": {
     "start": "cross-env PUBLIC_URL=/ node scripts/start.js",
     "build": "cross-env PUBLIC_URL=/ node scripts/build.js",
+    "build-ghp": "cross-env PUBLIC_URL=/react-burger node scripts/build.js",
     "test": "cross-env PUBLIC_URL=/ node scripts/test.js",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build-ghp",
     "deploy": "gh-pages -d build",
     "cypress:open": "./node_modules/.bin/cypress open"
   },
